@@ -21,11 +21,12 @@ public class Game extends Canvas implements Runnable{
 
 	public static final int WIDTH = 240;
 	public static final int HEIGHT = WIDTH/12 * 9;
-	public static final int SCALE = 5;
+	public static final int SCALE = 3;
 	public final String NAME = "ROTMG";
 	
 	
 	private JFrame frame;
+	private Player player1;
 	
 	public boolean running = false;
 	public int tickCount = 0;
@@ -67,13 +68,13 @@ public class Game extends Canvas implements Runnable{
 		//Used for KeyInput (uses another class to do this)
 		requestFocus();
 		addKeyListener(new KeyInput(this));
-				
+		
 				
 		SpriteSheet ss = new SpriteSheet(spriteSheet);
 		// ss.grabImage(0, 0, 1, 1);
 		
 		//Initializing any objects here
-		
+		player1 = new Player();//map, index);
 		
 		
 	}
@@ -159,6 +160,8 @@ public class Game extends Canvas implements Runnable{
 			pixels[i] = (i) +  tickCount;
 		}
 		*/
+		
+		player1.tick();
 	}
 
 	public void render() //Update Game Display
@@ -184,24 +187,26 @@ public class Game extends Canvas implements Runnable{
 		g.setColor(Color.WHITE);
 		g.setFont(new Font("Arial", Font.PLAIN, 6*SCALE));
 		//g.drawString(getWidth() + " -- " + getHeight(), 1*SCALE, 6*SCALE);;
-		
+		player1.render(g);
 		
 		//////////// End of Drawing Stuff to screen
 		g.dispose();
 		bs.show();
 	}
 	
-	//When a key is preesed down, this is called
+	//When a key is pressed down, this is called
 		public void keyPressed(KeyEvent e)
 		{
+			char key = e.getKeyChar();
+			player1.controlPressed(key);
 			
-			//int key = e.getKeyCode();
 		}
 		
 		//When the key it finished being pressed, this is called
 		public void keyReleased(KeyEvent e)
 		{
-			//int key = e.getKeyCode();
+			char key = e.getKeyChar();
+			player1.controlReleased(key);
 		}
 	
 	public static void main(String[] args)
