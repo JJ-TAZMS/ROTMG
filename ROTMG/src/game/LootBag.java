@@ -1,16 +1,21 @@
 package game;
 import java.util.ArrayList;
 import java.util.Random;
-public class LootBag {
+import java.awt.image.BufferedImage;
+//import BufferedImageLoader;
+public class LootBag extends BufferedImageLoader{
 	
 	ArrayList<String> bagItems; //array list of randomized item id's
+	String tier;
 	
 	//create new lootbag item
 	//to be used in the enemy class when an enemy dies
 	public LootBag(String enemyTier, double xPos, double yPos) {
 		//create a new image
 		//SpriteSheet bag = new SpriteSheet(); //image for the loot bag
+		//BufferedImage bag = BufferedImageLoader.loadImage("a");
 		
+		tier = enemyTier;
 		bagItems = new ArrayList<String>(); 
 		randomizeLoot();
 		dropBag(xPos, yPos);
@@ -22,11 +27,19 @@ public class LootBag {
 	}
 	
 	private void randomizeLoot() {
+		
 		Random rand = new Random();
+		
 		int numOfItems = rand.nextInt(4) + 1; //loot bag can spawn anywhere from 1 to 4 items
 		
 		for (int i=0; i<numOfItems; i++) {
 			//bagItems.add(random item from item class)
 		}
+		
+		
+		//add a staff to bag
+		//add a spell to bag
+		//add a robe to bag
+		
 	}
 }
