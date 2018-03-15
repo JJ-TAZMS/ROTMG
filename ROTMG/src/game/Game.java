@@ -38,6 +38,7 @@ public class Game extends Canvas implements Runnable{
 	private BufferedImage spriteSheet = null;
 	
 	private Field map;
+	private Player player1;
 	
 	public Game()
 	{
@@ -62,7 +63,7 @@ public class Game extends Canvas implements Runnable{
 	{
 		BufferedImageLoader loader = new BufferedImageLoader();
 		try {
-			spriteSheet = loader.loadImage("/sprite_sheet.png");
+			spriteSheet = loader.loadImage("/character_sheet.png");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -72,12 +73,15 @@ public class Game extends Canvas implements Runnable{
 		addKeyListener(new KeyInput(this));
 				
 				
-		//SpriteSheet ss = new SpriteSheet(spriteSheet);
+		SpriteSheet ss = new SpriteSheet(spriteSheet, 8);
 		// ss.grabImage(0, 0, 1, 1);
 		
 		//Initializing any objects here
 		
 		map = new Field(3000);
+		int index = 0;
+		player1 = new Player(map.getMap(), index, ss);
+		map.setPositionInMap(player1);
 		
 		
 		
@@ -152,7 +156,7 @@ public class Game extends Canvas implements Runnable{
 			{
 				lastTimer += 1000;
 				System.out.println("fps" + frames + " " + ticks);
-				System.out.println(map.getxInMap() + ", " + map.getyInMap());
+				System.out.println(player1.getX() + ", " + player1.getY());
 				frames = 0;
 				ticks = 0;
 			}
@@ -162,45 +166,8 @@ public class Game extends Canvas implements Runnable{
 	
 	public void tick() //Update Game Logic
 	{
-		/*
-		tickCount++;
 		
-		for (int i = 0; i < pixels.length; i++)
-		{
-			pixels[i] = (i) +  tickCount;
-		}
-		*/
-		
-		double x = 0;
-		double y = 0;
-		
-		double increment = .5;
-		
-		if (up) //W
-		{
-			y -= increment;
-		}
-		if (down) //S
-		{
-			y += increment;
-		}
-		
-		if (left) //A
-		{
-			x -= increment;
-		}
-		if (right) //D
-		{
-			x += increment;
-		}
-		
-		if (Math.abs(x) == Math.abs(y))
-		{
-			x /= Math.sqrt(2);
-			y /= Math.sqrt(2);
-		}
-		map.changePos(x,  y);
-		//System.out.println("Pos in map: " + (int)map.getxInMap() + ", " + map.getyInMap());
+		player1.tick();
 	}
 
 	public void render() //Update Game Display
@@ -227,72 +194,29 @@ public class Game extends Canvas implements Runnable{
 		g.setFont(new Font("Arial", Font.PLAIN, 6*SCALE));
 		//g.drawString(getWidth() + " -- " + getHeight(), 1*SCALE, 6*SCALE);;
 		
-		map.render(g, minimap);
+		map.render(g, player1);
+		player1.render(g);
 		
 		//////////// End of Drawing Stuff to screen
 		g.dispose();
 		bs.show();
 	}
 	
-	
-	private boolean up, down, left, right, minimap;
 	//When a key is preesed down, this is called
-		public void keyPressed(KeyEvent e)
-		{
-			
-			int key = e.getKeyCode();
-
-			if (key == 80)
-			{
-				minimap = !minimap;
-				System.out.println("Toggling mapview");
-			}
-			
-			if (key == 87 && !up) //W
-			{
-				up = true;
-			}
-			if (key == 83 && !down) //S
-			{
-				down = true;
-			}
-			
-			if (key == 65 && !left) //A
-			{
-				left = true;
-			}
-			if (key == 68 && !right) //D
-			{
-				right = true;
-			}
-			
-		}
+	public void keyPressed(KeyEvent e)
+	{
+		char key = e.getKeyChar();
+		player1.controlPressed(key);
 		
-		//When the key it finished being pressed, this is called
-		public void keyReleased(KeyEvent e)
-		{
-			//int key = e.getKeyCode();
-			int key = e.getKeyCode();
-
-			
-			if (key == 87) //W
-			{
-				up = false;
-			}
-			if (key == 83) //S
-			{
-				down = false;
-			}
-			
-			if (key == 65) //A
-			{
-				left = false;
-			}
-			if (key == 68) //D
-			{
-				right = false;
-			}
-		}
+	}
+	
+	//When the key it finished being pressed, this is called
+	public void keyReleased(KeyEvent e)
+	{
+		char key = e.getKeyChar();
+		player1.controlReleased(key);
+	}
+	
 	
 	public static void main(String[] args)
 	{

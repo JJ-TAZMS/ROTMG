@@ -8,7 +8,7 @@ public class Stats {
 	{
 		if(index == 0)
 		{
-			speed = 5; 
+			speed = .2; 
 			dexterity = 5;
 			attack = 5;
 			defense = 5;

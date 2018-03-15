@@ -15,12 +15,6 @@ public class Field {
 	private int chunks;
 	private int mapDist;
 	
-	private double xPosInMap;
-	private double yPosInMap;
-	
-	public double getxInMap()	{	return xPosInMap;	}
-	public double getyInMap()	{	return yPosInMap;	}
-	
 	
 	//Construct a new Field, where til is the amount of steps that must be taken each time the
 	//generation is tried.
@@ -31,9 +25,6 @@ public class Field {
 		mapDist = 70;
 		
 		createMap(); //Creates the Map and stores it into 'map'
-		
-		setPositionInMap(); //Sets a starting beach location in the map
-		
 		
 	}
 	
@@ -87,7 +78,7 @@ public class Field {
 	
 
 	//Sets a random beach start location in the map. 
-	public void setPositionInMap()
+	public void setPositionInMap(Player player)
 	{
 		//Randomly pick beach chunk...
 		boolean chosen = false;
@@ -99,8 +90,8 @@ public class Field {
 			
 			if (map[rndX][rndY].getCount() == 1)
 			{
-				xPosInMap = map[rndX][rndY].getX()*Chunk.CHUNKSIZE;
-				yPosInMap = map[rndX][rndY].getY()*Chunk.CHUNKSIZE;
+				player.setX(map[rndX][rndY].getX()*Chunk.CHUNKSIZE);
+				player.setY(map[rndX][rndY].getY()*Chunk.CHUNKSIZE);
 				chosen = true;
 			}
 		}
@@ -575,57 +566,34 @@ public class Field {
 		return true;
 	}
 	
-	//This is used at the player moves around the map. (The position in the map changes)
-	public void changePos(double cX, double cY)
-	{
-		xPosInMap += cX;
-		yPosInMap += cY;
-	}
-	
 	public void tick()
 	{
 		
 	}
 	
 	//Displays the map or minimap depending on what 'showMini' is
-	public void render(Graphics g, boolean showMini)
+	public void render(Graphics g, Player player)
 	{
-		if (showMini)
-		{
+		//Display the rendering chunks only
 		
-			//Display all the positions if you are displaying the minimap
-			for (Chunk[] r : map)
-			{
-				for (Chunk c : r)
-				{
-					c.render(g, xPosInMap, yPosInMap, showMini);
-				}
-			}
-		}	else
+		int radiusOfChunks = 3;
+		int currentXChunk = (int) (player.getX()/Chunk.CHUNKSIZE) + Math.abs(map[0][0].getX());
+		int currentYChunk = (int) (player.getY()/Chunk.CHUNKSIZE) +  Math.abs(map[0][0].getY());
+		//Add the distance to the 0,0 coordinate
+		
+		//System.out.println("Showing from " + (currentXChunk-radiusOfChunks) + " to " + (currentXChunk+radiusOfChunks));
+		
+		for (int r = currentXChunk-radiusOfChunks; r <= currentXChunk+radiusOfChunks; r++)
 		{
-
-			//Display the rendering chunks only
-			
-			int radiusOfChunks = 3;
-			int currentXChunk = (int) (xPosInMap/Chunk.CHUNKSIZE) + Math.abs(map[0][0].getX());
-			int currentYChunk = (int) (yPosInMap/Chunk.CHUNKSIZE) +  Math.abs(map[0][0].getY());
-			//Add the distance to the 0,0 coordinate
-			
-			//System.out.println("Showing from " + (currentXChunk-radiusOfChunks) + " to " + (currentXChunk+radiusOfChunks));
-			
-			for (int r = currentXChunk-radiusOfChunks; r <= currentXChunk+radiusOfChunks; r++)
+			for (int c = currentYChunk-radiusOfChunks; c <= currentYChunk+radiusOfChunks; c++)
 			{
-				for (int c = currentYChunk-radiusOfChunks; c <= currentYChunk+radiusOfChunks; c++)
+				map[r][c].render(g, player.getX(), player.getY());
+				if (!map[r][c].getRendered())
 				{
-					map[r][c].render(g, xPosInMap, yPosInMap, showMini);
-					if (!map[r][c].getRendered())
-					{
-						map[r][c].setRendered(true);
-					}
+					map[r][c].setRendered(true);
 				}
 			}
 		}
-		
 	}
 	
 	//Used for getting the seed of map.
@@ -659,7 +627,7 @@ public class Field {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		SpriteSheet ss = new SpriteSheet(spriteSheet);
+		SpriteSheet ss = new SpriteSheet(spriteSheet, 100);
 		//hooks into the spritesheet and BufferedImageLoader class
 		
 		for (Chunk[] r : map)

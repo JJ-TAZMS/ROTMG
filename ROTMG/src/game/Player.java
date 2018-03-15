@@ -6,23 +6,30 @@ import java.util.ArrayList;
 
 public class Player {
 	private double x, y, xVel, yVel, theta;
-	private double speed;
 	private boolean moveUp, moveDown, moveLeft, moveRight;
 	private int index;
-	private BufferedImage image;
+	private BufferedImage[] image;
+	private BufferedImage img;
 	private GUI gui;
 	private Stats stats;
 	private ArrayList<Projectile> projectiles;
 	private int itemID;
 	private boolean itemInHand;
 
-	public Player(Chunk[][] map, int index) // Sets class type with index
+	public Player(Chunk[][] map, int index, SpriteSheet ss) // Sets class type with index
 	{
 		stats = new Stats(index);
 		gui = new GUI(map, stats);
 		projectiles = new ArrayList<Projectile>();
-		x = y = xVel = yVel = theta = 0;
-		speed = 5;
+		x = y = theta = 0;
+		
+		//TODO Check class index for picture
+		image = new BufferedImage[4];
+		image[0] = ss.grabImage(8, 29, 1, 1); //Right
+		image[1] = ss.grabImage(9, 29, 1, 1); //Down
+		image[2] = ss.grabImage(10, 29, 1, 1); //Left
+		image[3] = ss.grabImage(11, 29, 1, 1); //Up
+		img = image[1];
 	}
 
 	public void tick() // Update game logic for player (stats, pos, etc.)
@@ -34,19 +41,19 @@ public class Player {
 	{
 		if(moveUp)
 		{
-			yVel = speed * -1;
+			yVel = stats.getSpeed() * -1;
 		}
 		if(moveDown)
 		{
-			yVel = speed;
+			yVel = stats.getSpeed();
 		}
 		if(moveRight)
 		{
-			xVel = speed;
+			xVel = stats.getSpeed();
 		}
 		if(moveLeft)
 		{
-			xVel = speed * -1;
+			xVel = stats.getSpeed() * -1;
 		}
 		if(!moveUp && !moveDown)
 		{
@@ -67,7 +74,24 @@ public class Player {
 
 	public void render(Graphics g) // Update picture for player
 	{
-		g.drawImage(image, (int)x, (int)y, null);
+		double vel = Math.sqrt(Math.pow(xVel, 2) + Math.pow(yVel, 2));
+		if (vel != 0)
+		{
+			if (xVel < 0) //Left has priority in pictures
+			{
+				img = image[2];
+			}	else if (yVel > 0) //Down is next
+			{
+				img = image[1];
+			}	else if (xVel > 0)
+			{
+				img = image[0]; //Then right
+			}	else
+			{
+				img = image[3]; //And lastly up
+			}
+		}
+		g.drawImage(img, Game.SCALE*Game.WIDTH/2, Game.SCALE*Game.HEIGHT/2, Tile.TILESIZE*Game.SCALE, Tile.TILESIZE*Game.SCALE, null);
 		//g.drawRect((int)x, (int)y, 50, 50);
 	}
 	
@@ -132,7 +156,15 @@ public class Player {
 	public double getYvel() {
 		return yVel;
 	}
-
+	
+	public double getX()	{
+		return x;
+	}
+	
+	public double getY()	{
+		return y;
+	}
+	
 	public double getTheta() {
 		return theta;
 	}
@@ -142,7 +174,7 @@ public class Player {
 	}
 
 	public BufferedImage getImage() {
-		return image;
+		return img;
 	}
 
 	public boolean getItemInHand() {

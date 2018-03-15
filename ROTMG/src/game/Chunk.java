@@ -65,7 +65,7 @@ public class Chunk {
 	}
 	
 	//Prints out the map
-	public void render(Graphics g, double xIn, double yIn, boolean showMini)
+	public void render(Graphics g, double xIn, double yIn)
 	{
 			//Display all the tiles in the chunk if you are displaying the actual map
 			for (int r = 0; r < CHUNKSIZE; r++)
