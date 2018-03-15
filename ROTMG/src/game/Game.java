@@ -22,6 +22,8 @@ public class Game extends Canvas implements Runnable{
 	public static final int WIDTH = 240;
 	public static final int HEIGHT = WIDTH/12 * 9;
 	public static final int SCALE = 5;
+	
+	
 	public final String NAME = "ROTMG";
 	
 	
@@ -35,6 +37,7 @@ public class Game extends Canvas implements Runnable{
 	
 	private BufferedImage spriteSheet = null;
 	
+	private Field map;
 	
 	public Game()
 	{
@@ -69,14 +72,21 @@ public class Game extends Canvas implements Runnable{
 		addKeyListener(new KeyInput(this));
 				
 				
-		SpriteSheet ss = new SpriteSheet(spriteSheet);
+		//SpriteSheet ss = new SpriteSheet(spriteSheet);
 		// ss.grabImage(0, 0, 1, 1);
 		
 		//Initializing any objects here
 		
+		map = new Field(3000);
+		
+		
 		
 		
 	}
+	
+
+	
+	
 	
 
 	
@@ -142,6 +152,7 @@ public class Game extends Canvas implements Runnable{
 			{
 				lastTimer += 1000;
 				System.out.println("fps" + frames + " " + ticks);
+				System.out.println(map.getxInMap() + ", " + map.getyInMap());
 				frames = 0;
 				ticks = 0;
 			}
@@ -159,6 +170,37 @@ public class Game extends Canvas implements Runnable{
 			pixels[i] = (i) +  tickCount;
 		}
 		*/
+		
+		double x = 0;
+		double y = 0;
+		
+		double increment = .5;
+		
+		if (up) //W
+		{
+			y -= increment;
+		}
+		if (down) //S
+		{
+			y += increment;
+		}
+		
+		if (left) //A
+		{
+			x -= increment;
+		}
+		if (right) //D
+		{
+			x += increment;
+		}
+		
+		if (Math.abs(x) == Math.abs(y))
+		{
+			x /= Math.sqrt(2);
+			y /= Math.sqrt(2);
+		}
+		map.changePos(x,  y);
+		//System.out.println("Pos in map: " + (int)map.getxInMap() + ", " + map.getyInMap());
 	}
 
 	public void render() //Update Game Display
@@ -185,23 +227,71 @@ public class Game extends Canvas implements Runnable{
 		g.setFont(new Font("Arial", Font.PLAIN, 6*SCALE));
 		//g.drawString(getWidth() + " -- " + getHeight(), 1*SCALE, 6*SCALE);;
 		
+		map.render(g, minimap);
 		
 		//////////// End of Drawing Stuff to screen
 		g.dispose();
 		bs.show();
 	}
 	
+	
+	private boolean up, down, left, right, minimap;
 	//When a key is preesed down, this is called
 		public void keyPressed(KeyEvent e)
 		{
 			
-			//int key = e.getKeyCode();
+			int key = e.getKeyCode();
+
+			if (key == 80)
+			{
+				minimap = !minimap;
+				System.out.println("Toggling mapview");
+			}
+			
+			if (key == 87 && !up) //W
+			{
+				up = true;
+			}
+			if (key == 83 && !down) //S
+			{
+				down = true;
+			}
+			
+			if (key == 65 && !left) //A
+			{
+				left = true;
+			}
+			if (key == 68 && !right) //D
+			{
+				right = true;
+			}
+			
 		}
 		
 		//When the key it finished being pressed, this is called
 		public void keyReleased(KeyEvent e)
 		{
 			//int key = e.getKeyCode();
+			int key = e.getKeyCode();
+
+			
+			if (key == 87) //W
+			{
+				up = false;
+			}
+			if (key == 83) //S
+			{
+				down = false;
+			}
+			
+			if (key == 65) //A
+			{
+				left = false;
+			}
+			if (key == 68) //D
+			{
+				right = false;
+			}
 		}
 	
 	public static void main(String[] args)

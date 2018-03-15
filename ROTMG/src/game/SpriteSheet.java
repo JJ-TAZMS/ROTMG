@@ -13,7 +13,7 @@ public class SpriteSheet {
 	
 	public BufferedImage grabImage(int row, int col, int width, int height)
 	{
-		int square = 8;
+		int square = 100;
 		BufferedImage img = image.getSubimage((row*square),(col*square),square*width,square*height);
 		return img;
 	}
