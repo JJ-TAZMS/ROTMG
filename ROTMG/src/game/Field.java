@@ -90,8 +90,8 @@ public class Field {
 			
 			if (map[rndX][rndY].getCount() == 1)
 			{
-				player.setX(map[rndX][rndY].getX()*Chunk.CHUNKSIZE);
-				player.setY(map[rndX][rndY].getY()*Chunk.CHUNKSIZE);
+				player.setX(map[rndX][rndY].getX()*Chunk.CHUNKSIZE + Chunk.CHUNKSIZE/2);
+				player.setY(map[rndX][rndY].getY()*Chunk.CHUNKSIZE + Chunk.CHUNKSIZE/2);
 				chosen = true;
 			}
 		}
@@ -146,7 +146,7 @@ public class Field {
 		System.out.println("X range: " + (highX - lowX));
 		System.out.println("Y range: " + (highY - lowY));
 		
-		int outerborder = 10;
+		int outerborder = 20;
 		
 		Chunk[][] newMap = new Chunk[(highX-lowX) + outerborder*2][(highY-lowY) + outerborder*2];
 		
@@ -173,7 +173,7 @@ public class Field {
 				if (newMap[r][c] == null)
 				{
 					//Set as water if not yet set
-					newMap[r][c] = new Chunk(r + lowX - outerborder, c + lowY - outerborder, 0);
+					newMap[r][c] = new Chunk(r + lowX - outerborder, c + lowY - outerborder, -1);
 				}
 			}
 		}
@@ -388,7 +388,7 @@ public class Field {
 							int xPos = (int) (Math.cos(theta)*radius) + r;
 							int yPos = (int) (Math.sin(theta)*radius) + c;
 							
-							if (newMap[xPos][yPos].getCount() == 0)
+							if (newMap[xPos][yPos].getCount() <= 0)
 							{
 								newMap[r][c].setCount(1);
 								//Don't keep checking if you're already a shore...
@@ -403,13 +403,13 @@ public class Field {
 		}
 		
 		
-		//This part sets the lowlands(lvl 2)
+		//This part sets the lowlands(lvl 2) and the shallow water (lvl 0)
 		for (int r = 0; r < newMap.length; r++)
 		{
 			for (int c = 0; c < newMap[r].length; c++)
 			{	
 				
-				//Checks the distance for the low and highlands
+				//Checks the distance for the lowlands
 				if (newMap[r][c].getCount() > 1)
 				{
 					int lowLandRadius = 13;
@@ -430,7 +430,33 @@ public class Field {
 							}
 						}
 					}
+				}
+				
+				
+				//Checks the distance for the shallow water
+				if (newMap[r][c].getCount() < 1)
+				{
+					int shallowRadius = 2  +1;
 					
+					//If theres a shore close by, you are now a lowLand.
+					for (double theta = 0; theta < Math.PI*2; theta += Math.PI/10)
+					{
+						for (int radius = 0; radius < shallowRadius; radius ++)
+						{
+							int xPos = (int) (Math.cos(theta)*radius) + r;
+							int yPos = (int) (Math.sin(theta)*radius) + c;
+							
+							if (xPos > 0 && xPos < newMap.length && yPos > 0 && yPos < newMap[0].length)
+							{
+								if (newMap[xPos][yPos].getCount() == 1)
+								{
+									newMap[r][c].setCount(0);
+									theta = Math.PI*2;
+									radius = shallowRadius;
+								}
+							}
+						}
+					}
 				}
 			}
 		}
@@ -571,21 +597,42 @@ public class Field {
 		
 	}
 	
-	//Displays the map or minimap depending on what 'showMini' is
+	//Displays the map
 	public void render(Graphics g, Player player)
 	{
 		//Display the rendering chunks only
 		
+		//Add the distance to the 0,0 coordinate
+		//The current chunk you are is the distance you are from the [0][0] chunk (In chunks)
+		//Plus the position of that first chunk
 		int radiusOfChunks = 3;
 		int currentXChunk = (int) (player.getX()/Chunk.CHUNKSIZE) + Math.abs(map[0][0].getX());
 		int currentYChunk = (int) (player.getY()/Chunk.CHUNKSIZE) +  Math.abs(map[0][0].getY());
-		//Add the distance to the 0,0 coordinate
+
+		//Problem.. whenever you are on a side of 0,0 that side shows 1 less than the radius Chunks
+		int lowx = 0;
+		int lowy = 0;
+		int highx = 0;
+		int highy = 0;
 		
-		//System.out.println("Showing from " + (currentXChunk-radiusOfChunks) + " to " + (currentXChunk+radiusOfChunks));
-		
-		for (int r = currentXChunk-radiusOfChunks; r <= currentXChunk+radiusOfChunks; r++)
+		if (player.getX() < 0)
 		{
-			for (int c = currentYChunk-radiusOfChunks; c <= currentYChunk+radiusOfChunks; c++)
+			lowx = -1;
+		}	else
+		{
+			highx = 1;
+		}
+		if (player.getY() < 0)
+		{
+			lowy = -1;
+		}	else
+		{
+			highy = 1;
+		}
+		
+		for (int r = currentXChunk-radiusOfChunks+lowx; r < currentXChunk+radiusOfChunks+highx; r++)
+		{
+			for (int c = currentYChunk-radiusOfChunks+lowy; c < currentYChunk+radiusOfChunks+highy; c++)
 			{
 				map[r][c].render(g, player.getX(), player.getY());
 				if (!map[r][c].getRendered())
@@ -594,7 +641,10 @@ public class Field {
 				}
 			}
 		}
+		
+		
 	}
+	
 	
 	//Used for getting the seed of map.
 	//TODO make better seeds using the final map array
@@ -635,35 +685,39 @@ public class Field {
 			for (Chunk t : r)
 			{
 			//System.out.println(t.getCount());
-				
-				if (t.getCount() <= 0) //WATER, set color to blue, get water image
+				if (t.getCount() <= -1)//DEEP water
 				{
-					t.setColor(new Color(0, 191, 255), ss.grabImage(0, 0, 1, 1));
+					t.setColor(new Color(0, 0, 255), ss.grabImage(0, 0, 1, 1));
+					
+					
+				}	else if (t.getCount() <= 0) //WATER, set color to blue, get water image
+				{
+					t.setColor(new Color(0, 191, 255), ss.grabImage(1, 0, 1, 1));
 					
 					
 				}	else if (t.getCount() <= 1) //BEACH, set color to white, get beach image
 				{
-					t.setColor(new Color(255, 255, 255), ss.grabImage(1, 0, 1, 1));
+					t.setColor(new Color(255, 255, 255), ss.grabImage(2, 0, 1, 1));
 					
 					
 				}	else if (t.getCount() <= 2) //LOWLANDS, color to white-grey, lowlands image
 				{
-					t.setColor(new Color(200, 200, 200), ss.grabImage(2, 0, 1, 1));
+					t.setColor(new Color(200, 200, 200), ss.grabImage(3, 0, 1, 1));
 					
 					
 				}	else if (t.getCount() <= 3)  //MIDLANDS, color to gray, midlands image
 				{
-					t.setColor(new Color(140, 140, 140), ss.grabImage(3, 0, 1, 1));
+					t.setColor(new Color(140, 140, 140), ss.grabImage(4, 0, 1, 1));
 					
 					
 				}	else if (t.getCount() <= 4)  //HIGHLANDS, color to dark-gray, highlands image
 				{
-					t.setColor(new Color(80, 80, 80), ss.grabImage(4, 0, 1, 1));
+					t.setColor(new Color(80, 80, 80), ss.grabImage(5, 0, 1, 1));
 					
 					
 				}	else                         //GODLANDS, color to black, godlands image
 				{
-					t.setColor(new Color(0, 0, 0), ss.grabImage(5, 0, 1, 1));
+					t.setColor(new Color(0, 0, 0), ss.grabImage(6, 0, 1, 1));
 				}
 			}
 		}

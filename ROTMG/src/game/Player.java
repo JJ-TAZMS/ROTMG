@@ -91,8 +91,9 @@ public class Player {
 				img = image[3]; //And lastly up
 			}
 		}
-		g.drawImage(img, Game.SCALE*Game.WIDTH/2, Game.SCALE*Game.HEIGHT/2, Tile.TILESIZE*Game.SCALE, Tile.TILESIZE*Game.SCALE, null);
+		g.drawImage(img, Game.SCALE*(Game.WIDTH-Tile.TILESIZE)/2, Game.SCALE*(Game.HEIGHT-Tile.TILESIZE)/2, Tile.TILESIZE*Game.SCALE, Tile.TILESIZE*Game.SCALE, null);
 		//g.drawRect((int)x, (int)y, 50, 50);
+		//gui.render(g);
 	}
 	
 	public void controlPressed(char k) //Takes key input and decides what to do
