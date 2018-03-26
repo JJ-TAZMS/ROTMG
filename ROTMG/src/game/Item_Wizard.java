@@ -1,9 +1,9 @@
 package game;
 import java.util.*;
-public class Item_Staves
+public class Item_Wizard
 {
 	ArrayList<String> staves = new ArrayList<String>();
-	public Item_Staves()
+	public Item_Wizard()
 	{
 		staves.add("T0 Energy Staff");
 		staves.add("T1 Fireband Staff");
