@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
@@ -19,8 +20,8 @@ public class Game extends Canvas implements Runnable{
 
 	private static final long serialVersionUID = 1L;
 
-	public static final int WIDTH = 240;
-	public static final int HEIGHT = WIDTH/12 * 9;
+	public static int WIDTH = 240;
+	public static int HEIGHT = (int) (WIDTH * .75);
 	public static final int SCALE = 5;
 	
 	
@@ -54,7 +55,7 @@ public class Game extends Canvas implements Runnable{
 		frame.add(this, BorderLayout.CENTER);
 		frame.pack();
 		
-		frame.setResizable(false);
+		frame.setResizable(true);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
@@ -80,8 +81,8 @@ public class Game extends Canvas implements Runnable{
 		
 		map = new Field(3000);
 		int index = 0;
-		player1 = new Player(map.getMap(), index, ss);
-		map.setPositionInMap(player1);
+		player1 = new Player(map, index, ss);
+		player1.getMap().setPositionInMap(player1);
 		
 		
 		
@@ -157,11 +158,10 @@ public class Game extends Canvas implements Runnable{
 				lastTimer += 1000;
 				//System.out.println("fps" + frames + " " + ticks);
 				//System.out.println(player1.getX() + ", " + player1.getY());
-				frame.setTitle(NAME + " : " + (int)player1.getX() + ", " + (int)player1.getY());
+				frame.setTitle(NAME + "  Pos: " + (int)player1.getX() + ", " + (int)player1.getY() + "  MapSize: " + player1.getMap().getMap().length*Chunk.CHUNKSIZE + ", " + player1.getMap().getMap()[0].length*Chunk.CHUNKSIZE + " Size: " + this.getWidth() + "/" + WIDTH + ", " + this.getHeight() + "/" + HEIGHT);
 				frames = 0;
 				ticks = 0;
 			}
-			
 		}
 	}
 	
@@ -169,6 +169,8 @@ public class Game extends Canvas implements Runnable{
 	{
 		
 		player1.tick();
+		WIDTH = this.getWidth()/Game.SCALE;
+		HEIGHT = this.getHeight()/Game.SCALE;
 	}
 
 	public void render() //Update Game Display
@@ -194,9 +196,14 @@ public class Game extends Canvas implements Runnable{
 		g.setColor(Color.WHITE);
 		g.setFont(new Font("Arial", Font.PLAIN, 6*SCALE));
 		//g.drawString(getWidth() + " -- " + getHeight(), 1*SCALE, 6*SCALE);;
+		Graphics2D g2d = (Graphics2D)g;
+		g2d.rotate(player1.getTheta(), Game.WIDTH/2 * Game.SCALE, Game.HEIGHT/2 * Game.SCALE);
 		
-		map.render(g, player1);
-		player1.render(g);
+		player1.getMap().render(g2d, player1);
+		
+		
+		g2d.rotate(-player1.getTheta(), Game.WIDTH/2 * Game.SCALE, Game.HEIGHT/2 * Game.SCALE);
+		player1.render(g2d);
 		
 		//////////// End of Drawing Stuff to screen
 		g.dispose();

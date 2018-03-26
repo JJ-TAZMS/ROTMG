@@ -8,6 +8,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.awt.*;
+import javax.swing.*;
+
 
 public class Field {
 	private ArrayList<Chunk> field; //Used for map creation
@@ -66,7 +69,13 @@ public class Field {
 		//Send in a thickened version of the largest godLands area to create
 		//The various difficulties.
 		Chunk[][] godLands = (thickenMap(convertToArray(hasGodLandsArea(70, 11))));
+		field = null;
 		map = setLands(godLands);
+		
+		//ConvertToAllPositives. Doing this earlier would mess with generation
+		//Aka generation starts at some arbitrary point (0,0) , and that is used
+		//All the way until the lands are set.
+		map = shiftChunks(map);
 		
 		//TODO add biomes like Forests, Plains, and Deserts.
 		
@@ -90,8 +99,8 @@ public class Field {
 			
 			if (map[rndX][rndY].getCount() == 1)
 			{
-				player.setX(map[rndX][rndY].getX()*Chunk.CHUNKSIZE + Chunk.CHUNKSIZE/2);
-				player.setY(map[rndX][rndY].getY()*Chunk.CHUNKSIZE + Chunk.CHUNKSIZE/2);
+				player.setX(map[rndX][rndY].getX()*Chunk.CHUNKSIZE + Chunk.CHUNKSIZE/4);
+				player.setY(map[rndX][rndY].getY()*Chunk.CHUNKSIZE + Chunk.CHUNKSIZE/4);
 				chosen = true;
 			}
 		}
@@ -162,10 +171,16 @@ public class Field {
 		for (Chunk t : toBeConverted)
 		{
 			//Set the position to the center (plus a bit change for outer border)
-			newMap[t.getX() - lowX + (outerborder)][t.getY() - lowY + (outerborder)] = t;
+			//Substracting the low (which is a negative num) will get you to 0. adding the outerborder
+			//Keeps some room for the water.
+			int newX = t.getX() - lowX + (outerborder);
+			int newY = t.getY() - lowY + (outerborder);
+			newMap[newX][newY] = t;
+			
 		}
 		
 		//Set the water if not yet established as a Chunk
+		//Also this makes all the chunks POSITIV
 		for (int r = 0; r < newMap.length; r++)
 		{
 			for (int c = 0; c < newMap[r].length; c++)
@@ -511,6 +526,21 @@ public class Field {
 	}
 	
 	
+	public Chunk[][] shiftChunks(Chunk[][] toBeShifted)
+	{
+		Chunk[][] newMap = new Chunk[toBeShifted.length][toBeShifted[0].length];
+		
+		for (int r = 0; r < newMap.length; r++)
+		{
+			for (int c = 0; c < newMap[r].length; c++)
+			{	
+				newMap[r][c] = new Chunk(r, c, toBeShifted[r][c].getCount());
+			}
+		}
+		
+		return newMap;
+	}
+	
 	//Recursive methods for map generation in the arraylist. A stepfunction is used
 	//That goes either forward, left, or right. When overlapping a chunk, its
 	//'altitude' increased, allowing for the different areas in the map to be made.
@@ -601,40 +631,34 @@ public class Field {
 	public void render(Graphics g, Player player)
 	{
 		//Display the rendering chunks only
+		/*
+		for (Chunk[] r : map)
+		{
+			for (Chunk c : r)
+			{
+				g.setColor(c.getColor());
+				g.fillRect(Game.SCALE*(c.getX()), Game.SCALE*(c.getY()),5, 5);
+			}
+		}
+		*/
+		
+		//g.fillRect(50,  50, 10, 10);
+		
 		
 		//Add the distance to the 0,0 coordinate
 		//The current chunk you are is the distance you are from the [0][0] chunk (In chunks)
 		//Plus the position of that first chunk
-		int radiusOfChunks = 3;
+		
+		int radiusOfChunks = (Game.WIDTH/100) + 1;
 		int currentXChunk = (int) (player.getX()/Chunk.CHUNKSIZE) + Math.abs(map[0][0].getX());
 		int currentYChunk = (int) (player.getY()/Chunk.CHUNKSIZE) +  Math.abs(map[0][0].getY());
-
-		//Problem.. whenever you are on a side of 0,0 that side shows 1 less than the radius Chunks
-		int lowx = 0;
-		int lowy = 0;
-		int highx = 0;
-		int highy = 0;
 		
-		if (player.getX() < 0)
-		{
-			lowx = -1;
-		}	else
-		{
-			highx = 1;
-		}
-		if (player.getY() < 0)
-		{
-			lowy = -1;
-		}	else
-		{
-			highy = 1;
-		}
 		
-		for (int r = currentXChunk-radiusOfChunks+lowx; r < currentXChunk+radiusOfChunks+highx; r++)
+		for (int r = currentXChunk-radiusOfChunks; r <= currentXChunk+radiusOfChunks; r++)
 		{
-			for (int c = currentYChunk-radiusOfChunks+lowy; c < currentYChunk+radiusOfChunks+highy; c++)
+			for (int c = currentYChunk-radiusOfChunks; c <= currentYChunk+radiusOfChunks; c++)
 			{
-				map[r][c].render(g, player.getX(), player.getY());
+				map[r][c].render(g, player.getX(), player.getY(), player.getTheta());
 				if (!map[r][c].getRendered())
 				{
 					map[r][c].setRendered(true);
@@ -643,7 +667,26 @@ public class Field {
 		}
 		
 		
+		
 	}
+	
+	
+	/*
+	public void rotateChunks(double theta, Player player)
+	{
+		int radiusOfChunks = 0;
+		int currentXChunk = (int) (player.getX()/Chunk.CHUNKSIZE) + Math.abs(map[0][0].getX());
+		int currentYChunk = (int) (player.getY()/Chunk.CHUNKSIZE) +  Math.abs(map[0][0].getY());
+		
+		for (int r = currentXChunk-radiusOfChunks; r <= currentXChunk+radiusOfChunks; r++)
+		{
+			for (int c = currentYChunk-radiusOfChunks; c <= currentYChunk+radiusOfChunks; c++)
+			{
+				map[r][c].setRotatedTiles(theta);
+			}
+		}
+	}
+*/	
 	
 	
 	//Used for getting the seed of map.

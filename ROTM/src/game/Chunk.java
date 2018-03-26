@@ -65,17 +65,28 @@ public class Chunk {
 	}
 	
 	//Prints out the map
-	public void render(Graphics g, double xIn, double yIn)
+	public void render(Graphics g, double xIn, double yIn, double theta)
 	{
+		//tiles[0][0].render(g, xIn, yIn, theta);
+		//tiles[0][5].render(g, xIn, yIn, theta);
+		//tiles[0][9].render(g, xIn, yIn, theta);
+		//tiles[9][9].render(g, xIn, yIn, theta);
+		//tiles[0][0].render(g, xIn, yIn, theta);
+		//tiles[0][0].render(g, xIn, yIn, theta);
+		
+		//g.fillRect((int)xPos, (int)yPos, 10, 10);
+		
 			//Display all the tiles in the chunk if you are displaying the actual map
 			for (int r = 0; r < CHUNKSIZE; r++)
 			{
 				for (int c = 0; c < CHUNKSIZE; c++)
 				{
-					tiles[r][c].render(g, xIn, yIn);
+					tiles[r][c].render(g, xIn, yIn, theta);
 					
 				}
 			}
+			
+		
 			
 			/*
 			String cpos = "(" + xPos + ", " + yPos + ")";
@@ -86,6 +97,19 @@ public class Chunk {
 			*/
 		
 	}
+	
+	/*
+	public void setRotatedTiles(double theta)
+	{
+		for (int r = 0; r < CHUNKSIZE; r++)
+		{
+			for (int c = 0; c < CHUNKSIZE; c++)
+			{
+				tiles[r][c].setRotated(theta);
+			}
+		}
+	}
+	*/
 	
 	
 	//Passing an image to each tile and sets the color of the chunk (for the minimap)
@@ -110,6 +134,8 @@ public class Chunk {
 	public boolean getRendered()	{	return beenRendered;	}
 	public void setRendered(boolean b) {	beenRendered = b;	}
 	
+	public void setPos(int x, int y)	{	xPos = x;	yPos = y;	}
 	public int getX()	{	return xPos;	}
 	public int getY()	{	return yPos;	}
+	public Tile[][] getTiles()	{	return tiles;	}
 }

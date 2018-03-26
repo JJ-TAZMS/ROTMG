@@ -9,6 +9,10 @@ public class Hotbar {
 		//hotbar = new Slots[4];
 	}
 	public void render(Graphics g){
-		//loop through slots and render each in 4x1
+		for (int i = 0; i<4; i++){
+			//when there's items, gotta add something that would render
+			//the item icon, need to use isEmpty in Slots
+			g.drawRect((GUI.xStart + 15)+(50*i), GUI.yStart, 50, 50);
+		}	
 	}
 }
