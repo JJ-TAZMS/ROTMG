@@ -37,9 +37,9 @@ public class LootBag extends BufferedImageLoader{
 		randItemId = rand.nextInt(7);
 		bagItems.add(itemWiz.getSpells(randItemId));
 		
-		
-		int numOfItems = rand.nextInt(4) + 1; //loot bag can spawn anywhere from 1 to 4 items
 		/*
+		int numOfItems = rand.nextInt(4) + 1; //loot bag can spawn anywhere from 1 to 4 items
+		
 		for (int i=0; i<numOfItems; i++) {
 			randItemId = rand.nextInt(36);
 			//bagItems.add(random item from item class)
