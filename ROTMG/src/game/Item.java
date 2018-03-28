@@ -96,4 +96,8 @@ public class Item
 		listOfDesiredItems = listOfData;
 	}
 	
+	public String toString() {
+		return (itemType + "," + itemTier + "," + itemName + "," + itemStat);
+	}
+	
 }
