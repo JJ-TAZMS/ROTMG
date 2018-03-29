@@ -177,6 +177,12 @@ public class Game extends Canvas implements Runnable{
 	{
 		
 		player1.tick();
+		
+		//TODO when we have an arraylist of players, we need to send in the player positions to only their nearby enemies.
+		for (Enemy en : map.getEnemies())
+		{
+			en.tick(player1.getX(), player1.getY());
+		}
 		WIDTH = this.getWidth()/Game.SCALE;
 		HEIGHT = this.getHeight()/Game.SCALE;
 	}

@@ -280,6 +280,10 @@ public class Player {
 		{
 			p.render(g, x, y);
 		}
+		
+		for (Enemy en : map.getEnemies()){
+			en.render(g,  x, y);
+		}
 
 		//g.setColor(Color.CYAN);
 		//g.fillRect((int) (Game.SCALE*(Game.WIDTH/2 - 5)), (int) (Game.SCALE*(Game.HEIGHT/2 - 5)), Tile.TILESIZE*Game.SCALE, Tile.TILESIZE*Game.SCALE);

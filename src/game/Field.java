@@ -20,6 +20,7 @@ public class Field {
 	private int mapDist;
 	
 	private ArrayList<LootBag> lootBags;
+	private ArrayList<Enemy> enemies;
 	
 	
 	//Construct a new Field, where til is the amount of steps that must be taken each time the
@@ -28,6 +29,7 @@ public class Field {
 	{
 		field = new ArrayList<Tile> ();
 		lootBags = new ArrayList<LootBag> ();
+		enemies = new ArrayList<Enemy> ();
 		chunks = til;
 		mapDist = 70;
 		
@@ -133,6 +135,7 @@ public class Field {
 			lb.render(g, player.getX(), player.getY());
 		}
 		
+		
 	}
 	/*
 	public void renderNoRot(Graphics g, Player player)
@@ -173,6 +176,16 @@ public class Field {
 			{
 				player.setX(map[rndX][rndY].getX()/Tile.TILESIZE);
 				player.setY(map[rndX][rndY].getY()/Tile.TILESIZE);
+				
+				
+				//TODO get rid of this and add real spawning
+				enemies.add(new Enemy(1, map[rndX][rndY].getX()/Tile.TILESIZE + 5, map[rndX][rndY].getY()/Tile.TILESIZE + 2));
+				enemies.add(new Enemy(1, map[rndX][rndY].getX()/Tile.TILESIZE + 4, map[rndX][rndY].getY()/Tile.TILESIZE + 5));
+				enemies.add(new Enemy(1, map[rndX][rndY].getX()/Tile.TILESIZE + 3, map[rndX][rndY].getY()/Tile.TILESIZE + -2));
+				enemies.add(new Enemy(1, map[rndX][rndY].getX()/Tile.TILESIZE + 2, map[rndX][rndY].getY()/Tile.TILESIZE + 5));
+				enemies.add(new Enemy(1, map[rndX][rndY].getX()/Tile.TILESIZE + -3, map[rndX][rndY].getY()/Tile.TILESIZE + -1));
+				
+				
 				chosen = true;
 			}
 		}
@@ -895,6 +908,8 @@ public class Field {
 	{
 		lootBags.add(new LootBag(enemyTier, x, y));
 	}
+	
+	public ArrayList<Enemy> getEnemies()	{	return enemies;	}
 	
 	//Used to be used to smooth the look of the map. Has possible future allocations
 		//Can be possibly used to better generate the map
