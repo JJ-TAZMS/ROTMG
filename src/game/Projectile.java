@@ -27,7 +27,7 @@ public class Projectile {
 		// TODO add constants for sizes / maxRange based on index
 		//height = img.getHeight();
 		//width = img.getWidth();
-		if (index == 1)
+		if (index == 0)
 		{
 			maxRange = 10;
 			damage = 10;
