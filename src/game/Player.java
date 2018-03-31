@@ -21,7 +21,6 @@ public class Player {
 	private Field map;
 	private int itemID;
 	private boolean itemInHand;
-	private int atkWait;
 
 	public Player(Field m, int index, SpriteSheet ss) // Sets class type with index
 	{
@@ -52,6 +51,7 @@ public class Player {
 	
 	public void projectileTick()
 	{
+		//Display each of the player's projectiles
 		for(int i = 0; i < projectiles.size(); i++)
 		{
 			projectiles.get(i).tick();
@@ -85,29 +85,30 @@ public class Player {
 	{
 		xVel = yVel = 0;
 		
+		double speed = stats.getSpeed();
 		
 		if(moveUp)
 		{
-			yVel += -stats.getSpeed()*Math.sin(theta+Math.PI/2);
-			xVel += stats.getSpeed()*Math.cos(theta+Math.PI/2);
+			yVel += -speed*Math.sin(theta+Math.PI/2);
+			xVel += speed*Math.cos(theta+Math.PI/2);
 		}
 
 		
 		if(moveDown)
 		{
-			yVel += stats.getSpeed()*Math.sin(theta+Math.PI/2);
-			xVel += -stats.getSpeed()*Math.cos(theta+Math.PI/2);
+			yVel += speed*Math.sin(theta+Math.PI/2);
+			xVel += -speed*Math.cos(theta+Math.PI/2);
 		}
 		
 		if(moveRight)
 		{
-			yVel += -stats.getSpeed()*Math.sin(theta);
-			xVel += stats.getSpeed()*Math.cos(theta);
+			yVel += -speed*Math.sin(theta);
+			xVel += speed*Math.cos(theta);
 		}
 		if(moveLeft)
 		{
-			yVel += stats.getSpeed()*Math.sin(theta);
-			xVel += -stats.getSpeed()*Math.cos(theta);
+			yVel += speed*Math.sin(theta);
+			xVel += -speed*Math.cos(theta);
 		}
 		
 		if ((moveUp || moveDown) && (moveLeft || moveRight))
@@ -282,13 +283,18 @@ public class Player {
 		}
 		
 		for (Enemy en : map.getEnemies()){
-			en.render(g,  x, y);
+			en.render(g, x, y);
+			
+			for (Projectile p : en.getProj()) 
+			{
+				p.render(g, x, y);
+			}
 		}
 
 		//g.setColor(Color.CYAN);
 		//g.fillRect((int) (Game.SCALE*(Game.WIDTH/2 - 5)), (int) (Game.SCALE*(Game.HEIGHT/2 - 5)), Tile.TILESIZE*Game.SCALE, Tile.TILESIZE*Game.SCALE);
 		//g.fillRect(Game.SCALE*(Game.WIDTH-Tile.TILESIZE)/2 , Game.SCALE*(Game.HEIGHT-Tile.TILESIZE)/2, Tile.TILESIZE*Game.SCALE, Tile.TILESIZE*Game.SCALE);
-		//gui.render(g);
+		gui.render(g, x, y);
 	}
 	
 	public void controlPressed(char k) //Takes key input and decides what to do
@@ -376,9 +382,9 @@ public class Player {
 	
 	public void attack()
 	{
-		atkWait--;
+		stats.setAtkWait(stats.getAtkWait()-1);;
 		
-		if(attacking && (atkWait <= 0))
+		if(attacking && (stats.getAtkWait() <= 0))
 		{
 			double pTheta = Math.atan((Game.mouseY - Game.HEIGHT / 2.0 * Game.SCALE) / (Game.mouseX - Game.WIDTH / 2.0 * Game.SCALE));
 			if(Game.mouseX < Game.WIDTH / 2 * Game.SCALE)
@@ -391,7 +397,7 @@ public class Player {
 			projectiles.add(new Projectile(index, x, y, pTheta, .2));
 			System.out.println("Added new projectile");
 			
-			atkWait = (int)(120.0/stats.getDexterity());
+			stats.setAtkWait( (int) (360/stats.getDexterity()));
 		}
 		
 	}

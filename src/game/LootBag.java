@@ -38,7 +38,7 @@ public class LootBag extends BufferedImageLoader{
 		g.fillRect((int) (Game.SCALE*(xP + Game.WIDTH/2)), (int) (Game.SCALE*(yP + Game.HEIGHT/2)), Tile.TILESIZE*Game.SCALE, Tile.TILESIZE*Game.SCALE);
 		//g.fillRect((int) (Game.SCALE*(Game.WIDTH/2)), (int) (Game.SCALE*(Game.HEIGHT/2)), Tile.TILESIZE*Game.SCALE, Tile.TILESIZE*Game.SCALE);
 
-		System.out.println("LOOT BAG " + xP + ", " + yP);
+		System.out.println("LOOT BAG " + xP + ", " + yP + " " + toString());
 	}
 	
 	//drop the lootBag at the location that the enemy dies. Should be used in the enemy class?
@@ -46,6 +46,8 @@ public class LootBag extends BufferedImageLoader{
 		//draw the bag at the death position
 	}
 	
+	
+	//TODO make getting potions a lot more common, and make fewer items within a bag more common
 	private void randomizeLoot() throws FileNotFoundException {
 		
 		Random rand = new Random();

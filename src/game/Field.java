@@ -179,12 +179,11 @@ public class Field {
 				
 				
 				//TODO get rid of this and add real spawning
-				enemies.add(new Enemy(1, map[rndX][rndY].getX()/Tile.TILESIZE + 5, map[rndX][rndY].getY()/Tile.TILESIZE + 2));
-				enemies.add(new Enemy(1, map[rndX][rndY].getX()/Tile.TILESIZE + 4, map[rndX][rndY].getY()/Tile.TILESIZE + 5));
-				enemies.add(new Enemy(1, map[rndX][rndY].getX()/Tile.TILESIZE + 3, map[rndX][rndY].getY()/Tile.TILESIZE + -2));
-				enemies.add(new Enemy(1, map[rndX][rndY].getX()/Tile.TILESIZE + 2, map[rndX][rndY].getY()/Tile.TILESIZE + 5));
-				enemies.add(new Enemy(1, map[rndX][rndY].getX()/Tile.TILESIZE + -3, map[rndX][rndY].getY()/Tile.TILESIZE + -1));
+				Enemy e1 = new Pirate(player.getX() + 5, player.getY() + 10);
+				enemies.add(e1);
 				
+				e1 = new GelatinousCube(player.getX() + 5, player.getY() + 10);
+				enemies.add(e1);
 				
 				chosen = true;
 			}
@@ -332,7 +331,8 @@ public class Field {
 				{
 					if (Math.random() <= .02)
 					{
-						c.setObst(new Obstacle(sss.grabImage(13, 4, 1, 1)));
+						c.setObst(new Obstacle(sss.grabImage(13, 4, 1, 1))); //Forest Tree
+						c.setColor(new Color(20, 53, 26));
 					}
 				}	else if (c.getDif() == 3) //Midlands
 				{
@@ -340,10 +340,12 @@ public class Field {
 					{
 						if (Math.random() >= .5)
 						{
-							c.setObst(new Obstacle(sss.grabImage(9, 4, 1, 1)));
+							c.setObst(new Obstacle(sss.grabImage(9, 4, 1, 1))); //Green Tree
+							c.setColor(new Color(10, 67, 28));
 						}	else
 						{
-							c.setObst(new Obstacle(sss.grabImage(10, 4, 1, 1)));
+							c.setObst(new Obstacle(sss.grabImage(10, 4, 1, 1)));  //Yellow Tree
+							c.setColor(new Color(179, 146, 42));
 						}
 					}
 				}	else if (c.getDif() == 4) //Highlands
@@ -352,15 +354,18 @@ public class Field {
 					{
 						if (Math.random() >= (2.0/3.0))
 						{
-							c.setObst(new Obstacle(sss.grabImage(9, 4, 1, 1)));
+							c.setObst(new Obstacle(sss.grabImage(9, 4, 1, 1))); //Green Tree
+							c.setColor(new Color(10, 67, 28));
 						}	else
 						{
 							if (Math.random() >= .5)
 							{
-								c.setObst(new Obstacle(sss.grabImage(10, 4, 1, 1)));
+								c.setObst(new Obstacle(sss.grabImage(10, 4, 1, 1))); //Yellow Tree
+								c.setColor(new Color(179, 146, 42));
 							}	else
 							{
-								c.setObst(new Obstacle(sss.grabImage(11, 4, 1, 1)));
+								c.setObst(new Obstacle(sss.grabImage(11, 4, 1, 1))); //Dead tree
+								c.setColor(new Color(83,53,10));
 							}
 						}
 					}
@@ -368,7 +373,8 @@ public class Field {
 				{
 					if (Math.random() <= .005)
 					{
-						c.setObst(new Obstacle(sss.grabImage(9, 5, 1, 1)));
+						c.setObst(new Obstacle(sss.grabImage(9, 5, 1, 1))); //Rock
+						c.setColor(new Color(169,169,169));
 					}
 				}
 			}
@@ -879,20 +885,20 @@ public class Field {
 				{ //Shallow water - light blue
 					clr = new Color(0, 191, 255);
 				}	else if (t.getDif() == 1)
-				{ //Beach - White
-					clr = new Color(255, 255, 255);
+				{ //Beach - Sand Color
+					clr = new Color(194, 178, 128);
 				}	else if (t.getDif() == 2)
-				{ //Lowlands
-					clr = new Color(200, 200, 200);
+				{ //Lowlands - Light Grass Green
+					clr = new Color(56, 173, 76);
 				}	else if (t.getDif() == 3)
-				{ //Midlands
-					clr = new Color(140, 140, 140);
+				{ //Midlands - brown/green grass
+					clr = new Color(77, 89, 39);
 				}	else if (t.getDif() == 4)
-				{ //Highlands
-					clr = new Color(80, 80, 80);
+				{ //Highlands - golden grass
+					clr = new Color(162, 163, 3);
 				}	else if (t.getDif() == 5)
-				{ //Godlands
-					clr = new Color(0, 0, 0);
+				{ //Godlands - dark
+					clr = new Color(80, 80, 80);
 				}
 				//System.out.println("Field SetColors... " + t.getDif());
 				

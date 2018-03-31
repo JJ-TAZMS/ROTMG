@@ -10,16 +10,11 @@ public class Enemy {
 	public int enemyID;
 	public double eX, eY;
 	public int size;
-	public double dist;
-	public double projTheta;
 	public double theta;
-	public double speed;
 	
-	public double count;
+	public EnemyStats stats;
 	
-	ArrayList<Projectile> proj = new ArrayList<Projectile>(); 
-	
-	boolean active = false;
+	ArrayList<Projectile> projectiles = new ArrayList<Projectile>(); 
 	
 	
 	public Enemy(int ID, double X, double Y){
@@ -27,8 +22,8 @@ public class Enemy {
 		enemyID = ID;
 		eX = X;
 		eY = Y;
-		size = 24;
-		speed = .1;
+		size = Tile.TILESIZE*Game.SCALE;
+		stats = new EnemyStats(ID);
 		
 	}
 	
@@ -37,59 +32,49 @@ public class Enemy {
 		double xP = ((-xIn) + (eX))*Tile.TILESIZE;
 		double yP = ((-yIn) + (eY))*Tile.TILESIZE;
 		
-		//System.out.println(xP + ", " + yP);
-		
 		g.setColor(Color.GREEN);
 		g.fillOval((int) (Game.SCALE*(xP + Game.WIDTH/2)), (int) (Game.SCALE*(yP + Game.HEIGHT/2)), size, size);
-		//if(proj.size() >0) {
-		//	for(int i = 0; i < proj.size()-1; i++){
-		//		proj.get(i).render(g);
-		//	}
-		//}
+		
 		
 	}
 	
 	public void tick(double xIn, double yIn) {
+
 		
-		count++;
-		
-		
-		dist = Math.sqrt((eX - xIn)*(eX - xIn) + (eY - yIn)*(eY - yIn));
-		if(dist > 10){
-			active = false;
+		double distFromPlayer = Math.sqrt((eX - xIn)*(eX - xIn) + (eY - yIn)*(eY - yIn));
+		stats.setAtkWait(stats.getAtkWait()-1);
+		/*
+		if(distFromPlayer < 30){
+			stats.setActive(true);
 		} else {
-			active = true;
+			stats.setActive(false);
 		}
-		
-		System.out.println("Active Enemy: " + active);
-		double dX = xIn - eX;
-		double dY = yIn - eY;
+		*/
+		//System.out.println("distFromPlayer " + distFromPlayer + " == " + stats.getMoveDist());
 
-		dX = Math.abs(dX);
-		dY = Math.abs(dY);
-		
-		theta = Math.abs(Math.atan(dY/dX));
-
-		if(active) {
+		if(distFromPlayer < stats.getMoveDist()) {
+			moveBehavior(xIn, yIn);
 			
-			//if(dist<100) {
-			//	mag*=-1;
-			//}
-			
-			if(xIn > eX) {
-				eX += (speed*Math.cos(theta));
-			}
-			if(xIn < eX) {
-				eX -= (speed*Math.cos(theta));
-			}
-			if(yIn > eY) {
-				eY += (speed*Math.sin(theta));
-			}
-			if(yIn < eY) {
-				eY -= (speed*Math.sin(theta));
+			if (distFromPlayer < stats.getAtkDist()) {
+				if((stats.getAtkWait() <= 0))
+				{
+					attackBehavior(xIn, yIn);
+					
+					stats.setAtkWait( (int) (360/stats.getDexterity()));
+				}
+				
 			}
 		}
 		
+		for (int i = 0; i < projectiles.size(); i++)
+		{
+			projectiles.get(i).tick();
+			if (projectiles.get(i).getDist() > projectiles.get(i).getRange())
+			{
+				projectiles.remove(i);
+				i--;
+			}
+		}
 		
 		//Checks which quadrant the player is in
 		//if((mX < eX) && (mY < eY)) {
@@ -104,9 +89,14 @@ public class Enemy {
 		
 	}
 	
-	public void behavior() {
+	public void moveBehavior(double xIn, double yIn) {
 		
 	}
 	
+	public void attackBehavior(double xIn, double yIn) {
+		
+	}
 
+	public Stats getStats()	{	return stats;	}
+	public ArrayList<Projectile> getProj()	{	return projectiles;	}
 }

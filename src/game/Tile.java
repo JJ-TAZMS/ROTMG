@@ -121,6 +121,8 @@ public class Tile {
 		image = tileImage;
 	}
 	
+	public void setColor(Color clr)	{	color = clr;	}
+	
 	public void addDif()	{	difficulty++;	}
 	public void setDif(int n)	{	difficulty = n;	}
 	public int getDif() {	return difficulty;	}

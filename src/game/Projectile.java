@@ -27,9 +27,18 @@ public class Projectile {
 		// TODO add constants for sizes / maxRange based on index
 		//height = img.getHeight();
 		//width = img.getWidth();
-		maxRange = 10;
-		damage = 10;
-		isEnemy = true;
+		if (index == 1)
+		{
+			maxRange = 10;
+			damage = 10;
+			isEnemy = false;
+		}	else
+		{
+			maxRange = new EnemyStats(index).getAtkDist();
+			damage = new EnemyStats(index).getAttack();
+			isEnemy = true;
+		}
+		
 		
 	}
 

@@ -2,22 +2,36 @@ package game;
 
 public class Stats {
 	private double speed, dexterity, attack , defense, vitality;
-	private double wisdom, hp, mp, healthPotions, manaPotions;
+	private double wisdom, hp, mp, healthPotions, manaPotions, experience;
+	private int atkWait;
+	
+	public Stats()
+	{
+		vitality = 0; //Enemies don't regenerate
+		mp = 0;       //Enemies don't use spells
+		wisdom = 0;   //Don't use magic
+		healthPotions = 0;
+		manaPotions = 0;
+		atkWait = 0;
+	}
+	
 	
 	public Stats(int index)
 	{
-		if(index == 0)
+		atkWait = 0;
+		if(index == 0) //Two digit numbers are player stats only
 		{
-			speed = .2; 
-			dexterity = 5;
-			attack = 5;
-			defense = 5;
-			vitality = 5;
-			wisdom = 5;
+			speed = 10; 
+			dexterity = 15;
+			attack = 12;
+			defense = 0;
+			vitality = 12;
+			wisdom = 12;
 			hp = 100;
 			mp = 100;
 			healthPotions = 3;
 			manaPotions = 3;
+			experience = 0;
 		}
 	}
 	
@@ -62,12 +76,25 @@ public class Stats {
 	{
 		manaPotions = x;
 	}
+	public void setExperience(int x)
+	{
+		experience = x;
+	}
+	public void setAtkWait(int x)
+	{
+		atkWait = x;
+	}
 	
 	//Getters
-	public double getSpeed()
+	public double getDispSpeed()
 	{
 		return speed;
 	}
+	public double getSpeed()
+	{
+		return speed/100.0;
+	}
+	
 	public double getDexterity()
 	{
 		return dexterity;
@@ -104,6 +131,13 @@ public class Stats {
 	{
 		return manaPotions;
 	}
-	
+	public double getExperience() 
+	{
+		return experience;
+	}
+	public int getAtkWait()
+	{
+		return atkWait;
+	}
 
 }
