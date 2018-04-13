@@ -43,16 +43,19 @@ public class Enemy {
 		
 		double distFromPlayer = Math.sqrt((eX - xIn)*(eX - xIn) + (eY - yIn)*(eY - yIn));
 		stats.setAtkWait(stats.getAtkWait()-1);
-		/*
-		if(distFromPlayer < 30){
-			stats.setActive(true);
-		} else {
-			stats.setActive(false);
-		}
-		*/
 		//System.out.println("distFromPlayer " + distFromPlayer + " == " + stats.getMoveDist());
 
 		if(distFromPlayer < stats.getMoveDist()) {
+			double dX = eX - xIn;
+			double dY = eY - yIn;
+			
+			theta = Math.atan(dY/dX);
+
+			if(xIn < eX)
+			{
+				theta += Math.PI;
+			}
+			
 			moveBehavior(xIn, yIn);
 			
 			if (distFromPlayer < stats.getAtkDist()) {
@@ -75,17 +78,6 @@ public class Enemy {
 				i--;
 			}
 		}
-		
-		//Checks which quadrant the player is in
-		//if((mX < eX) && (mY < eY)) {
-		//	projTheta = Math.PI - theta;
-		//}
-		//if((mX < eX) && (mY > eY)) {
-		//	projTheta = Math.PI + theta;
-		//}
-		//if((mX > eX) && (mY > eY)) {
-		//	projTheta = -theta;
-		//}
 		
 	}
 	

@@ -10,15 +10,7 @@ public class GelatinousCube extends Enemy{
 		public void moveBehavior(double xIn, double yIn) 
 		{
 			
-			double dX = eX - xIn;
-			double dY = eY - yIn;
 			
-			theta = Math.atan(dY/dX);
-
-			if(xIn < eX)
-			{
-				theta += Math.PI;
-			}
 			
 		}
 		
