@@ -5,16 +5,17 @@ import java.awt.image.BufferedImage;
 public class SpriteSheet {
 
 	private BufferedImage image;
+	int square;
 	
-	public SpriteSheet(BufferedImage img)
+	public SpriteSheet(BufferedImage img, int sq)
 	{
 		image = img;
+		square = sq;
 	}
 	
-	public BufferedImage grabImage(int row, int col, int width, int height)
+	public BufferedImage grabImage(int x, int y, int width, int height)
 	{
-		int square = 8;
-		BufferedImage img = image.getSubimage((row*square),(col*square),square*width,square*height);
+		BufferedImage img = image.getSubimage((x*square),(y*square),square*width,square*height);
 		return img;
 	}
 }
