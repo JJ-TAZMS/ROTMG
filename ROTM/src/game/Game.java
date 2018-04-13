@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.util.Scanner;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 public class Game extends Canvas implements Runnable{
 
@@ -29,7 +31,12 @@ public class Game extends Canvas implements Runnable{
 	
 	
 	private JFrame frame;
-	
+	public static JLabel attack;
+	public static JLabel defense;
+	public static JLabel speed; 
+	public static JLabel dexterity; 
+	public static JLabel vitality;
+	public static JLabel wisdom;
 	public boolean running = false;
 	public int tickCount = 0;
 	
@@ -48,7 +55,18 @@ public class Game extends Canvas implements Runnable{
 		setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		
 		frame = new JFrame(NAME);
-		
+		attack = new JLabel("ATT - ");
+		defense = new JLabel("DEF - ");
+		speed = new JLabel("SPD - ");
+		dexterity = new JLabel("DEX - ");
+		vitality = new JLabel("VIT - ");
+		wisdom = new JLabel("WIS - ");
+		frame.add(attack);
+		frame.add(defense);
+		frame.add(speed);
+		frame.add(dexterity);
+		frame.add(vitality);
+		frame.add(wisdom);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout());
 		
