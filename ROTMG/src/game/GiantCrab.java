@@ -3,7 +3,7 @@ package game;
 public class GiantCrab extends Enemy{
 
 	public GiantCrab(double X, double Y) {
-		super(1, X, Y);
+		super(9, X, Y);
 	}
 	
 	//@Overrides Enemy Class
@@ -13,7 +13,7 @@ public class GiantCrab extends Enemy{
 			double speed = stats.getSpeed();
 			double playerDist = (Math.sqrt((eX - Game.player1.getX())*(eX - Game.player1.getX()) + 
 					(eY - Game.player1.getY())*(eY - Game.player1.getX()))) ;
-			//keeps a distance of 5 from the player
+			//keeps a distance of 50 from the player
 			if (playerDist > 50) {
 				eX += speed*Math.cos(theta);
 				eY += speed*Math.sin(theta);
@@ -28,7 +28,7 @@ public class GiantCrab extends Enemy{
 			
 			//TODO give in weapon firing speed
 			System.out.println("Attacking the player...");
-			projectiles.add(new Projectile(1, eX, eY, theta, .1));
+			projectiles.add(new Projectile(9, eX, eY, theta, .1));
 		}
 
 	
