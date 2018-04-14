@@ -185,6 +185,11 @@ public class Field {
 				e1 = new GelatinousCube(player.getX() + 5, player.getY() + 10);
 				enemies.add(e1);
 				
+				//testing for myself 
+				Enemy crab = new GiantCrab(player.getX() + 10, player.getY() + 10);
+				enemies.add(crab);
+				
+				
 				chosen = true;
 			}
 		}
