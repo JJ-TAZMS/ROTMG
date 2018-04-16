@@ -179,6 +179,7 @@ public class Field {
 				
 				
 				//TODO get rid of this and add real spawning
+				/*
 				Enemy e1 = new Pirate(player.getX() + 5, player.getY() + 10);
 				enemies.add(e1);
 				
@@ -188,6 +189,9 @@ public class Field {
 				//testing for myself 
 				Enemy crab = new GiantCrab(player.getX() + 10, player.getY() + 10);
 				enemies.add(crab);
+				*/
+				Enemy urgle = new Urgle(player.getX() + 10, player.getY()+10);
+				enemies.add(urgle);
 				
 				
 				chosen = true;

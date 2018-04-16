@@ -53,7 +53,7 @@ public class Game extends Canvas implements Runnable{
 	private BufferedImage spriteSheet = null;
 	
 	private Field map;
-	public static Player player1;
+	private Player player1;
 	
 	public Game()
 	{

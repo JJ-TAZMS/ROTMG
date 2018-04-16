@@ -1,10 +1,12 @@
 package game;
 
-public class GiantCrab extends Enemy{
+public class Urgle extends Enemy{
 
-	public GiantCrab(double X, double Y) {
-		super(9, X, Y);
+	public Urgle(double X, double Y) {
+		super(1, X, Y);
 	}
+	
+	private boolean isAdvancing = true;
 	
 	//@Overrides Enemy Class
 		public void moveBehavior(double xIn, double yIn) 
@@ -13,23 +15,28 @@ public class GiantCrab extends Enemy{
 			double speed = stats.getSpeed();
 			double playerDist = (Math.sqrt((eX - xIn)*(eX - xIn) + 
 					(eY - yIn)*(eY - xIn))) ;
-			//keeps a distance from the player
-			//Ask Sean about stats.getMoveDist();
-			if (playerDist > 40) {
+			
+			//get within certain tile distance of player then retreat back to farther tile distance. Repeat
+			if (playerDist>30 && isAdvancing) {
 				eX += speed*Math.cos(theta);
 				eY += speed*Math.sin(theta);
 			}
-			else if (playerDist < 40) {
+			if (playerDist<=30 && isAdvancing) { isAdvancing = false; }
+			
+			if (playerDist<50 && !isAdvancing){
 				eX -= speed*Math.cos(theta);
 				eY -= speed*Math.sin(theta);
 			}
+			if (playerDist>=50 && !isAdvancing) { isAdvancing = true; }
+			
+			
 		}
 		
 		public void attackBehavior(double xIn, double yIn) {
 			
 			//TODO give in weapon firing speed
 			//System.out.println("Attacking the player...");
-			projectiles.add(new Projectile(9, eX, eY, theta, .1));
+			projectiles.add(new Projectile(1, eX, eY, theta, .1));
 		}
 
 	

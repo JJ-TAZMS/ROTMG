@@ -15,7 +15,7 @@ public class EnemyStats extends Stats{
 			setDefense(0);
 			sethp(5);
 			setExperience(1);
-			moveDist = 10;
+			moveDist = 30;
 			attackDist = 3;
 		}	else if (index == 2) //Gelatinous Cube
 		{
