@@ -27,7 +27,28 @@ public class EnemyStats extends Stats{
 			setExperience(4);
 			moveDist = 20;
 			attackDist = 5;
+		}	else if (index == 6) //Forest Goblin
+		{
+			setSpeed(6); 
+			setDexterity(8);
+			setAttack(20);
+			setDefense(0);
+			sethp(60);
+			setExperience(6);
+			moveDist = 20;
+			attackDist = 4.8;
+		}	else if (index == 14) //Forest Goblin Mage
+		{
+			setSpeed(7); 
+			setDexterity(4);
+			setAttack(8);
+			setDefense(0);
+			sethp(35);
+			setExperience(4);
+			moveDist = 20;
+			attackDist = 8.4;
 		}
+
 	}
 	
 	//Getters
