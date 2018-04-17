@@ -179,20 +179,17 @@ public class Field {
 				
 				
 				//TODO get rid of this and add real spawning
-				/*
-				Enemy e1 = new Pirate(player.getX() + 5, player.getY() + 10);
-				enemies.add(e1);
+				//Enemy e1 = new Pirate(player.getX() + 5, player.getY() + 10);
 				
-				e1 = new GelatinousCube(player.getX() + 5, player.getY() + 10);
-				enemies.add(e1);
 				
-				//testing for myself 
-				Enemy crab = new GiantCrab(player.getX() + 10, player.getY() + 10);
-				enemies.add(crab);
-				*/
-				Enemy urgle = new Urgle(player.getX() + 10, player.getY()+10);
-				enemies.add(urgle);
+				//Enemy e2 = new GelatinousCube(player.getX() + 5, player.getY() + 10);
 				
+				
+				Enemy e3 = new GiantCrab(player.getX() + 10, player.getY() + 10);
+				
+				//enemies.add(e1);
+				//enemies.add(e2);
+				enemies.add(e3);
 				
 				chosen = true;
 			}
