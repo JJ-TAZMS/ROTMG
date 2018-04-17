@@ -179,16 +179,16 @@ public class Field {
 				
 				
 				//TODO get rid of this and add real spawning
-				//Enemy e1 = new Pirate(player.getX() + 5, player.getY() + 10);
+				Enemy e1 = new Pirate(player.getX() + 5, player.getY() + 10);
+				System.out.println(e1.getStats());
 				
-				
-				//Enemy e2 = new GelatinousCube(player.getX() + 5, player.getY() + 10);
-				
+				Enemy e2 = new GelatinousCube(player.getX() + 5, player.getY() + 10);
+				System.out.println(e2.getStats());
 				
 				Enemy e3 = new GiantCrab(player.getX() + 10, player.getY() + 10);
-				
-				//enemies.add(e1);
-				//enemies.add(e2);
+				System.out.println(e3.getStats());
+				enemies.add(e1);
+				enemies.add(e2);
 				enemies.add(e3);
 				
 				chosen = true;
