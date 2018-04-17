@@ -3,6 +3,7 @@ package game;
 public class Pirate extends Enemy{
 
 	public Pirate(double X, double Y) {
+		//Add randomization for Pirate vs Piratess here
 		super(1, X, Y);
 	}
 	
@@ -11,13 +12,32 @@ public class Pirate extends Enemy{
 	{
 		
 		double speed = stats.getSpeed();
+		double playerDist = (Math.sqrt((eX - xIn)*(eX - xIn) + (eY - yIn)*(eY - yIn))) ;
+		//keeps a distance of 1 tiles from the player
+		if (playerDist < .5)
+		{
+				boolean wander = (stats.getAtkWait()%15 == 0);
+				
+				if (wander)
+				{
+					double rndTheta = (Math.random()*Math.PI*2);
+					xVel = ((Math.random()>=.5)? 1: -1)*speed*Math.cos(rndTheta)/2;
+					yVel = ((Math.random()>=.5)? 1: -1)*speed*Math.sin(rndTheta)/2;
+				}
+				
+				
+		}	else {
+			xVel = speed*Math.cos(theta);
+			yVel = speed*Math.sin(theta);
+		}
 		
-		eX += speed*Math.cos(theta);
-		eY += speed*Math.sin(theta);
+		eX += xVel;
+		eY += yVel;
+		
 	}
 	
 	public void attackBehavior(double xIn, double yIn) {
-		
+		projectiles.add(new Projectile(1, eX, eY, theta, .1));
 	}
 
 }

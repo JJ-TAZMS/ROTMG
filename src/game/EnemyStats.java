@@ -5,11 +5,12 @@ public class EnemyStats extends Stats{
 	private double moveDist, attackDist; //In tiles
 	private boolean active;
 	
+	
 	public EnemyStats(int index) {
 		active = false;
 		if (index == 1) //PIRATE
 		{
-			setSpeed(8); 
+			setSpeed(6); 
 			setDexterity(3);
 			setAttack(4);
 			setDefense(0);
@@ -25,30 +26,19 @@ public class EnemyStats extends Stats{
 			setDefense(0);
 			sethp(70);
 			setExperience(4);
-			moveDist = 20;
+			moveDist = 20;  //Render distance bc no actual movement ot player
 			attackDist = 5;
-		}	else if (index == 6) //Forest Goblin
+		}	else if (index == 9) //Giant Crab
 		{
-			setSpeed(6); 
-			setDexterity(8);
-			setAttack(20);
-			setDefense(0);
-			sethp(60);
-			setExperience(6);
-			moveDist = 20;
-			attackDist = 4.8;
-		}	else if (index == 14) //Forest Goblin Mage
-		{
-			setSpeed(7); 
+			setSpeed(4); 
 			setDexterity(4);
-			setAttack(8);
-			setDefense(0);
-			sethp(35);
-			setExperience(4);
-			moveDist = 20;
-			attackDist = 8.4;
+			setAttack(9);
+			setDefense(2);
+			sethp(300);
+			setExperience(43);
+			moveDist = 10;
+			attackDist = 6;
 		}
-
 	}
 	
 	//Getters

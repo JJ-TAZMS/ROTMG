@@ -8,7 +8,7 @@ import java.util.Random;
 public class Enemy {
 	
 	public int enemyID;
-	public double eX, eY;
+	public double eX, eY, xVel, yVel;
 	public int size;
 	public double theta;
 	
@@ -22,6 +22,7 @@ public class Enemy {
 		enemyID = ID;
 		eX = X;
 		eY = Y;
+		xVel = yVel = 0;
 		size = Tile.TILESIZE*Game.SCALE;
 		stats = new EnemyStats(ID);
 		
@@ -33,7 +34,7 @@ public class Enemy {
 		double yP = ((-yIn) + (eY))*Tile.TILESIZE;
 		
 		g.setColor(Color.GREEN);
-		g.fillOval((int) (Game.SCALE*(xP + Game.WIDTH/2)), (int) (Game.SCALE*(yP + Game.HEIGHT/2)), size, size);
+		g.fillOval((int) (Game.SCALE*(xP + Game.WIDTH/2)) - size/2, (int) (Game.SCALE*(yP + Game.HEIGHT/2)) - size/2, size, size);
 		
 		
 	}
@@ -45,39 +46,55 @@ public class Enemy {
 		stats.setAtkWait(stats.getAtkWait()-1);
 		//System.out.println("distFromPlayer " + distFromPlayer + " == " + stats.getMoveDist());
 
-		if(distFromPlayer < stats.getMoveDist()) {
-			double dX = eX - xIn;
-			double dY = eY - yIn;
+		if (distFromPlayer < Game.WIDTH/Tile.TILESIZE * 3)
+		{
+			stats.setActive(true);
 			
-			theta = Math.atan(dY/dX);
+		}	else
+		{
+			stats.setActive(false);
+		}
+		
+		
+		if (stats.getActive())
+		{
+			if(distFromPlayer < stats.getMoveDist()) {
+				double dX = eX - xIn;
+				double dY = eY - yIn;
+				
+				theta = Math.atan(dY/dX);
 
-			if(xIn < eX)
-			{
-				theta += Math.PI;
-			}
-			
-			moveBehavior(xIn, yIn);
-			
-			if (distFromPlayer < stats.getAtkDist()) {
-				if((stats.getAtkWait() <= 0))
+				if(xIn < eX)
 				{
-					attackBehavior(xIn, yIn);
-					
-					stats.setAtkWait( (int) (360/stats.getDexterity()));
+					theta += Math.PI;
 				}
 				
+				moveBehavior(xIn, yIn);
+				
+				if (distFromPlayer < stats.getAtkDist()) {
+					if((stats.getAtkWait() <= 0))
+					{
+						attackBehavior(xIn, yIn);
+						
+						stats.setAtkWait( (int) (360/stats.getDexterity()));
+					}
+					
+				}
+			}
+			
+			
+			//Worst comes to worst take this out of the active if statement
+			for (int i = 0; i < projectiles.size(); i++)
+			{
+				projectiles.get(i).tick();
+				if (projectiles.get(i).getDist() > projectiles.get(i).getRange())
+				{
+					projectiles.remove(i);
+					i--;
+				}
 			}
 		}
 		
-		for (int i = 0; i < projectiles.size(); i++)
-		{
-			projectiles.get(i).tick();
-			if (projectiles.get(i).getDist() > projectiles.get(i).getRange())
-			{
-				projectiles.remove(i);
-				i--;
-			}
-		}
 		
 	}
 	

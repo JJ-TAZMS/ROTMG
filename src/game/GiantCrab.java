@@ -11,15 +11,13 @@ public class GiantCrab extends Enemy{
 		{
 			
 			double speed = stats.getSpeed();
-			double playerDist = (Math.sqrt((eX - xIn)*(eX - xIn) + 
-					(eY - yIn)*(eY - xIn))) ;
-			//keeps a distance from the player
-			//Ask Sean about stats.getMoveDist();
-			if (playerDist > 40) {
+			double playerDist = (Math.sqrt((eX - xIn)*(eX - xIn) + (eY - yIn)*(eY - yIn))) ;
+			//keeps a distance of 5 tiles from the player
+			if (playerDist > 5) {
 				eX += speed*Math.cos(theta);
 				eY += speed*Math.sin(theta);
 			}
-			else if (playerDist < 40) {
+			else if (playerDist < 5) {
 				eX -= speed*Math.cos(theta);
 				eY -= speed*Math.sin(theta);
 			}
@@ -27,8 +25,7 @@ public class GiantCrab extends Enemy{
 		
 		public void attackBehavior(double xIn, double yIn) {
 			
-			//TODO give in weapon firing speed
-			//System.out.println("Attacking the player...");
+			System.out.println("Attacking the player...");
 			projectiles.add(new Projectile(9, eX, eY, theta, .1));
 		}
 
