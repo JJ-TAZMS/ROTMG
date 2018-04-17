@@ -21,8 +21,8 @@ public class Pirate extends Enemy{
 				if (wander)
 				{
 					double rndTheta = (Math.random()*Math.PI*2);
-					xVel = ((Math.random()>=.5)? 1: -1)*speed*Math.cos(rndTheta)/2;
-					yVel = ((Math.random()>=.5)? 1: -1)*speed*Math.sin(rndTheta)/2;
+					xVel = (speed*Math.cos(rndTheta))/2.0;
+					yVel = (speed*Math.sin(rndTheta))/2.0;
 				}
 				
 				

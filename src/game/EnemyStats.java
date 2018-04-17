@@ -38,6 +38,16 @@ public class EnemyStats extends Stats{
 			setExperience(43);
 			moveDist = 10;
 			attackDist = 6;
+		}	else if (index == 17) //Flying Brain
+		{
+			setSpeed(8);//Speed needs to be finessed
+			setDexterity(4);
+			setAttack(50);
+			setDefense(12);
+			sethp(1000);
+			setExperience(100);
+			moveDist = 20;
+			attackDist = 21.6;
 		}
 	}
 	

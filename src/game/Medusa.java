@@ -1,9 +1,9 @@
 package game;
 
-public class GiantCrab extends Enemy{
+public class Medusa extends Enemy{
 
 	private double wanderTheta;
-	public GiantCrab(double X, double Y) {
+	public Medusa(double X, double Y) {
 		super(9, X, Y);
 		wanderTheta = 0;
 	}
