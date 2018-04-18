@@ -1,5 +1,9 @@
 package game;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 public class EnemyStats extends Stats{
 
 	private double moveDist, attackDist; //In tiles
@@ -8,47 +12,49 @@ public class EnemyStats extends Stats{
 	
 	public EnemyStats(int index) {
 		active = false;
-		if (index == 1) //PIRATE
-		{
-			setSpeed(6); 
-			setDexterity(3);
-			setAttack(4);
-			setDefense(0);
-			sethp(5);
-			setExperience(1);
-			moveDist = 10;
-			attackDist = 3;
-		}	else if (index == 2) //Gelatinous Cube
-		{
-			setSpeed(4); 
-			setDexterity(4);
-			setAttack(9);
-			setDefense(0);
-			sethp(70);
-			setExperience(4);
-			moveDist = 20;  //Render distance bc no actual movement ot player
-			attackDist = 5;
-		}	else if (index == 9) //Giant Crab
-		{
-			setSpeed(4); 
-			setDexterity(4);
-			setAttack(9);
-			setDefense(2);
-			sethp(300);
-			setExperience(43);
-			moveDist = 10;
-			attackDist = 6;
-		}	else if (index == 17) //Flying Brain
-		{
-			setSpeed(8);//Speed needs to be finessed
-			setDexterity(4);
-			setAttack(50);
-			setDefense(12);
-			sethp(1000);
-			setExperience(100);
-			moveDist = 20;
-			attackDist = 21.6;
+		
+		Scanner scanner = null;
+		try {
+			scanner = new Scanner(new File("res/enemies.csv"));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Enemies.csv not found!");
 		}
+		
+		if (scanner != null) {
+			scanner.nextLine(); //skip the first line of the csv file which is the categories
+	        while(scanner.hasNextLine()){
+	        		String data = scanner.nextLine();
+	     
+	        		String[] sepData = data.split(",");
+	        		
+	        		//if the index matches the index we are looking for then store the data 
+	        		if (sepData[1].equals("" + index)) {
+	        			setSpeed(Integer.valueOf(sepData[5]));
+	        			setDexterity(Integer.valueOf(sepData[6]));
+	        			setAttack(Integer.valueOf(sepData[7]));
+	        			setDefense(Integer.valueOf(sepData[3]));
+	        			sethp(Integer.valueOf(sepData[2]));
+	        			setExperience(Integer.valueOf(sepData[4]));
+	        			moveDist = Integer.valueOf(sepData[8]);
+	        			attackDist = Integer.valueOf(sepData[9]);
+	        			break; //break out of loop because we are finished
+	        		}
+	        		
+	        }
+	        
+	        scanner.close();
+		}
+		
+	}
+	
+	//print out information of the enemy. Just for testing
+	public String toString() {
+		return ("ENEMY STATS: " + String.valueOf(this.gethp()) + ", " + String.valueOf(this.getDefense()) + ", " 
+				+ String.valueOf(this.getExperience())+ ", " + String.valueOf(this.getSpeed()) + ", " 
+				+ String.valueOf(this.getDexterity()) + ", " + String.valueOf(this.getAttack()) 
+				+ ", " + String.valueOf(this.getMoveDist()) + ", " + String.valueOf(this.getAtkDist())) ;
 	}
 	
 	//Getters
