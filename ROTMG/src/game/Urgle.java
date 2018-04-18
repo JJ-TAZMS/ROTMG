@@ -3,7 +3,7 @@ package game;
 public class Urgle extends Enemy{
 
 	public Urgle(double X, double Y) {
-		super(1, X, Y);
+		super(10, X, Y);
 	}
 	
 	private boolean isAdvancing = true;
@@ -36,7 +36,7 @@ public class Urgle extends Enemy{
 			
 			//TODO give in weapon firing speed
 			//System.out.println("Attacking the player...");
-			projectiles.add(new Projectile(1, eX, eY, theta, .1));
+			projectiles.add(new Projectile(10, eX, eY, theta, .1));
 		}
 
 	
