@@ -11,7 +11,7 @@ public class BanditLeader extends Enemy	{
 		grenade = true;
 	}
 	
-	public void moveBehavior()
+	public void moveBehavior(double xIn, double yIn)
 	{
 		double speed = stats.getSpeed();
 		
@@ -19,17 +19,18 @@ public class BanditLeader extends Enemy	{
 		eY += speed*Math.sin(theta);
 	}
 	
-	public void attackBehavior()
+	public void attackBehavior(double xIn, double yIn)
 	{
 		if(grenade)
 		{
 			delay = 1000;
+			grenade = false;
 			projectiles.add(new Projectile(1, eX, eY, theta, .3));
 		}
 		else
 		{
 			projectiles.add(new Projectile(1, eX, eY, theta, .1));
-			delayAttack();
+			grenade = delayAttack();
 		}
 	}
 	

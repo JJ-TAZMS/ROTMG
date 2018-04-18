@@ -129,7 +129,6 @@ public class Field {
 				}
 			}
 		}
-		
 		for (LootBag lb : lootBags)
 		{
 			lb.render(g, player.getX(), player.getY());

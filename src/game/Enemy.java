@@ -7,10 +7,10 @@ import java.util.Random;
 
 public class Enemy {
 	
-	public int enemyID;
-	public double eX, eY, xVel, yVel;
-	public int size;
-	public double theta;
+	private int enemyID;
+	private int size;
+	protected double eX, eY, xVel, yVel;
+	protected double theta;
 	
 	public EnemyStats stats;
 	
@@ -59,15 +59,7 @@ public class Enemy {
 		if (stats.getActive())
 		{
 			if(distFromPlayer < stats.getMoveDist()) {
-				double dX = eX - xIn;
-				double dY = eY - yIn;
-				
-				theta = Math.atan(dY/dX);
-
-				if(xIn < eX)
-				{
-					theta += Math.PI;
-				}
+				setTheta(xIn, yIn);
 				
 				moveBehavior(xIn, yIn);
 				
@@ -98,6 +90,19 @@ public class Enemy {
 		
 	}
 	
+	public void setTheta(double xIn, double yIn)
+	{
+		double dX = eX - xIn;
+		double dY = eY - yIn;
+		
+		theta = Math.atan(dY/dX);
+
+		if(xIn < eX)
+		{
+			theta += Math.PI;
+		}
+	}
+	
 	public void moveBehavior(double xIn, double yIn) {
 		
 	}
@@ -106,6 +111,8 @@ public class Enemy {
 		
 	}
 
-	public Stats getStats()	{	return stats;	}
+	public EnemyStats getStats()	{	return stats;	}
 	public ArrayList<Projectile> getProj()	{	return projectiles;	}
+	public double getX()	{	return eX;	}
+	public double getY()	{	return eY;	}
 }
