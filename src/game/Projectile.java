@@ -34,7 +34,7 @@ public class Projectile {
 			isEnemy = false;
 		}	else
 		{
-			maxRange = new EnemyStats(index).getAtkDist();
+			maxRange = new EnemyStats(index).getAtkDist()*2;
 			damage = new EnemyStats(index).getAttack();
 			isEnemy = true;
 		}
