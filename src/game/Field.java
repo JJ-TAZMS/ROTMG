@@ -184,7 +184,7 @@ public class Field {
 				//Enemy e2 = new GelatinousCube(player.getX() + 5, player.getY() + 10);
 				
 				
-				Enemy e3 = new GiantCrab(player.getX() + 10, player.getY() + 10);
+				Enemy e3 = new Medusa(player.getX() + 10, player.getY() + 10);
 				
 				//enemies.add(e1);
 				//enemies.add(e2);
