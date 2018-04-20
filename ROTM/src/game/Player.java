@@ -1,14 +1,17 @@
 package game;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class Player {
 	private double x, y, xVel, yVel, theta;
 	private boolean moveUp, moveDown, moveLeft, moveRight, rotateUp, rotateDown;
+	private boolean attacking;
 	private int index;
 	private BufferedImage[] image;
 	private BufferedImage img;
@@ -18,6 +21,10 @@ public class Player {
 	private Field map;
 	private int itemID;
 	private boolean itemInHand;
+	private LootBag bag;
+	private boolean nearBag;
+	//private Item itemHeld;
+	private int bagIndex;
 
 	public Player(Field m, int index, SpriteSheet ss) // Sets class type with index
 	{
@@ -25,7 +32,8 @@ public class Player {
 		stats = new Stats(index);
 		gui = new GUI(map.getMap(), stats);
 		projectiles = new ArrayList<Projectile>();
-		x = y = theta = 0;
+		x = y = 0;
+		theta = 0;
 		
 		//TODO Check class index for picture
 		image = new BufferedImage[4];
@@ -34,12 +42,33 @@ public class Player {
 		image[2] = ss.grabImage(10, 29, 1, 1); //Left
 		image[3] = ss.grabImage(11, 29, 1, 1); //Up
 		img = image[1];
+		
+		bag = null;
+		nearBag = false;
 	}
 
 	public void tick() // Update game logic for player (stats, pos, etc.)
 	{
 		move();
 		rotateMap();
+		projectileTick();
+		attack();
+		checkBags();
+	}
+	
+	
+	public void projectileTick()
+	{
+		//Display each of the player's projectiles
+		for(int i = 0; i < projectiles.size(); i++)
+		{
+			projectiles.get(i).tick();
+			if(projectiles.get(i).checkDelete())
+			{
+				projectiles.remove(i);
+				i--;
+			}
+		}
 	}
 	
 	
@@ -59,36 +88,36 @@ public class Player {
 			theta += cT;
 		}
 	}
+	
 	public void move()
 	{
 		xVel = yVel = 0;
 		
+		double speed = stats.getSpeed();
 		
 		if(moveUp)
 		{
-			yVel += -stats.getSpeed()*Math.sin(theta+Math.PI/2);
-			xVel += stats.getSpeed()*Math.cos(theta+Math.PI/2);
+			yVel += -speed*Math.sin(theta+Math.PI/2);
+			xVel += speed*Math.cos(theta+Math.PI/2);
 		}
 
 		
 		if(moveDown)
 		{
-			yVel += stats.getSpeed()*Math.sin(theta+Math.PI/2);
-			xVel += -stats.getSpeed()*Math.cos(theta+Math.PI/2);
+			yVel += speed*Math.sin(theta+Math.PI/2);
+			xVel += -speed*Math.cos(theta+Math.PI/2);
 		}
 		
 		if(moveRight)
 		{
-			yVel += -stats.getSpeed()*Math.sin(theta);
-			xVel += stats.getSpeed()*Math.cos(theta);
+			yVel += -speed*Math.sin(theta);
+			xVel += speed*Math.cos(theta);
 		}
 		if(moveLeft)
 		{
-			yVel += stats.getSpeed()*Math.sin(theta);
-			xVel += -stats.getSpeed()*Math.cos(theta);
+			yVel += speed*Math.sin(theta);
+			xVel += -speed*Math.cos(theta);
 		}
-		
-		
 		
 		if ((moveUp || moveDown) && (moveLeft || moveRight))
 		{
@@ -96,10 +125,139 @@ public class Player {
 			yVel = yVel / Math.sqrt(2.0);
 		}
 		
+		//Adjust for error in sin/cos
+		if (Math.abs(xVel) < .000001)
+		{
+			xVel = 0;
+		}
+		if (Math.abs(yVel) < .000001)
+		{
+			yVel = 0;
+		}
+		
+		//System.out.println("Before... Xvel: " + xVel + ", yVel: " + yVel);
+		
+		//So far, the above sets the default values for the movement based on no interference.
+		
+		checkObstacle(xVel, yVel);
+		
+		
+	}
+	
+	private void checkObstacle(double xVel, double yVel)
+	{
+		/*
+		 * dX  dY
+		 * -1  0   cos(pi)      sin
+		 * 1  0		cos(0)		sin
+		 * 0  -1	cos(3pi/2)	sin
+		 * 0  1		cos(pi/2)	sin
+		 */
+		
+		
+		//Check water intersection
+		//The X and Y position are the direct center of the displayed player. This is fine for water intersection
+		//System.out.println(" + x + ", " + y);
+		Tile t = map.getMap()[(int) (x)][(int) (y)];
+		if (t.getDif() == 0)
+		{
+			xVel *= .5;
+			yVel *= .5;
+			//System.out.println("In water!");
+		}
+		
+		
+		
+		
+		//Check obstacle intersection
+		for (double cX = x-.5; cX <= x+.5; cX+=.2)
+		{
+			if (cX == x-.1)	{	cX = x+.1;	}
+			for (double cY = y-.5; cY <= y+.5; cY+=.2)
+			{
+				if (cY == y-.1) {	cY = y+.1;	}
+				Tile cT = map.getMap()[(int) (cX)][(int) (cY)];
+				//double xDist = Math.abs((int)cX - (x));
+				//double yDist = Math.abs((int)cY - (y));
+				if (cT.getDif() < 0 || cT.getObst() != null) //Just add a condition of the tile having an obstacle here.
+				{
+					//Check for where a barrier is...
+					if (cY > y-.3 && cY < y+.3)
+					{
+						if (cX < x && xVel < 0) //If left and trying left
+						{
+							xVel = 0;
+						}
+						if (cX > x && xVel > 0) //If right and trying right
+						{
+							xVel = 0;
+						}
+					}
+					if (cX > x-.3 && cX < x+.3)
+					{
+						if (cY < y && yVel < 0) //If up and trying up
+						{
+							yVel = 0;
+						}
+						if (cY > y && yVel > 0) //If down and trying down
+						{
+							yVel = 0;
+						}
+					}
+					
+					/*
+					if (cX < x && cY == y) //If checking left
+					{
+						if (xVel < 0)
+						{
+							xVel = 0;
+						}
+					}
+					if (cX > x && cY == y) //If checking right
+					{
+						if (xVel > 0)
+						{
+							xVel = 0;
+						}
+					}
+					if (cY < y && cX == x) //If checking up
+					{
+						if (yVel < 0)
+						{
+							yVel = 0;
+						}
+					}
+					if (cY > y && cX == x) //If checking down
+					{
+						if (yVel > 0)
+						{
+							yVel = 0;
+						}
+					}
+					*/
+					
+					/*
+					if ((cC.getTiles()[(int) ((x+.5)%Chunk.CHUNKSIZE)][(int) (y%Chunk.CHUNKSIZE)].getDif() < 0 && xVel > 0) || (cC.getTiles()[(int) ((x-.5)%Chunk.CHUNKSIZE)][(int) (y%Chunk.CHUNKSIZE)].getDif() < 0 && xVel < 0))
+					{
+						xVel = 0;
+					}
+					if ((cC.getTiles()[(int) (x%Chunk.CHUNKSIZE)][(int) ((y+.5)%Chunk.CHUNKSIZE)].getDif() < 0 && yVel > 0) || (cC.getTiles()[(int) (x%Chunk.CHUNKSIZE)][(int) ((y-.5)%Chunk.CHUNKSIZE)].getDif() < 0 && yVel < 0))
+					{
+						yVel = 0;
+					}
+					*/
+				}
+			}
+		}
+		
+			
+		//System.out.println("         After Xvel: " + xVel + ", yVel: " + yVel);
+		//System.out.println();
 		//System.out.println("Speed: " + Math.sqrt(xVel*xVel + yVel*yVel));
 		
 		x += xVel;
 		y += yVel;
+		
 	}
 
 	public void render(Graphics g) // Update picture for player
@@ -121,28 +279,29 @@ public class Player {
 				img = image[1]; //And lastly up
 			}
 		}
-		
-		/*
-		if (rotateUp || rotateDown)
-		{
-			Graphics2D g2d = (Graphics2D) g;
-			//Make a backup so that we can reset our graphics object after using it.
-		    AffineTransform backup = g2d.getTransform();
-		    //rx is the x coordinate for rotation, ry is the y coordinate for rotation, and angle
-		    //is the angle to rotate the image. If you want to rotate around the center of an image,
-		    //use the image's center x and y coordinates for rx and ry.
-		    AffineTransform a = AffineTransform.getRotateInstance(theta, Game.WIDTH/2, Game.HEIGHT/2);
-		    //Set our Graphics2D object to the transform
-		    g2d.setTransform(a);
-		    //Draw our image like normal
-		    //g2d.drawImage(image, (int) (Game.SCALE*(x + Game.WIDTH/2)), (int) (Game.SCALE*(y+ Game.HEIGHT/2)), (int) (TILESIZE*Game.SCALE), (int) (TILESIZE*Game.SCALE), null);
-		    //Reset our graphics object so we can draw with it again.
-		    ((Graphics2D) g).setTransform(backup);
-		}
-		*/
+		//g.setColor(Color.CYAN);
+		//g.fillRect(Game.SCALE*(Game.WIDTH-Tile.TILESIZE)/2, Game.SCALE*(Game.HEIGHT-Tile.TILESIZE)/2, Tile.TILESIZE*Game.SCALE, Tile.TILESIZE*Game.SCALE);
+
 		
 		g.drawImage(img, Game.SCALE*(Game.WIDTH-Tile.TILESIZE)/2, Game.SCALE*(Game.HEIGHT-Tile.TILESIZE)/2, Tile.TILESIZE*Game.SCALE, Tile.TILESIZE*Game.SCALE, null);
-		//g.drawRect((int)x, (int)y, 50, 50);
+		
+		for(Projectile p : projectiles)
+		{
+			p.render(g, x, y);
+		}
+		
+		for (Enemy en : map.getEnemies()){
+			en.render(g, x, y);
+			
+			for (Projectile p : en.getProj()) 
+			{
+				p.render(g, x, y);
+			}
+		}
+
+		//g.setColor(Color.CYAN);
+		//g.fillRect((int) (Game.SCALE*(Game.WIDTH/2 - 5)), (int) (Game.SCALE*(Game.HEIGHT/2 - 5)), Tile.TILESIZE*Game.SCALE, Tile.TILESIZE*Game.SCALE);
+		//g.fillRect(Game.SCALE*(Game.WIDTH-Tile.TILESIZE)/2 , Game.SCALE*(Game.HEIGHT-Tile.TILESIZE)/2, Tile.TILESIZE*Game.SCALE, Tile.TILESIZE*Game.SCALE);
 		gui.render(g, x, y);
 	}
 	
@@ -171,6 +330,23 @@ public class Player {
 		if (k == 'e')
 		{
 			rotateDown = true;
+		}
+		if (k == '.')
+		{
+			try {
+				map.addLootBag("1", x, y);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		for (int i=1; i<=bag.bagItems.size();i++)
+		{
+			if (k == (char)(i) && nearBag)
+			{
+				itemInHand = true;
+				bagIndex = i-1;			
+			}
 		}
 		
 		
@@ -202,6 +378,45 @@ public class Player {
 		{
 			rotateDown = false;
 		}
+	}
+	
+	public void mouseClick(int k)
+	{
+		if(k == 1)
+		{
+			attacking = true;
+		}
+	}
+	
+	public void mouseReleased(int k)
+	{
+		if(k == 1)
+		{
+			attacking = false;
+			
+		}
+	}
+	
+	public void attack()
+	{
+		stats.setAtkWait(stats.getAtkWait()-1);;
+		
+		if(attacking && (stats.getAtkWait() <= 0))
+		{
+			double pTheta = Math.atan((Game.mouseY - Game.HEIGHT / 2.0 * Game.SCALE) / (Game.mouseX - Game.WIDTH / 2.0 * Game.SCALE));
+			if(Game.mouseX < Game.WIDTH / 2 * Game.SCALE)
+			{
+				pTheta += Math.PI;
+			}
+			
+			
+			//TODO give in weapon firing speed
+			projectiles.add(new Projectile(index, x, y, pTheta, .2));
+			System.out.println("Added new projectile");
+			
+			stats.setAtkWait( (int) (360/stats.getDexterity()));
+		}
+		
 	}
 
 	// Setters
@@ -257,4 +472,24 @@ public class Player {
 	public Field getMap()	{
 		return map;
 	}
+	public void checkBags(){
+		for (int i=0; i<map.getBags().size(); i++)
+		{
+			double bagX = map.getBags().get(i).getX();
+			double bagY = map.getBags().get(i).getY();
+			double playerDist = (Math.sqrt(bagX - x)*(bagX - x) + (bagY - y)*(bagY - y));
+			if (playerDist<3)
+			{
+				nearBag = true;
+				bag = map.getBags().get(i);
+			} else {
+				nearBag = false;  //jk dont do this
+				bag = null;
+			}
+		}
+	}
+	
+	public LootBag getBag() { return bag; }
+	
+	public boolean getNear() { return nearBag;  }
 }

@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -13,23 +14,29 @@ import javax.swing.*;
 
 
 public class Field {
-	private ArrayList<Chunk> field; //Used for map creation
-	private Chunk[][] map; //Where the actual map is stored
+	private ArrayList<Tile> field; //Used for map creation
+	private Tile[][] map; //Where the actual map is stored
 	private int chunks;
 	private int mapDist;
+	
+	private ArrayList<LootBag> lootBags;
+	private ArrayList<Enemy> enemies;
 	
 	
 	//Construct a new Field, where til is the amount of steps that must be taken each time the
 	//generation is tried.
 	public Field(int til)
 	{
-		field = new ArrayList<Chunk> ();
+		field = new ArrayList<Tile> ();
+		lootBags = new ArrayList<LootBag> ();
+		enemies = new ArrayList<Enemy> ();
 		chunks = til;
 		mapDist = 70;
 		
 		createMap(); //Creates the Map and stores it into 'map'
 		
 	}
+	public ArrayList<LootBag> getBags() { return lootBags; }
 	
 	//Create the map through an arraylist and convert it to an array. Then using the largest godlands area
 	//Set the various difficulty areas in the map.
@@ -42,23 +49,25 @@ public class Field {
 		boolean shouldReStep = true;
 		while (largestAlt < 18 || shouldReStep)
 		{
-			field.add(new Chunk(0, 0));
+			field.add(new Tile(0, 0));
 			int dir = 0;
 			
 			
 			String seed = initFieldNewSeed(chunks-1, dir, 0, 0);
 			System.out.println(compactSeed(seed));
 			
-			for (Chunk c : field)
+			for (Tile c : field)
 			{
-				if (c.getCount() > largestAlt) {	largestAlt = c.getCount();	}
+				if (c.getDif() > largestAlt) {	largestAlt = c.getDif();	}
 			}
 			shouldReStep = (hasGodLandsArea(70, 11) == null);
 		}
 		
 		
-		//Convert the ok map
+		//Convert the ok map to an Array
 		map = convertToArray(field);
+		
+		
 		
 		System.out.println("Thickenning Map...");
 		map = thickenMap(map);
@@ -68,23 +77,90 @@ public class Field {
 		
 		//Send in a thickened version of the largest godLands area to create
 		//The various difficulties.
-		Chunk[][] godLands = (thickenMap(convertToArray(hasGodLandsArea(70, 11))));
+		Tile[][] godLands = (thickenMap(convertToArray(hasGodLandsArea(70, 11))));
 		field = null;
+		
+		System.out.println("Setting Lands...");
 		map = setLands(godLands);
 		
+		System.out.println("Shifting Positions...");
 		//ConvertToAllPositives. Doing this earlier would mess with generation
 		//Aka generation starts at some arbitrary point (0,0) , and that is used
 		//All the way until the lands are set.
 		map = shiftChunks(map);
 		
+		//Make the map the actual size
+		
+		
 		//TODO add biomes like Forests, Plains, and Deserts.
 		
+		System.out.println("Setting Pictures...");
+		setPictures(); //Set the minimap colors and the ingame Tile colors.
 		
-		setColors(); //Set the minimap colors and the ingame Tile colors.
+		System.out.println("Expanding Map...");
+		map = expandMap(map);
+		
+		map = addObstacles(map);
+		//map = thickenMap(map);
 		
 		//System.out.println("Highest Altitude: " + largestAltitude(map));
 	}
 	
+	public void render(Graphics g, Player player)
+	{
+		//Display the rendering chunks only
+		
+		//Add the distance to the 0,0 coordinate
+		//The current chunk you are is the distance you are from the [0][0] chunk (In chunks)
+		//Plus the position of that first chunk
+		
+		int radiusOfTiles = Game.WIDTH/10 + 10;
+		int currentX = (int) player.getX();
+		int currentY = (int) player.getY();
+		
+		
+		for (int r = currentX-radiusOfTiles; r <= currentX+radiusOfTiles; r++)
+		{
+			for (int c = currentY-radiusOfTiles; c <= currentY+radiusOfTiles; c++)
+			{
+				map[r][c].render(g, player.getX(), player.getY());
+				if (!map[r][c].getRendered())
+				{
+					map[r][c].setRendered(true);
+				}
+			}
+		}
+		
+		for (LootBag lb : lootBags)
+		{
+			lb.render(g, player.getX(), player.getY());
+		}
+		
+		
+	}
+	/*
+	public void renderNoRot(Graphics g, Player player)
+	{
+		//Display the rendering chunks only
+		
+		//Add the distance to the 0,0 coordinate
+		//The current chunk you are is the distance you are from the [0][0] chunk (In chunks)
+		//Plus the position of that first chunk
+		
+		int radiusOfChunks = (Game.WIDTH/100) + 1;
+		int currentXChunk = (int) (player.getX()/Chunk.CHUNKSIZE);
+		int currentYChunk = (int) (player.getY()/Chunk.CHUNKSIZE);
+		
+		
+		for (int r = currentXChunk-radiusOfChunks; r <= currentXChunk+radiusOfChunks; r++)
+		{
+			for (int c = currentYChunk-radiusOfChunks; c <= currentYChunk+radiusOfChunks; c++)
+			{
+				map[r][c].renderNoRot(g, player.getX(), player.getY(), player.getTheta());
+			}
+		}
+	}
+	*/
 
 	//Sets a random beach start location in the map. 
 	public void setPositionInMap(Player player)
@@ -97,10 +173,25 @@ public class Field {
 			int rndX = (int) (Math.random()*(map.length));
 			int rndY = (int) (Math.random()*(map[0].length));
 			
-			if (map[rndX][rndY].getCount() == 1)
+			if (map[rndX][rndY].getDif() == 1)
 			{
-				player.setX(map[rndX][rndY].getX()*Chunk.CHUNKSIZE + Chunk.CHUNKSIZE/4);
-				player.setY(map[rndX][rndY].getY()*Chunk.CHUNKSIZE + Chunk.CHUNKSIZE/4);
+				player.setX(map[rndX][rndY].getX()/Tile.TILESIZE);
+				player.setY(map[rndX][rndY].getY()/Tile.TILESIZE);
+				
+				
+				//TODO get rid of this and add real spawning
+				Enemy e1 = new Pirate(player.getX() + 5, player.getY() + 10);
+				
+				
+				Enemy e2 = new GelatinousCube(player.getX() + 5, player.getY() + 10);
+				
+				
+				Enemy e3 = new GiantCrab(player.getX() + 10, player.getY() + 10);
+				
+				enemies.add(e1);
+				enemies.add(e2);
+				enemies.add(e3);
+				
 				chosen = true;
 			}
 		}
@@ -109,27 +200,27 @@ public class Field {
 	
 	
 	//Used for map generation, returns the largest altitude in the map
-	public int largestAltitude(Chunk[][] maptoCheck)
+	public int largestAltitude(Tile[][] maptoCheck)
 	{
 		int count = 0;
-		for (Chunk[] r : maptoCheck)
+		for (Tile[] r : maptoCheck)
 		{
-			for (Chunk c : r)
+			for (Tile c : r)
 			{
-				if (c.getCount() > count) {	count = c.getCount();	}
+				if (c.getDif() > count) {	count = c.getDif();	}
 			}
 		}
 		return count;
 	}
 	
 	//Used for map generation, converts the arraylist of chunks into an array of chunks
-	public Chunk[][] convertToArray(ArrayList<Chunk> toBeConverted)
+	public Tile[][] convertToArray(ArrayList<Tile> toBeConverted)
 	{
 		int highX = 0;
 		int highY = 0;
 		int lowX = 100000;
 		int lowY = 100000;
-		for (Chunk t : toBeConverted)
+		for (Tile t : toBeConverted)
 		{
 			if (highX < t.getX())
 			{
@@ -157,7 +248,7 @@ public class Field {
 		
 		int outerborder = 20;
 		
-		Chunk[][] newMap = new Chunk[(highX-lowX) + outerborder*2][(highY-lowY) + outerborder*2];
+		Tile[][] newMap = new Tile[(highX-lowX) + outerborder*2][(highY-lowY) + outerborder*2];
 		
 		//System.out.println("X range: " + newMap.length);
 		//System.out.println("Y range: " + newMap[0].length)
@@ -168,7 +259,7 @@ public class Field {
 		
 		
 		//Go through every Chunk in field and set its spot in the array
-		for (Chunk t : toBeConverted)
+		for (Tile t : toBeConverted)
 		{
 			//Set the position to the center (plus a bit change for outer border)
 			//Substracting the low (which is a negative num) will get you to 0. adding the outerborder
@@ -188,13 +279,115 @@ public class Field {
 				if (newMap[r][c] == null)
 				{
 					//Set as water if not yet set
-					newMap[r][c] = new Chunk(r + lowX - outerborder, c + lowY - outerborder, -1);
+					newMap[r][c] = new Tile(r + lowX - outerborder, c + lowY - outerborder, -1);
+					
+				}
+				//System.out.print(newMap[r][c].getDif() + " ");
+			}
+			//System.out.println("");
+		}
+		
+		return newMap;
+				
+	}
+	
+	public Tile[][] expandMap(Tile[][] chunkBasedMap)
+	{
+		//Previous to this point, everything was in 'Chunk' form (but still called 'Tile'). This aims
+		//to expand everyting to tiles.
+		Tile[][] expandedMap = new Tile[chunkBasedMap.length*10][chunkBasedMap[0].length*10];
+		
+		System.out.println("New: " + expandedMap.length + ", " + expandedMap[0].length);
+		for (int r = 0; r < chunkBasedMap.length; r++)
+		{
+			for (int c = 0; c < chunkBasedMap[r].length; c++)
+			{
+				int chunksize = 10;
+				for (int j = 0; j < chunksize; j++)
+				{
+					for (int k = 0; k < chunksize; k++)
+					{
+						
+						expandedMap[r*chunksize + j][c*chunksize + k] = new Tile(r*chunksize*Tile.TILESIZE + j*(Tile.TILESIZE), c*chunksize*Tile.TILESIZE + k*(Tile.TILESIZE), chunkBasedMap[r][c]);
+					}
+				}
+			}
+		}
+		return expandedMap;
+				
+	}
+	
+	public Tile[][] addObstacles(Tile[][] oldMap)
+	{
+		Tile[][] newMap = oldMap;
+		BufferedImage sspriteSheet = null;
+		BufferedImageLoader loader = new BufferedImageLoader();
+		try {
+			sspriteSheet = loader.loadImage("/structure_sheet.png");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		SpriteSheet sss = new SpriteSheet(sspriteSheet, 8);
+		//hooks into the spritesheet and BufferedImageLoader class
+		
+		for (Tile[] r : oldMap)
+		{
+			for (Tile c : r)
+			{
+				if (c.getDif() == 2) //Low lands
+				{
+					if (Math.random() <= .02)
+					{
+						c.setObst(new Obstacle(sss.grabImage(13, 4, 1, 1))); //Forest Tree
+						c.setColor(new Color(20, 53, 26));
+					}
+				}	else if (c.getDif() == 3) //Midlands
+				{
+					if (Math.random() <= .05)
+					{
+						if (Math.random() >= .5)
+						{
+							c.setObst(new Obstacle(sss.grabImage(9, 4, 1, 1))); //Green Tree
+							c.setColor(new Color(10, 67, 28));
+						}	else
+						{
+							c.setObst(new Obstacle(sss.grabImage(10, 4, 1, 1)));  //Yellow Tree
+							c.setColor(new Color(179, 146, 42));
+						}
+					}
+				}	else if (c.getDif() == 4) //Highlands
+				{
+					if (Math.random() <= .03)
+					{
+						if (Math.random() >= (2.0/3.0))
+						{
+							c.setObst(new Obstacle(sss.grabImage(9, 4, 1, 1))); //Green Tree
+							c.setColor(new Color(10, 67, 28));
+						}	else
+						{
+							if (Math.random() >= .5)
+							{
+								c.setObst(new Obstacle(sss.grabImage(10, 4, 1, 1))); //Yellow Tree
+								c.setColor(new Color(179, 146, 42));
+							}	else
+							{
+								c.setObst(new Obstacle(sss.grabImage(11, 4, 1, 1))); //Dead tree
+								c.setColor(new Color(83,53,10));
+							}
+						}
+					}
+				}	else if (c.getDif() == 5) //Godlands
+				{
+					if (Math.random() <= .005)
+					{
+						c.setObst(new Obstacle(sss.grabImage(9, 5, 1, 1))); //Rock
+						c.setColor(new Color(169,169,169));
+					}
 				}
 			}
 		}
 		
 		return newMap;
-				
 	}
 	
 	
@@ -203,9 +396,9 @@ public class Field {
 	
 	//Accomplishes this by going through from the highest altitude to the lowest, creating a circle
 	//Around the tile, never overriding larger tiles.
-	public Chunk[][] thickenMap(Chunk[][] barrenMap)
+	public Tile[][] thickenMap(Tile[][] barrenMap)
 	{
-		Chunk[][] newMap = new Chunk[barrenMap.length][barrenMap[0].length];
+		Tile[][] newMap = new Tile[barrenMap.length][barrenMap[0].length];
 		
 		int largest = largestAltitude(barrenMap);
 		
@@ -226,7 +419,7 @@ public class Field {
 					//newMap[r][c].setCount(10);
 					//System.out.println("at (" + r + ", " + c + ")");
 					//When at the proper altitude
-					if (barrenMap[r][c].getCount() == altitude)
+					if (barrenMap[r][c].getDif() == altitude)
 					{
 						//System.out.println("Successfully found altitude at (" + r + ", " + c + ") +" + map[r][c].getCount() );
 						
@@ -247,9 +440,9 @@ public class Field {
 								int yPos = (int) (Math.sin(theta)*radius) + c;
 								
 								//System.out.println("At (" + xPos + ", " + yPos + ") Altitude: " + toMap[xPos][yPos].getCount());
-								if (barrenMap[xPos][yPos].getCount() < altitude)
+								if (barrenMap[xPos][yPos].getDif() < altitude)
 								{
-									newMap[xPos][yPos] = new Chunk(xPos-r + barrenMap[r][c].getX(), yPos-c + barrenMap[r][c].getY(), barrenMap[r][c].getCount()); //map[x][y].getCount()
+									newMap[xPos][yPos] = new Tile(xPos-r + barrenMap[r][c].getX(), yPos-c + barrenMap[r][c].getY(), barrenMap[r][c]);
 								}
 							}
 						}
@@ -277,15 +470,15 @@ public class Field {
 	
 	//Find and return the largest godLands area.
 	//Return null if the size is not at least 'area'
-	public ArrayList<Chunk> hasGodLandsArea(int area, int reqAlt)
+	public ArrayList<Tile> hasGodLandsArea(int area, int reqAlt)
 	{
-		ArrayList<Chunk> godLands = new ArrayList<Chunk> ();
-		ArrayList<Chunk> highAltitudes = new ArrayList<Chunk> ();
+		ArrayList<Tile> godLands = new ArrayList<Tile> ();
+		ArrayList<Tile> highAltitudes = new ArrayList<Tile> ();
 		
 		//Add all possible chunks as possible godLands
-		for (Chunk c : field)
+		for (Tile c : field)
 		{
-			if (c.getCount() >= reqAlt)
+			if (c.getDif() >= reqAlt)
 			{
 				highAltitudes.add(c);
 				//System.out.println(c.getX() + ", " + c.getY());
@@ -298,7 +491,7 @@ public class Field {
 		while(highAltitudes.size() > 0) //Keep running through until you've tried all areas
 		{ 
 			//Take the first chunk as the starting point
-			ArrayList<Chunk> areaCheck = new ArrayList<Chunk> ();
+			ArrayList<Tile> areaCheck = new ArrayList<Tile> ();
 			//System.out.println("Checking new Area starting at " + godLands.get(0).getX() + ", " + godLands.get(0).getY());
 			areaCheck.add(highAltitudes.remove(0));
 			
@@ -357,9 +550,9 @@ public class Field {
 	//Sets the differing difficulty lands (Godlands, Highlands, Midlands, Lowlands, Beach, Water
 	//Takes in the position of the Godlands and does everything else based on the shoreline
 	//And that's position.
-	public Chunk[][] setLands(Chunk[][] godLands)
+	public Tile[][] setLands(Tile[][] godLands)
 	{
-		Chunk[][] newMap = map;
+		Tile[][] newMap = map;
 		
 		//Sets the godland chunks and shorline chunks simultaneously, setting everything else to Midlands.
 		//By setting everything else to midlands, only lowlands, highlands, and water have to be set.
@@ -368,22 +561,22 @@ public class Field {
 			for (int c = 0; c < newMap[r].length; c++)
 			{	
 				//Set everything to MidLands (lvl 3), GodLands (lvl 5), and Beach (lvl 1)
-				if (newMap[r][c].getCount() > 0)
+				if (newMap[r][c].getDif() > 0)
 				{
 					
 					//(Initially sets everything (thats not water) to midlands
-					newMap[r][c].setCount(3);
-					for (Chunk[] j : godLands)
+					newMap[r][c].setDif(3);
+					for (Tile[] j : godLands)
 					{
-						for (Chunk k : j)
+						for (Tile k : j)
 						{
 							//the 'godlands' array is only composed of godlands and water.
 							//Takes all the godland parts and puts it into this newMap
-							if (k.getCount() > 0)
+							if (k.getDif() > 0)
 							{
 								if (newMap[r][c].getX() == k.getX() && newMap[r][c].getY() == k.getY())
 								{
-									newMap[r][c].setCount(5);
+									newMap[r][c].setDif(5);
 								}
 							}
 						}
@@ -403,9 +596,9 @@ public class Field {
 							int xPos = (int) (Math.cos(theta)*radius) + r;
 							int yPos = (int) (Math.sin(theta)*radius) + c;
 							
-							if (newMap[xPos][yPos].getCount() <= 0)
+							if (newMap[xPos][yPos].getDif() <= 0)
 							{
-								newMap[r][c].setCount(1);
+								newMap[r][c].setDif(1);
 								//Don't keep checking if you're already a shore...
 								theta = Math.PI*2;
 								radius = shoreradius;
@@ -425,7 +618,7 @@ public class Field {
 			{	
 				
 				//Checks the distance for the lowlands
-				if (newMap[r][c].getCount() > 1)
+				if (newMap[r][c].getDif() > 1)
 				{
 					int lowLandRadius = 13;
 					
@@ -437,9 +630,9 @@ public class Field {
 							int xPos = (int) (Math.cos(theta)*radius) + r;
 							int yPos = (int) (Math.sin(theta)*radius) + c;
 							
-							if (newMap[xPos][yPos].getCount() == 1)
+							if (newMap[xPos][yPos].getDif() == 1)
 							{
-								newMap[r][c].setCount(2);
+								newMap[r][c].setDif(2);
 								theta = Math.PI*2;
 								radius = lowLandRadius;
 							}
@@ -449,7 +642,7 @@ public class Field {
 				
 				
 				//Checks the distance for the shallow water
-				if (newMap[r][c].getCount() < 1)
+				if (newMap[r][c].getDif() < 1)
 				{
 					int shallowRadius = 2  +1;
 					
@@ -463,9 +656,9 @@ public class Field {
 							
 							if (xPos > 0 && xPos < newMap.length && yPos > 0 && yPos < newMap[0].length)
 							{
-								if (newMap[xPos][yPos].getCount() == 1)
+								if (newMap[xPos][yPos].getDif() == 1)
 								{
-									newMap[r][c].setCount(0);
+									newMap[r][c].setDif(0);
 									theta = Math.PI*2;
 									radius = shallowRadius;
 								}
@@ -488,10 +681,10 @@ public class Field {
 			int radius = 1;
 			int xPos = (int) (Math.cos(theta)*radius) + centerX;
 			int yPos = (int) (Math.sin(theta)*radius) + centerY;
-			while(newMap[xPos][yPos].getCount() != 2)
+			while(newMap[xPos][yPos].getDif() != 2)
 			{
 				radius++;
-				if (newMap[xPos][yPos].getCount() >= 5)
+				if (newMap[xPos][yPos].getDif() >= 5)
 				{
 					edgeRad = radius;
 				}
@@ -505,9 +698,9 @@ public class Field {
 				//System.out.println(dist);
 				xPos = (int) (Math.cos(theta)*(dist)) + centerX;
 				yPos = (int) (Math.sin(theta)*(dist)) + centerY;
-				if (newMap[xPos][yPos].getCount() < 5)
+				if (newMap[xPos][yPos].getDif() < 5)
 				{
-					newMap[xPos][yPos].setCount(5);
+					newMap[xPos][yPos].setDif(5);
 				}
 			}
 			
@@ -515,26 +708,25 @@ public class Field {
 			//This makes the midlands 2/3 of the distance
 			for (int dist = edgeRad; dist <= ((radius-edgeRad)/3) + edgeRad; dist ++)
 			{
-				System.out.println(dist);
+				//System.out.println(dist);
 				xPos = (int) (Math.cos(theta)*(dist)) + centerX;
 				yPos = (int) (Math.sin(theta)*(dist)) + centerY;
-				newMap[xPos][yPos].setCount(4);
+				newMap[xPos][yPos].setDif(4);
 			}
-			
 		}
 		return newMap;
 	}
 	
 	
-	public Chunk[][] shiftChunks(Chunk[][] toBeShifted)
+	public Tile[][] shiftChunks(Tile[][] toBeShifted)
 	{
-		Chunk[][] newMap = new Chunk[toBeShifted.length][toBeShifted[0].length];
+		Tile[][] newMap = new Tile[toBeShifted.length][toBeShifted[0].length];
 		
 		for (int r = 0; r < newMap.length; r++)
 		{
 			for (int c = 0; c < newMap[r].length; c++)
 			{	
-				newMap[r][c] = new Chunk(r, c, toBeShifted[r][c].getCount());
+				newMap[r][c] = new Tile(r, c, toBeShifted[r][c].getDif());
 			}
 		}
 		
@@ -600,14 +792,14 @@ public class Field {
 	public boolean addChunk(int x, int y, boolean addCount)
 	{
 		//go through each Chunk
-		for (Chunk t : field)
+		for (Tile t : field)
 		{
 			if (t.getX() == x && t.getY() == y)
 			{
 				//add to the count if you are generating the map
 				if (addCount)
 				{
-					t.addCount();
+					t.addDif();
 				}
 				//System.out.println("HEY -- " + t.getColor());
 				return false;
@@ -617,7 +809,7 @@ public class Field {
 		if (addCount)
 		{
 			
-			field.add(new Chunk(x, y));
+			field.add(new Tile(x, y));
 		}
 		return true;
 	}
@@ -628,47 +820,7 @@ public class Field {
 	}
 	
 	//Displays the map
-	public void render(Graphics g, Player player)
-	{
-		//Display the rendering chunks only
-		/*
-		for (Chunk[] r : map)
-		{
-			for (Chunk c : r)
-			{
-				g.setColor(c.getColor());
-				g.fillRect(Game.SCALE*(c.getX()), Game.SCALE*(c.getY()),5, 5);
-			}
-		}
-		*/
-		
-		//g.fillRect(50,  50, 10, 10);
-		
-		
-		//Add the distance to the 0,0 coordinate
-		//The current chunk you are is the distance you are from the [0][0] chunk (In chunks)
-		//Plus the position of that first chunk
-		
-		int radiusOfChunks = (Game.WIDTH/100) + 1;
-		int currentXChunk = (int) (player.getX()/Chunk.CHUNKSIZE) + Math.abs(map[0][0].getX());
-		int currentYChunk = (int) (player.getY()/Chunk.CHUNKSIZE) +  Math.abs(map[0][0].getY());
-		
-		
-		for (int r = currentXChunk-radiusOfChunks; r <= currentXChunk+radiusOfChunks; r++)
-		{
-			for (int c = currentYChunk-radiusOfChunks; c <= currentYChunk+radiusOfChunks; c++)
-			{
-				map[r][c].render(g, player.getX(), player.getY(), player.getTheta());
-				if (!map[r][c].getRendered())
-				{
-					map[r][c].setRendered(true);
-				}
-			}
-		}
-		
-		
-		
-	}
+	
 	
 	
 	/*
@@ -711,63 +863,66 @@ public class Field {
 	
 	//For viewing the map and the minimap. 
 	//Done here to prevent an overflow of loaded images and spritesheets, etc.
-	public void setColors() //For viewing map
+	public void setPictures() //For viewing map
 	{
-		BufferedImage spriteSheet = null;
+		BufferedImage cspriteSheet = null;
+		//BufferedImage sspriteSheet = null;
 		BufferedImageLoader loader = new BufferedImageLoader();
 		try {
-			spriteSheet = loader.loadImage("/spritesheet.png");
+			cspriteSheet = loader.loadImage("/spritesheet.png");
+			//sspriteSheet = loader.loadImage("/structure_sheet.png");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		SpriteSheet ss = new SpriteSheet(spriteSheet, 100);
+		SpriteSheet css = new SpriteSheet(cspriteSheet, 100);
+		//SpriteSheet sss = new SpriteSheet(sspriteSheet, 8);
 		//hooks into the spritesheet and BufferedImageLoader class
 		
-		for (Chunk[] r : map)
+		
+		
+		for (Tile[] r : map)
 		{
-			for (Chunk t : r)
-			{
-			//System.out.println(t.getCount());
-				if (t.getCount() <= -1)//DEEP water
-				{
-					t.setColor(new Color(0, 0, 255), ss.grabImage(0, 0, 1, 1));
-					
-					
-				}	else if (t.getCount() <= 0) //WATER, set color to blue, get water image
-				{
-					t.setColor(new Color(0, 191, 255), ss.grabImage(1, 0, 1, 1));
-					
-					
-				}	else if (t.getCount() <= 1) //BEACH, set color to white, get beach image
-				{
-					t.setColor(new Color(255, 255, 255), ss.grabImage(2, 0, 1, 1));
-					
-					
-				}	else if (t.getCount() <= 2) //LOWLANDS, color to white-grey, lowlands image
-				{
-					t.setColor(new Color(200, 200, 200), ss.grabImage(3, 0, 1, 1));
-					
-					
-				}	else if (t.getCount() <= 3)  //MIDLANDS, color to gray, midlands image
-				{
-					t.setColor(new Color(140, 140, 140), ss.grabImage(4, 0, 1, 1));
-					
-					
-				}	else if (t.getCount() <= 4)  //HIGHLANDS, color to dark-gray, highlands image
-				{
-					t.setColor(new Color(80, 80, 80), ss.grabImage(5, 0, 1, 1));
-					
-					
-				}	else                         //GODLANDS, color to black, godlands image
-				{
-					t.setColor(new Color(0, 0, 0), ss.grabImage(6, 0, 1, 1));
+			for (Tile t : r)
+			{	
+				Color clr = null;
+				if (t.getDif() == -1)
+				{ //Deep Water - dark blue
+					clr = new Color(0, 0, 255);
+				}	else if (t.getDif() == 0)
+				{ //Shallow water - light blue
+					clr = new Color(0, 191, 255);
+				}	else if (t.getDif() == 1)
+				{ //Beach - Sand Color
+					clr = new Color(194, 178, 128);
+				}	else if (t.getDif() == 2)
+				{ //Lowlands - Light Grass Green
+					clr = new Color(56, 173, 76);
+				}	else if (t.getDif() == 3)
+				{ //Midlands - brown/green grass
+					clr = new Color(77, 89, 39);
+				}	else if (t.getDif() == 4)
+				{ //Highlands - golden grass
+					clr = new Color(162, 163, 3);
+				}	else if (t.getDif() == 5)
+				{ //Godlands - dark
+					clr = new Color(80, 80, 80);
 				}
+				//System.out.println("Field SetColors... " + t.getDif());
+				
+				t.setImg(clr, css.grabImage(t.getDif()+1, 0, 1, 1));
 			}
 		}
 	}
 
 	
-	public Chunk[][] getMap()	{	return map;	}
+	public Tile[][] getMap()	{	return map;	}
+	
+	public void addLootBag(String enemyTier, double x, double y) throws FileNotFoundException
+	{
+		lootBags.add(new LootBag(enemyTier, x, y));
+	}
+	
+	public ArrayList<Enemy> getEnemies()	{	return enemies;	}
 	
 	//Used to be used to smooth the look of the map. Has possible future allocations
 		//Can be possibly used to better generate the map
@@ -832,7 +987,6 @@ public class Field {
 			return base4Seed;
 		}
 	}
-
 	
 	public void loadSeed(String seed)
 	{

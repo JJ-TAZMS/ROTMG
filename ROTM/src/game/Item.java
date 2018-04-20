@@ -14,32 +14,6 @@ public class Item
 	private ArrayList<String[]> listOfDesiredItems;
 	private String itemName;
 	
-	/*
-	public static void main(String[] args) throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File("res/items_wiz.csv"));
-        //scanner.useDelimiter(",");
-        String itemType = "A";
-        String itemTier = "3";
-        ArrayList<String[]> listOfData = new ArrayList<String[]>();
-        while(scanner.hasNextLine()){
-        		String data = scanner.nextLine();
-        		//System.out.println(data);
-        		String[] sepData = data.split(",");
-        		//System.out.println(Arrays.toString(sepData));
-        		//System.out.println(sepData[0] + "  " + sepData[1]);
-        		if (sepData[0].equals(itemType) && sepData[1].equals(itemTier)) {
-        			listOfData.add(sepData);
-        		}
-        }
-        
-        //print out all items of the desired type and tier
-        for (String[] a: listOfData) {
-        		System.out.println(Arrays.toString(a));
-        }
-        scanner.close();
-    }
-    */
-	
 	public Item(String type, String tier) throws FileNotFoundException {
 		createListOfItems(type, tier);
 		String[] itemData = getRandomItemData();
@@ -48,7 +22,14 @@ public class Item
 		itemName = itemData[2];
 		itemStat = Integer.parseInt(itemData[3]);
 	}
-	
+	public Item(String type, String name, int tier, int stat)
+	{
+		itemType = type;
+		itemName = name;
+		itemTier = tier;
+		itemStat = stat; 
+		listOfDesiredItems = null;
+	}
 	//SHOULD WRITE A CONSTRUCTOR THAT CAN GET A SPECIFIC ITEM, NOT JUST A RANDOM ONE
 	
 	public String getType() {

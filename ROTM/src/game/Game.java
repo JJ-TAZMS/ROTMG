@@ -8,6 +8,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
@@ -37,8 +39,13 @@ public class Game extends Canvas implements Runnable{
 	public static JLabel dexterity; 
 	public static JLabel vitality;
 	public static JLabel wisdom;
+	
 	public boolean running = false;
 	public int tickCount = 0;
+	
+	public static double mouseX;
+	public static double mouseY;
+
 	
 	//private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 	//private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
@@ -55,6 +62,7 @@ public class Game extends Canvas implements Runnable{
 		setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		
 		frame = new JFrame(NAME);
+		
 		attack = new JLabel("ATT - ");
 		defense = new JLabel("DEF - ");
 		speed = new JLabel("SPD - ");
@@ -67,6 +75,7 @@ public class Game extends Canvas implements Runnable{
 		frame.add(dexterity);
 		frame.add(vitality);
 		frame.add(wisdom);
+		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout());
 		
@@ -96,13 +105,16 @@ public class Game extends Canvas implements Runnable{
 		// ss.grabImage(0, 0, 1, 1);
 		
 		//Initializing any objects here
-		
 		map = new Field(3000);
+		
 		int index = 0;
 		player1 = new Player(map, index, ss);
 		player1.getMap().setPositionInMap(player1);
 		
-		
+		MouseListeners listeners = new MouseListeners();   
+		addMouseListener(listeners);
+		addMouseMotionListener(listeners);
+
 		
 		
 	}
@@ -176,7 +188,7 @@ public class Game extends Canvas implements Runnable{
 				lastTimer += 1000;
 				//System.out.println("fps" + frames + " " + ticks);
 				//System.out.println(player1.getX() + ", " + player1.getY());
-				frame.setTitle(NAME + "  Pos: " + (int)player1.getX() + ", " + (int)player1.getY() + "  MapSize: " + player1.getMap().getMap().length*Chunk.CHUNKSIZE + ", " + player1.getMap().getMap()[0].length*Chunk.CHUNKSIZE + " Size: " + this.getWidth() + "/" + WIDTH + ", " + this.getHeight() + "/" + HEIGHT);
+				frame.setTitle(NAME + "  Pos: " + (int)player1.getX() + ", " + (int)player1.getY() + "  MapSize: " + player1.getMap().getMap().length + ", " + player1.getMap().getMap()[0].length + " Size: " + this.getWidth() + "/" + WIDTH + ", " + this.getHeight() + "/" + HEIGHT);
 				frames = 0;
 				ticks = 0;
 			}
@@ -187,6 +199,12 @@ public class Game extends Canvas implements Runnable{
 	{
 		
 		player1.tick();
+		
+		//TODO when we have an arraylist of players, we need to send in the player positions to only their nearby enemies.
+		for (Enemy en : map.getEnemies())
+		{
+			en.tick(player1.getX(), player1.getY());
+		}
 		WIDTH = this.getWidth()/Game.SCALE;
 		HEIGHT = this.getHeight()/Game.SCALE;
 	}
@@ -221,6 +239,7 @@ public class Game extends Canvas implements Runnable{
 		
 		
 		g2d.rotate(-player1.getTheta(), Game.WIDTH/2 * Game.SCALE, Game.HEIGHT/2 * Game.SCALE);
+		//player1.getMap().renderNoRot(g2d, player1);
 		player1.render(g2d);
 		
 		//////////// End of Drawing Stuff to screen
@@ -228,7 +247,7 @@ public class Game extends Canvas implements Runnable{
 		bs.show();
 	}
 	
-	//When a key is preesed down, this is called
+	//When a key is pressed down, this is called
 	public void keyPressed(KeyEvent e)
 	{
 		char key = e.getKeyChar();
@@ -249,6 +268,30 @@ public class Game extends Canvas implements Runnable{
 		new Game().start();
 	}
 	
+
+	class MouseListeners extends MouseAdapter {
+
+	    public void mousePressed(MouseEvent e) {
+	    	//System.out.println("YO");
+	    	player1.mouseClick(e.getButton());
+	    	
+	    }
+
+	    public void mouseDragged(MouseEvent e) {
+	    	mouseX = e.getX();
+	    	mouseY = e.getY();
+	    }
+	    
+	    public void mouseReleased(MouseEvent e) {
+	    	player1.mouseReleased(e.getButton());
+	    }
+	    
+	    public void mouseMoved(MouseEvent e) {
+	    	mouseX = e.getX();
+	    	mouseY = e.getY();
+	    }
+	    
+	}
 
 	
 }

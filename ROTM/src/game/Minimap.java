@@ -4,9 +4,9 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 public class Minimap {
-	private Chunk[][] m;
+	private Tile[][] m;
 	private int dim;
-	public Minimap(Chunk[][] map)
+	public Minimap(Tile[][] map)
 	{
 		//assuming Map is supposed to be Field? or 'map' from Field, aka Chunk[][]
 		m = map;
@@ -14,20 +14,22 @@ public class Minimap {
 	}
 	public void render(Graphics g, double xIn, double yIn){
 		//Only go through like a radius of 30 around player's pos
-		int radiusOfChunks = 10;
-		int currentXChunk = (int) (xIn/Chunk.CHUNKSIZE);
-		int currentYChunk = (int) (yIn/Chunk.CHUNKSIZE);
+		int radiusOfTiles = 20;
+		int currentXChunk = (int) (xIn);
+		int currentYChunk = (int) (yIn);
 		
 		
-		for (int r = currentXChunk-radiusOfChunks; r <= currentXChunk+radiusOfChunks; r++)
+		for (int r = currentXChunk-radiusOfTiles; r <= currentXChunk+radiusOfTiles; r++)
 		{
-			for (int c = currentYChunk-radiusOfChunks; c <= currentYChunk+radiusOfChunks; c++)
+			for (int c = currentYChunk-radiusOfTiles; c <= currentYChunk+radiusOfTiles; c++)
 			{
-				int spread = 10;
-				double xPos = GUI.xStart + 10 + (m[r][c].getX()*spread) - m[currentXChunk-radiusOfChunks][currentYChunk-radiusOfChunks].getX()*spread;
-				double yPos = 10 + (m[r][c].getY()*spread) - m[currentXChunk-radiusOfChunks][currentYChunk-radiusOfChunks].getY()*spread;
-				System.out.println(m[r][c].getX());
-				System.out.println(GUI.xStart + (m[r][c].getX()*Game.SCALE));
+				int spread = 5;
+				double xPos = GUI.xStart + 10 + ((r - (currentXChunk-radiusOfTiles))*spread);
+				double yPos = 10 + ((c - (currentYChunk-radiusOfTiles))*spread);
+				//double xPos = GUI.xStart + 10 + (m[r][c].getX()*spread) - m[currentXChunk-radiusOfTiles][currentYChunk-radiusOfTiles].getX()*spread;
+				//double yPos = 10 + (m[r][c].getY()*spread) - m[currentXChunk-radiusOfTiles][currentYChunk-radiusOfTiles].getY()*spread;
+				//System.out.println("MiniMap: " + xPos + ", " + yPos);
+				//System.out.println(GUI.xStart + (m[r][c].getX()*Game.SCALE));
 				if (m[r][c].getRendered())
 				{
 					g.setColor(m[r][c].getColor());

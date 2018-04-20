@@ -37,6 +37,10 @@ public class Inventory {
 					//the item icon, need to use isEmpty in Slots
 				}
 			}
+			
+		}
+		for (int i=0; i<4;i++)
+		{
 			//g.drawRect((GUI.xStart + 15)+(50*i), GUI.yStartInv+50, 50, 50);
 			//g.drawRect((GUI.xStart + 15)+(50*i), GUI.yStartInv+100, 50, 50);
 		}
