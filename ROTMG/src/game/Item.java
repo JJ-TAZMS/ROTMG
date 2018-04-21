@@ -15,31 +15,7 @@ public class Item
 	private ArrayList<String[]> listOfDesiredItems;
 	private String itemName;
 	
-	/*
-	public static void main(String[] args) throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File("res/items_wiz.csv"));
-        //scanner.useDelimiter(",");
-        String itemType = "A";
-        String itemTier = "3";
-        ArrayList<String[]> listOfData = new ArrayList<String[]>();
-        while(scanner.hasNextLine()){
-        		String data = scanner.nextLine();
-        		//System.out.println(data);
-        		String[] sepData = data.split(",");
-        		//System.out.println(Arrays.toString(sepData));
-        		//System.out.println(sepData[0] + "  " + sepData[1]);
-        		if (sepData[0].equals(itemType) && sepData[1].equals(itemTier)) {
-        			listOfData.add(sepData);
-        		}
-        }
-        
-        //print out all items of the desired type and tier
-        for (String[] a: listOfData) {
-        		System.out.println(Arrays.toString(a));
-        }
-        scanner.close();
-    }
-    */
+
 	
 	public Item(String type, String tier) throws FileNotFoundException {
 		createListOfItems(type, tier);
@@ -50,7 +26,6 @@ public class Item
 		itemStat = Integer.parseInt(itemData[3]);
 	}
 	
-	//SHOULD WRITE A CONSTRUCTOR THAT CAN GET A SPECIFIC ITEM, NOT JUST A RANDOM ONE
 	
 	public String getType() {
 		return itemType;
@@ -98,7 +73,7 @@ public class Item
 		
 		//testing this to see if merge  can work
 		//please work for the love of god
-		ArrayList<String[]> whodafu = listOfDesiredItems;
+		
 	}
 	
 	public String toString() {

@@ -204,48 +204,6 @@ public class Player {
 							yVel = 0;
 						}
 					}
-					
-					/*
-					if (cX < x && cY == y) //If checking left
-					{
-						if (xVel < 0)
-						{
-							xVel = 0;
-						}
-					}
-					if (cX > x && cY == y) //If checking right
-					{
-						if (xVel > 0)
-						{
-							xVel = 0;
-						}
-					}
-					if (cY < y && cX == x) //If checking up
-					{
-						if (yVel < 0)
-						{
-							yVel = 0;
-						}
-					}
-					if (cY > y && cX == x) //If checking down
-					{
-						if (yVel > 0)
-						{
-							yVel = 0;
-						}
-					}
-					*/
-					
-					/*
-					if ((cC.getTiles()[(int) ((x+.5)%Chunk.CHUNKSIZE)][(int) (y%Chunk.CHUNKSIZE)].getDif() < 0 && xVel > 0) || (cC.getTiles()[(int) ((x-.5)%Chunk.CHUNKSIZE)][(int) (y%Chunk.CHUNKSIZE)].getDif() < 0 && xVel < 0))
-					{
-						xVel = 0;
-					}
-					if ((cC.getTiles()[(int) (x%Chunk.CHUNKSIZE)][(int) ((y+.5)%Chunk.CHUNKSIZE)].getDif() < 0 && yVel > 0) || (cC.getTiles()[(int) (x%Chunk.CHUNKSIZE)][(int) ((y-.5)%Chunk.CHUNKSIZE)].getDif() < 0 && yVel < 0))
-					{
-						yVel = 0;
-					}
-					*/
 				}
 			}
 		}
@@ -340,16 +298,19 @@ public class Player {
 				e.printStackTrace();
 			}
 		}
-		/*
-		for (int i=1; i<=bag.bagItems.size();i++)
+		if(bag != null)
 		{
-			if (k == (char)(i) && nearBag)
+			System.out.println("work you piece of shit");
+			for (int i=1; i<=bag.bagItems.size();i++)
 			{
-				itemInHand = true;
-				bagIndex = i-1;			
+				if (k == (char)(i) && nearBag)
+				{
+					itemInHand = true;
+					bagIndex = i-1;	
+					System.out.println("Ay my n-word you hit "+i);
+				}
 			}
 		}
-		*/
 		
 	}
 	
