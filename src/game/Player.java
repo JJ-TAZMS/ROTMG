@@ -292,6 +292,10 @@ public class Player {
 				{
 					p.render(g, x, y);
 				}
+				for (Bomb b : en.getBombs())
+				{
+					b.render(g,  x,  y);
+				}
 			}
 		}
 

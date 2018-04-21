@@ -3,6 +3,7 @@ package game;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class Bomb {
 
@@ -12,15 +13,15 @@ public class Bomb {
 	private double dist;
 	private double maxRange;
 	private double damage;
-	private double height;
-	private double width;
+	private int index;
 	private BufferedImage img;
+	private ArrayList<Projectile> bombSpread;
 	
-	public Bomb(int index, double x, double y, double theta)
+	public Bomb(int ind, double x, double y, double theta)
 	{
 		xPos = x;
 		yPos = y;
-		
+		index = ind;
 		
 		double vel = .2;
 		xVel = vel*Math.cos(theta);
@@ -28,19 +29,49 @@ public class Bomb {
 		
 		maxRange = new EnemyStats(index).getAtkDist2();
 		damage = new EnemyStats(index).getAttack2();
+		bombSpread = new ArrayList<Projectile> ();
+		dist = .001;
 		
 	}
 	
 	public void tick()
 	{	
-			//Update position
-			xPos += xVel;
-			yPos += yVel;
+		
+			System.out.println("Bomb Dist: " + dist);
+			if (dist == 0)//Move projectiles
+			{
+				for (int i = 0; i < bombSpread.size(); i++)
+				{
+					bombSpread.get(i).tick();
+					if (bombSpread.get(i).getDist() > bombSpread.get(i).getRange())
+					{
+						System.out.println("Removing a bomb projectile");
+						bombSpread.remove(i);
+						i--;
+					}
+				}
+			}	else if (dist < maxRange) //If the bomb should be moving, move it
+			{
+				//Update position
+				System.out.println("Updating Bomb Pos");
+				xPos += xVel;
+				yPos += yVel;
+				
+				//add distance to range max distance
+				dist += Math.sqrt(Math.pow(xVel, 2) + Math.pow(yVel,  2));
+			}	else //Create projectiles
+			{
+				System.out.println("Adding a bunch of porjectiles for the bomb");
+				xVel = yVel = 0;
+				dist = 0;
+				for (double bombTheta = 0; bombTheta < 2*Math.PI; bombTheta+= Math.PI/4)
+				{
+					bombSpread.add(new Projectile(index, xPos, yPos, bombTheta, .2));
+				}
+			}
 			
-			//add distance to range max distance
-			dist += Math.sqrt(Math.pow(xVel, 2) + Math.pow(yVel,  2));
 			
-			System.out.println(xPos + ", " + yPos);
+			//System.out.println(xPos + ", " + yPos);
 	}
 
 	public void render(Graphics g, double xIn, double yIn) 
@@ -54,13 +85,23 @@ public class Bomb {
 
 		
 		
-		System.out.println(xP + ", " + yP);
+		//System.out.println(xP + ", " + yP);
+		if (dist == 0) //Display projectiles
+		{
+			for (Projectile p : bombSpread)
+			{
+				p.render(g,  xIn,  yIn);
+			}
+		}	else
+		{
+			g.drawOval((int) (Game.SCALE*(xP + Game.WIDTH/2)) - 5, (int) (Game.SCALE*(yP + Game.HEIGHT/2)) - 5, 10, 10);
+
+		}
 		
-		g.drawOval((int) (Game.SCALE*(xP + Game.WIDTH/2)) - 5, (int) (Game.SCALE*(yP + Game.HEIGHT/2)) - 5, 10, 10);
+		
 		//g.drawImage(img, Game.WIDTH / 2, Game.HEIGHT / 2, img.getHeight(), img.getWidth(), null);
 	}
 	
-	public boolean checkDelete()	{		return dist >= maxRange;	}
 	
 	// Getters
 	

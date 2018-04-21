@@ -15,6 +15,7 @@ public class Enemy {
 	public EnemyStats stats;
 	
 	protected ArrayList<Projectile> projectiles = new ArrayList<Projectile>(); 
+	protected ArrayList<Bomb> bombs = new ArrayList<Bomb> ();
 	
 	
 	public Enemy(int ID, double X, double Y){
@@ -85,6 +86,12 @@ public class Enemy {
 					i--;
 				}
 			}
+			for (int i = 0; i < bombs.size(); i++)
+			{
+				//System.out.println("TICKING BOMB");
+				bombs.get(i).tick();
+			}
+			
 		}
 		
 		
@@ -113,6 +120,7 @@ public class Enemy {
 
 	public EnemyStats getStats()	{	return stats;	}
 	public ArrayList<Projectile> getProj()	{	return projectiles;	}
+	public ArrayList<Bomb> getBombs()	{	return bombs;	}
 	public double getX()	{	return eX;	}
 	public double getY()	{	return eY;	}
 }

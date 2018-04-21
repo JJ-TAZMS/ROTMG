@@ -51,7 +51,7 @@ public class Projectile {
 			//add distance to range max distance
 			dist += Math.sqrt(Math.pow(xVel, 2) + Math.pow(yVel,  2));
 			
-			System.out.println(xPos + ", " + yPos);
+			//System.out.println(xPos + ", " + yPos);
 	}
 
 	public void render(Graphics g, double xIn, double yIn) 
@@ -65,7 +65,7 @@ public class Projectile {
 
 		
 		
-		System.out.println(xP + ", " + yP);
+		//System.out.println(xP + ", " + yP);
 		
 		g.drawOval((int) (Game.SCALE*(xP + Game.WIDTH/2)) - 25, (int) (Game.SCALE*(yP + Game.HEIGHT/2)) - 25, 50, 50);
 		//g.drawImage(img, Game.WIDTH / 2, Game.HEIGHT / 2, img.getHeight(), img.getWidth(), null);
