@@ -69,6 +69,7 @@ public class Enemy {
 					{
 						if (enemyID < 25)
 						{
+							
 							attackBehavior(xIn, yIn);
 						}	else
 						{
