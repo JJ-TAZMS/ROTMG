@@ -9,6 +9,7 @@ public class GUI {
 	private Stats stat;
 	private Inventory inv;
 	private Hotbar hot;
+	private LootBag loot;
 	public static int width = Game.WIDTH/5;
 	public static int xStart = (Game.WIDTH-width+2)*Game.SCALE;
 	public static int yStartInv = (Game.HEIGHT/2) * Game.SCALE;
@@ -23,6 +24,10 @@ public class GUI {
 		inv = new Inventory();
 		hot = new Hotbar();
 	}
+	public void setBag(LootBag l)
+	{
+		loot = l;
+	}
 	public void render(Graphics g, double xIn, double yIn){
 		
 		width = Game.WIDTH/5;
@@ -34,6 +39,11 @@ public class GUI {
 		g.setColor(Color.darkGray);
 		g.fillRect((Game.WIDTH-width+2)*Game.SCALE, 0, width*Game.SCALE, Game.HEIGHT*Game.SCALE);
 
+		g.setColor(Color.BLACK);
+		for (int i = 0; i<loot.bagItems.size(); i++)
+		{
+			g.drawRect((xStart + 15)+(50*i), Game.HEIGHT*Game.SCALE - 150, 50, 50); //item icons
+		}
 		mini.render(g, xIn, yIn);
 		inv.render(g);
 		hot.render(g);
