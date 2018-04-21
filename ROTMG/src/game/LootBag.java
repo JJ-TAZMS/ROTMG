@@ -90,6 +90,13 @@ public class LootBag {
 		}
 	}
 	
+	public double getX() {
+		return xPos;
+	}
+	
+	public double getY() {
+		return yPos;
+	}
 	
 	public String toString() {
 		String s = "Items in bag: " + "\n";

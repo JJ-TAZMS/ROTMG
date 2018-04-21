@@ -36,6 +36,7 @@ public class Field {
 		createMap(); //Creates the Map and stores it into 'map'
 		
 	}
+	public ArrayList<LootBag> getBags() { return lootBags; }
 	
 	//Create the map through an arraylist and convert it to an array. Then using the largest godlands area
 	//Set the various difficulty areas in the map.
@@ -129,6 +130,7 @@ public class Field {
 				}
 			}
 		}
+		
 		for (LootBag lb : lootBags)
 		{
 			lb.render(g, player.getX(), player.getY());
@@ -184,17 +186,17 @@ public class Field {
 				//Enemy e2 = new GelatinousCube(player.getX() + 5, player.getY() + 10);
 				
 				
-				Enemy e3 = new Medusa(player.getX() + 10, player.getY() + 10);
+				//Enemy e3 = new GiantCrab(player.getX() + 10, player.getY() + 10);
 				
 				//enemies.add(e1);
 				//enemies.add(e2);
-				enemies.add(e3);
+				//enemies.add(e3);
 				
 				lootBags.add(new LootBag("1", player.getX() + 5, player.getY() + 5));
 				lootBags.add(new LootBag("2", player.getX() + 2, player.getY() + 2));
 				lootBags.add(new LootBag("3", player.getX() + 1, player.getY() + 1));
 				lootBags.add(new LootBag("4", player.getX() + 3, player.getY() + 3));
-				
+				//lootBags.add(new LootBag("5", player.getX() + 6, player.getY() + 6));
 				chosen = true;
 			}
 		}
@@ -990,7 +992,6 @@ public class Field {
 			return base4Seed;
 		}
 	}
-
 	
 	public void loadSeed(String seed)
 	{

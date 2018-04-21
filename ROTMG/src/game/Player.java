@@ -21,6 +21,10 @@ public class Player {
 	private Field map;
 	private int itemID;
 	private boolean itemInHand;
+	private LootBag bag;
+	private boolean nearBag;
+	private Item itemHeld;
+	private int bagIndex;
 
 	public Player(Field m, int index, SpriteSheet ss) // Sets class type with index
 	{
@@ -38,6 +42,9 @@ public class Player {
 		image[2] = ss.grabImage(10, 29, 1, 1); //Left
 		image[3] = ss.grabImage(11, 29, 1, 1); //Up
 		img = image[1];
+		
+		bag = null;
+		nearBag = false;
 	}
 
 	public void tick() // Update game logic for player (stats, pos, etc.)
@@ -46,6 +53,7 @@ public class Player {
 		rotateMap();
 		projectileTick();
 		attack();
+		checkBags();
 	}
 	
 	
@@ -282,16 +290,12 @@ public class Player {
 			p.render(g, x, y);
 		}
 		
-		//TODO only render close enemies
 		for (Enemy en : map.getEnemies()){
-			if (en.getStats().getActive())
+			en.render(g, x, y);
+			
+			for (Projectile p : en.getProj()) 
 			{
-				en.render(g, x, y);
-				
-				for (Projectile p : en.getProj()) 
-				{
-					p.render(g, x, y);
-				}
+				p.render(g, x, y);
 			}
 		}
 
@@ -336,7 +340,16 @@ public class Player {
 				e.printStackTrace();
 			}
 		}
-		
+		/*
+		for (int i=1; i<=bag.bagItems.size();i++)
+		{
+			if (k == (char)(i) && nearBag)
+			{
+				itemInHand = true;
+				bagIndex = i-1;			
+			}
+		}
+		*/
 		
 	}
 	
@@ -381,6 +394,7 @@ public class Player {
 		if(k == 1)
 		{
 			attacking = false;
+			
 		}
 	}
 	
@@ -459,4 +473,47 @@ public class Player {
 	public Field getMap()	{
 		return map;
 	}
+	public void checkBags(){
+		if (map.getBags().size()>0)
+		{
+			for (int i=0; i<map.getBags().size(); i++)
+			{
+				double bagX = map.getBags().get(i).getX();
+				double bagY = map.getBags().get(i).getY();
+				double playerDist = (Math.sqrt(bagX - x)*(bagX - x) + (bagY - y)*(bagY - y));
+				nearBag = (Math.abs(playerDist)<1);
+				if (nearBag)
+				{
+					bag = map.getBags().get(i);	
+					i = map.getBags().size()+1;
+					//gui.setBag(bag);
+				}else{
+					bag = null;		
+				}
+				gui.setBag(bag);
+				if (playerDist > Game.DELRADIUS)
+				{
+					map.getBags().remove(i);
+				}
+				//i = map.getBags().size() +1;
+					
+				/*if (playerDist<3)
+				{
+					nearBag = true;
+					bag = map.getBags().get(i);
+					gui.renderLoot(bag);
+				} else if (playerDist> Game.DELRADIUS)
+				{
+					map.getBags().remove(i);
+				} else {
+					nearBag = false;  //jk dont do this
+					bag = null;
+				} */
+			}
+		}
+	}
+	
+	public LootBag getBag() { return bag; }
+	
+	public boolean getNear() { return nearBag;  }
 }

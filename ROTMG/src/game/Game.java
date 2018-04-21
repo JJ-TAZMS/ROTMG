@@ -28,7 +28,7 @@ public class Game extends Canvas implements Runnable{
 	public static int HEIGHT = (int) (WIDTH * .75);
 	public static final int SCALE = 5;
 	
-	
+	public static final int DELRADIUS = Game.WIDTH * Game.SCALE * 20;
 	public final String NAME = "ROTMG";
 	
 	
