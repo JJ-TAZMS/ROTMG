@@ -40,7 +40,7 @@ public class Enemy {
 		
 	}
 	
-	public void tick(double xIn, double yIn) {
+	public void tick(double xIn, double yIn, double pxVel, double pyVel) {
 
 		
 		double distFromPlayer = Math.sqrt((eX - xIn)*(eX - xIn) + (eY - yIn)*(eY - yIn));
@@ -67,7 +67,14 @@ public class Enemy {
 				if (distFromPlayer < stats.getAtkDist()) {
 					if((stats.getAtkWait() <= 0))
 					{
-						attackBehavior(xIn, yIn);
+						if (enemyID < 25)
+						{
+							attackBehavior(xIn, yIn);
+						}	else
+						{
+							attackBehavior(xIn, yIn, pxVel, pyVel);
+						}
+						
 						
 						stats.setAtkWait( (int) (360/stats.getDexterity()));
 					}
@@ -90,6 +97,10 @@ public class Enemy {
 			{
 				//System.out.println("TICKING BOMB");
 				bombs.get(i).tick();
+				if (bombs.get(i).shouldDelete()) {
+					bombs.remove(i);
+					i--;
+				}
 			}
 			
 		}
@@ -115,6 +126,10 @@ public class Enemy {
 	}
 	
 	public void attackBehavior(double xIn, double yIn) {
+		
+	}
+	
+	public void attackBehavior(double xIn, double yIn, double xVel, double yVel) {
 		
 	}
 

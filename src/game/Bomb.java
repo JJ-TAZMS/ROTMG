@@ -30,7 +30,6 @@ public class Bomb {
 		maxRange = new EnemyStats(index).getAtkDist2();
 		damage = new EnemyStats(index).getAttack2();
 		bombSpread = new ArrayList<Projectile> ();
-		dist = .001;
 		
 	}
 	
@@ -38,7 +37,7 @@ public class Bomb {
 	{	
 		
 			System.out.println("Bomb Dist: " + dist);
-			if (dist == 0)//Move projectiles
+			if (dist == -1)//Move projectiles
 			{
 				for (int i = 0; i < bombSpread.size(); i++)
 				{
@@ -63,7 +62,7 @@ public class Bomb {
 			{
 				System.out.println("Adding a bunch of porjectiles for the bomb");
 				xVel = yVel = 0;
-				dist = 0;
+				dist = -1;
 				for (double bombTheta = 0; bombTheta < 2*Math.PI; bombTheta+= Math.PI/4)
 				{
 					bombSpread.add(new Projectile(index, xPos, yPos, bombTheta, .2));
@@ -86,7 +85,7 @@ public class Bomb {
 		
 		
 		//System.out.println(xP + ", " + yP);
-		if (dist == 0) //Display projectiles
+		if (dist == -1) //Display projectiles
 		{
 			for (Projectile p : bombSpread)
 			{
@@ -105,6 +104,7 @@ public class Bomb {
 	
 	// Getters
 	
+public boolean shouldDelete()	{	return bombSpread.size() == 0 && dist == -1;	}
 	public double getDist(){		return dist;	}
 	
 	public double getRange()	{		return maxRange;	}
