@@ -12,6 +12,8 @@ import java.util.Scanner;
 import java.awt.*;
 import javax.swing.*;
 
+import game.Enemies.Medusa;
+
 
 public class Field {
 	private ArrayList<Tile> field; //Used for map creation

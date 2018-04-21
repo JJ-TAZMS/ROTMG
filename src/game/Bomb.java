@@ -1,47 +1,36 @@
 package game;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 
-public class Projectile {
+public class Bomb {
+
+	
 	private double xPos, yPos;
 	private double xVel, yVel;
 	private double dist;
 	private double maxRange;
 	private double damage;
-	private boolean isEnemy;
 	private double height;
 	private double width;
 	private BufferedImage img;
-
-	//Index that represents the projectile, its position, and its angle and speed
-	public Projectile(int index, double x, double y, double theta, double vel) {
+	
+	public Bomb(int index, double x, double y, double theta)
+	{
 		xPos = x;
 		yPos = y;
-		xVel = vel * Math.cos(theta);
-		yVel = vel * Math.sin(theta);
-		dist = 0;
-
-		// TODO add constants for sizes / maxRange based on index
-		//height = img.getHeight();
-		//width = img.getWidth();
-		if (index == 0)
-		{
-			maxRange = 10;
-			damage = 10;
-			isEnemy = false;
-		}	else
-		{
-			maxRange = new EnemyStats(index).getAtkDist()*2;
-			damage = new EnemyStats(index).getAttack();
-			isEnemy = true;
-		}
 		
+		
+		double vel = .2;
+		xVel = vel*Math.cos(theta);
+		yVel = vel*Math.sin(theta);
+		
+		maxRange = new EnemyStats(index).getAtkDist2();
+		damage = new EnemyStats(index).getAttack2();
 		
 	}
-
+	
 	public void tick()
 	{	
 			//Update position
@@ -59,7 +48,7 @@ public class Projectile {
 		double xP = ((-xIn) + (xPos))*Tile.TILESIZE;
 		double yP = ((-yIn) + (yPos))*Tile.TILESIZE;
 		
-		g.setColor(Color.BLACK);
+		g.setColor(Color.RED);
 		
 		//g.fillRect((int) (Game.SCALE*(xP + Game.WIDTH/2)), (int) (Game.SCALE*(yP + Game.HEIGHT/2)), Tile.TILESIZE*Game.SCALE, Tile.TILESIZE*Game.SCALE);
 
@@ -67,24 +56,15 @@ public class Projectile {
 		
 		System.out.println(xP + ", " + yP);
 		
-		g.drawOval((int) (Game.SCALE*(xP + Game.WIDTH/2)) - 25, (int) (Game.SCALE*(yP + Game.HEIGHT/2)) - 25, 50, 50);
+		g.drawOval((int) (Game.SCALE*(xP + Game.WIDTH/2)) - 5, (int) (Game.SCALE*(yP + Game.HEIGHT/2)) - 5, 10, 10);
 		//g.drawImage(img, Game.WIDTH / 2, Game.HEIGHT / 2, img.getHeight(), img.getWidth(), null);
 	}
 	
-	public boolean checkDelete()
-	{
-		return dist >= maxRange;
-	}
+	public boolean checkDelete()	{		return dist >= maxRange;	}
 	
 	// Getters
 	
-	public double getDist()
-	{
-		return dist;
-	}
+	public double getDist(){		return dist;	}
 	
-	public double getRange()
-	{
-		return maxRange;
-	}
+	public double getRange()	{		return maxRange;	}
 }
