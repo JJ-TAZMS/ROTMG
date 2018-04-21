@@ -86,7 +86,12 @@ public class LootBag {
 				itemType = "A";
 			else
 				itemType = "M";
-			bagItems.add(new Item(itemType, tier));
+			try {
+				bagItems.add(new Item(itemType, tier));
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 	
