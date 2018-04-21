@@ -21,7 +21,7 @@ Orc King,19,240,3,24,,,,,,Wander,Far shots,Midlands,Tj
 Orc Queen,20,,,,,,,,,Follows Orc King,Heals Orc King,Orc King,Tj
 Orc Warrior,21,90,3,9,,,,,,Chase,Far shots,Orc King,Tj
 White Dragon Whelp,22,240,0,24,,,,,,Chase,Far shots,Highlands,Alex
-Medusa,23,,,,,,,,,,,,
+Medusa,23,2000,18,195,4,6,100,12,7,Move Towards then wander,5 Spread shot and bombs,Mountains,Sean
 Ghost,24,,,,,,,,,,,,
 ,25,,,,,,,,,,,,
 ,26,,,,,,,,,,,,

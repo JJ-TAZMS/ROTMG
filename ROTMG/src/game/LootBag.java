@@ -19,6 +19,7 @@ public class LootBag extends BufferedImageLoader{
 		tier = enemyTier;
 		bagItems = new ArrayList<Item>(); 
 		randomizeLoot();
+		dropBag(x, y);
 		xPos = x;
 		yPos = y;
 	}
@@ -40,6 +41,10 @@ public class LootBag extends BufferedImageLoader{
 		System.out.println("LOOT BAG " + xP + ", " + yP + " " + toString());
 	}
 	
+	//drop the lootBag at the location that the enemy dies. Should be used in the enemy class?
+	private void dropBag(double xPos, double yPos) {
+		//draw the bag at the death position
+	}
 	
 	
 	//TODO make getting potions a lot more common, and make fewer items within a bag more common

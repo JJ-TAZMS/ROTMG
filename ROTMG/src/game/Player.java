@@ -282,12 +282,16 @@ public class Player {
 			p.render(g, x, y);
 		}
 		
+		//TODO only render close enemies
 		for (Enemy en : map.getEnemies()){
-			en.render(g, x, y);
-			
-			for (Projectile p : en.getProj()) 
+			if (en.getStats().getActive())
 			{
-				p.render(g, x, y);
+				en.render(g, x, y);
+				
+				for (Projectile p : en.getProj()) 
+				{
+					p.render(g, x, y);
+				}
 			}
 		}
 
