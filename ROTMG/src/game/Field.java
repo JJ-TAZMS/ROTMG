@@ -190,6 +190,11 @@ public class Field {
 				//enemies.add(e2);
 				enemies.add(e3);
 				
+				lootBags.add(new LootBag("1", player.getX() + 5, player.getY() + 5));
+				lootBags.add(new LootBag("2", player.getX() + 2, player.getY() + 2));
+				lootBags.add(new LootBag("3", player.getX() + 1, player.getY() + 1));
+				lootBags.add(new LootBag("4", player.getX() + 3, player.getY() + 3));
+				
 				chosen = true;
 			}
 		}

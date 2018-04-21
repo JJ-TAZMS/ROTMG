@@ -40,7 +40,7 @@ public class Item
     }
     */
 	
-	public Item(String type, String tier) throws FileNotFoundException {
+	public Item(String type, String tier) {
 		createListOfItems(type, tier);
 		String[] itemData = getRandomItemData();
 		itemType = itemData[0];
@@ -75,25 +75,35 @@ public class Item
 	}
 	
 	//This will parse a csv file and put items of desired type and tier in an arraylist
-	private void createListOfItems(String type, String tier) throws FileNotFoundException {
+	private void createListOfItems(String type, String tier) {
 		
-		Scanner scanner = new Scanner(new File("res/items_wiz.csv"));
+		Scanner scanner = null;
+		try {
+			scanner = new Scanner(new File("res/items_wiz.csv"));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("File 'items_wiz.csv' not found!");
+		}
         //scanner.useDelimiter(",");
-        String itemType = type;
-        String itemTier = tier;
-        ArrayList<String[]> listOfData = new ArrayList<String[]>();
-        while(scanner.hasNextLine()){
-        		String data = scanner.nextLine();
-     
-        		String[] sepData = data.split(",");
-        		
-        		if (sepData[0].equals(itemType) && sepData[1].equals(itemTier)) {
-        			listOfData.add(sepData);
-        		}
-        }
-        
-        scanner.close();
-		listOfDesiredItems = listOfData;
+		if (scanner!=null) {
+				
+	        String itemType = type;
+	        String itemTier = tier;
+	        ArrayList<String[]> listOfData = new ArrayList<String[]>();
+	        while(scanner.hasNextLine()){
+	        		String data = scanner.nextLine();
+	     
+	        		String[] sepData = data.split(",");
+	        		
+	        		if (sepData[0].equals(itemType) && sepData[1].equals(itemTier)) {
+	        			listOfData.add(sepData);
+	        		}
+	        }
+	        
+	        scanner.close();
+			listOfDesiredItems = listOfData;
+		}
 	}
 	
 	public String toString() {
