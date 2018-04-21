@@ -95,6 +95,10 @@ public class Item
         
         scanner.close();
 		listOfDesiredItems = listOfData;
+		
+		//testing this to see if merge  can work
+		//please work for the love of god
+		ArrayList<String[]> whodafu = listOfDesiredItems;
 	}
 	
 	public String toString() {
@@ -102,4 +106,3 @@ public class Item
 	}
 	
 }
-
