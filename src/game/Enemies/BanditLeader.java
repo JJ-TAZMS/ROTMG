@@ -1,17 +1,13 @@
-package game.Enemies;
-
-import game.Enemy;
-import game.Projectile;
+package game;
 
 public class BanditLeader extends Enemy	{
 	
-	private boolean grenade;
-	private int delay = 1000;
+	private int attackStage;
 	
 	public BanditLeader(double x, double y)
 	{
 		super(16,x,y);
-		grenade = true;
+		attackStage = 0;
 	}
 	
 	public void moveBehavior(double xIn, double yIn)
@@ -24,28 +20,17 @@ public class BanditLeader extends Enemy	{
 	
 	public void attackBehavior(double xIn, double yIn)
 	{
-		if(grenade)
+		if(attackStage < 30)
 		{
-			delay = 1000;
-			grenade = false;
-			projectiles.add(new Projectile(1, eX, eY, theta, .3));
+			projectiles.add(new Projectile(1, eX, eY, theta, .2));
+			attackStage++;
 		}
-		else
+		else //Throw grenade
 		{
 			projectiles.add(new Projectile(1, eX, eY, theta, .1));
-			grenade = delayAttack();
+			attackStage = 0;
 		}
 	}
 	
-	public boolean delayAttack()
-	{
-		if(delay > 0)
-		{
-			delay--;
-			return false;
-		}
-		
-		return true;
-	}
 
 }
