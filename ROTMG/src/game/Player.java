@@ -266,32 +266,32 @@ public class Player {
 	public void controlPressed(int k)
 	{
 		//if(k == 'w')
-		if(k == 119)
+		if(k == 87)
 		{
 			moveUp = true;
 		}
 		//if(k == 's')
-		if(k == 115)
+		if(k == 83)
 		{
 			moveDown = true;
 		}
 		//if(k == 'a')
-		if(k == 97)
+		if(k == 65)
 		{
 			moveLeft = true;
 		}
 		//if(k == 'd')
-		if(k == 100)
+		if(k == 68)
 		{
 			moveRight = true;
 		}
 		//if (k == 'q')
-		if (k == 113)
+		if (k == 81)
 		{
 			rotateUp = true;
 		}
 		//if (k == 'e')
-		if (k == 101)
+		if (k == 69)
 		{
 			rotateDown = true;
 		}
@@ -305,15 +305,19 @@ public class Player {
 			}
 		}*/
 		
-		for (int i=1; i<=bag.bagItems.size();i++)
-		{
-			if (k == 48+i && nearBag)
+		if (bag!=null) {
+			for (int i=1; i<=bag.bagItems.size();i++)
 			{
-				itemInHand = true;
-				bagIndex = i-1;		
-				itemHeld = bag.bagItems.get(i);
+				if (k == 48+i && nearBag)
+				{
+					itemInHand = true;
+					bagIndex = i-1;		
+					itemHeld = bag.bagItems.get(i-1);
+					gui.setIndex(i);
+				}
 			}
 		}
+		
 		
 		
 	}
@@ -322,32 +326,32 @@ public class Player {
 	public void controlReleased(int k)
 	{
 		//if(k == 'w')
-		if (k == 119)
+		if (k == 87)
 		{
 			moveUp = false;
 		}
 		//if(k == 's')
-		if (k == 115)
+		if (k == 83)
 		{
 			moveDown = false;
 		}
 		//if(k == 'a')
-		if (k == 97)
+		if (k == 65)
 		{
 			moveLeft = false;
 		}
 		//if(k == 'd')
-		if (k == 100)
+		if (k == 68)
 		{
 			moveRight = false;
 		}
 		//if (k == 'q')
-		if (k == 113)
+		if (k == 81)
 		{
 			rotateUp = false;
 		}
 		//if (k == 'e')
-		if (k == 101)
+		if (k == 69)
 		{
 			rotateDown = false;
 		}

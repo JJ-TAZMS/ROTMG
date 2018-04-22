@@ -261,7 +261,7 @@ public class Game extends Canvas implements Runnable{
 	public void keyReleased(KeyEvent e)
 	{
 		//char key = e.getKeyChar();
-		int key = e.getKeyChar();
+		int key = e.getKeyCode();
 		player1.controlReleased(key);
 	}
 	

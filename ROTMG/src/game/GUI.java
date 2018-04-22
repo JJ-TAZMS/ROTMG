@@ -3,6 +3,7 @@ package game;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
 
 public class GUI {
 	private Minimap mini;
@@ -28,7 +29,8 @@ public class GUI {
 	}
 	public void setBag(LootBag l)
 	{
-		loot = l;
+		loot = l;	
+		
 	}
 	public void setIndex(int i){ index = i; }
 	public void setInvIndex(int i) { invIndex = i; }
@@ -56,6 +58,8 @@ public class GUI {
 					g.setColor(Color.BLACK);
 				}
 				g.drawRect((xStart + 15)+(50*i), Game.HEIGHT*Game.SCALE - 150, 50, 50); //item icons
+				
+				g.drawImage( (Image) loot.bagItems.get(i).getImage(), (int)(xStart + 15)+(50*i), (int) (Game.HEIGHT*Game.SCALE - 150), null);
 			}
 		}
 		mini.render(g, xIn, yIn);

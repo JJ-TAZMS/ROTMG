@@ -45,6 +45,7 @@ public class LootBag {
 			
 		} catch(IOException e) {
 			e.printStackTrace();
+			System.out.println("Bag image file does not exist!");
 		}
 		
 		//System.out.println("LOOT BAG " + xP + ", " + yP + " " + toString());

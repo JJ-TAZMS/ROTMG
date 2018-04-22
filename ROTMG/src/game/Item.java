@@ -1,10 +1,16 @@
 
 package game;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
+
+import javax.imageio.ImageIO;
+
 import java.util.ArrayList;
 import java.util.Random;
 public class Item 
@@ -14,8 +20,7 @@ public class Item
 	private int itemTier;
 	private ArrayList<String[]> listOfDesiredItems;
 	private String itemName;
-	
-
+	private BufferedImage itemImage;
 	
 	public Item(String type, String tier) throws FileNotFoundException {
 		createListOfItems(type, tier);
@@ -24,6 +29,13 @@ public class Item
 		itemTier = Integer.parseInt(itemData[1]);
 		itemName = itemData[2];
 		itemStat = Integer.parseInt(itemData[3]);
+		try {
+			itemImage = ImageIO.read(new File("res/wizItem/" + "T" + tier + " " + itemName + ".png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("ERROR: Item picture does not exist!");
+		}
 	}
 	
 	
@@ -41,6 +53,10 @@ public class Item
 	
 	public int getStat() {
 		return itemStat;
+	}
+	
+	public Image getImage() {
+		return (Image)itemImage;
 	}
 	
 	//This will return a random item from the arraylist of desired items
