@@ -27,8 +27,9 @@ public class Game extends Canvas implements Runnable{
 	public static int WIDTH = 240;
 	public static int HEIGHT = (int) (WIDTH * .75);
 	public static final int SCALE = 5;
+	public static final int DELRADIUS = Game.WIDTH * Game.SCALE *20;
 	
-	public static final int DELRADIUS = Game.WIDTH * Game.SCALE * 20;
+	
 	public final String NAME = "ROTMG";
 	
 	
@@ -247,10 +248,11 @@ public class Game extends Canvas implements Runnable{
 		bs.show();
 	}
 	
-	//When a key is preesed down, this is called
+	//When a key is pressed down, this is called
 	public void keyPressed(KeyEvent e)
 	{
-		char key = e.getKeyChar();
+		//char key = e.getKeyChar();
+		int key = e.getKeyCode();
 		player1.controlPressed(key);
 		
 	}
@@ -258,7 +260,8 @@ public class Game extends Canvas implements Runnable{
 	//When the key it finished being pressed, this is called
 	public void keyReleased(KeyEvent e)
 	{
-		char key = e.getKeyChar();
+		//char key = e.getKeyChar();
+		int key = e.getKeyChar();
 		player1.controlReleased(key);
 	}
 	

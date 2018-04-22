@@ -131,7 +131,7 @@ public class Player {
 			xVel = 0;
 		}
 		if (Math.abs(yVel) < .000001)
-		{
+		{ 
 			yVel = 0;
 		}
 		
@@ -204,14 +204,13 @@ public class Player {
 							yVel = 0;
 						}
 					}
+					
+					
 				}
 			}
 		}
 		
 			
-		//System.out.println("         After Xvel: " + xVel + ", yVel: " + yVel);
-		//System.out.println();
-		//System.out.println("Speed: " + Math.sqrt(xVel*xVel + yVel*yVel));
 		
 		x += xVel;
 		y += yVel;
@@ -263,33 +262,40 @@ public class Player {
 		gui.render(g, x, y);
 	}
 	
-	public void controlPressed(char k) //Takes key input and decides what to do
+	//public void controlPressed(char k) //Takes key input and decides what to do
+	public void controlPressed(int k)
 	{
-		if(k == 'w')
+		//if(k == 'w')
+		if(k == 119)
 		{
 			moveUp = true;
 		}
-		if(k == 's')
+		//if(k == 's')
+		if(k == 115)
 		{
 			moveDown = true;
 		}
-		if(k == 'a')
+		//if(k == 'a')
+		if(k == 97)
 		{
 			moveLeft = true;
 		}
-		if(k == 'd')
+		//if(k == 'd')
+		if(k == 100)
 		{
 			moveRight = true;
 		}
-		if (k == 'q')
+		//if (k == 'q')
+		if (k == 113)
 		{
 			rotateUp = true;
 		}
-		if (k == 'e')
+		//if (k == 'e')
+		if (k == 101)
 		{
 			rotateDown = true;
 		}
-		if (k == '.')
+		/*if (k == '.')
 		{
 			try {
 				map.addLootBag("1", x, y);
@@ -297,46 +303,51 @@ public class Player {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
-		if(bag != null)
+		}*/
+		
+		for (int i=1; i<=bag.bagItems.size();i++)
 		{
-			System.out.println("work you piece of shit");
-			for (int i=1; i<=bag.bagItems.size();i++)
+			if (k == 48+i && nearBag)
 			{
-				if (k == (char)(i) && nearBag)
-				{
-					itemInHand = true;
-					bagIndex = i-1;	
-					System.out.println("Ay my n-word you hit "+i);
-				}
+				itemInHand = true;
+				bagIndex = i-1;		
+				itemHeld = bag.bagItems.get(i);
 			}
 		}
 		
+		
 	}
 	
-	public void controlReleased(char k) //used for deceleration and such
+	//public void controlReleased(char k) //used for deceleration and such
+	public void controlReleased(int k)
 	{
-		if(k == 'w')
+		//if(k == 'w')
+		if (k == 119)
 		{
 			moveUp = false;
 		}
-		if(k == 's')
+		//if(k == 's')
+		if (k == 115)
 		{
 			moveDown = false;
 		}
-		if(k == 'a')
+		//if(k == 'a')
+		if (k == 97)
 		{
 			moveLeft = false;
 		}
-		if(k == 'd')
+		//if(k == 'd')
+		if (k == 100)
 		{
 			moveRight = false;
 		}
-		if (k == 'q')
+		//if (k == 'q')
+		if (k == 113)
 		{
 			rotateUp = false;
 		}
-		if (k == 'e')
+		//if (k == 'e')
+		if (k == 101)
 		{
 			rotateDown = false;
 		}
@@ -447,7 +458,6 @@ public class Player {
 				{
 					bag = map.getBags().get(i);	
 					i = map.getBags().size()+1;
-					//gui.setBag(bag);
 				}else{
 					bag = null;		
 				}
@@ -456,20 +466,6 @@ public class Player {
 				{
 					map.getBags().remove(i);
 				}
-				//i = map.getBags().size() +1;
-					
-				/*if (playerDist<3)
-				{
-					nearBag = true;
-					bag = map.getBags().get(i);
-					gui.renderLoot(bag);
-				} else if (playerDist> Game.DELRADIUS)
-				{
-					map.getBags().remove(i);
-				} else {
-					nearBag = false;  //jk dont do this
-					bag = null;
-				} */
 			}
 		}
 	}
@@ -477,4 +473,6 @@ public class Player {
 	public LootBag getBag() { return bag; }
 	
 	public boolean getNear() { return nearBag;  }
+	
+	public int getBagIndex() { return bagIndex; }
 }
