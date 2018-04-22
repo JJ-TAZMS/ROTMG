@@ -8,6 +8,8 @@ import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import game.Enemies.Pirate;
+
 public class Player {
 	private double x, y, xVel, yVel, theta;
 	private boolean moveUp, moveDown, moveLeft, moveRight, rotateUp, rotateDown;
@@ -111,7 +113,7 @@ public class Player {
 			xVel += -speed*Math.cos(theta);
 		}
 		
-		if ((moveUp || moveDown) && (moveLeft || moveRight))
+		if ((xVel != 0) && (yVel != 0))
 		{
 			xVel = xVel / Math.sqrt(2.0);
 			yVel = yVel / Math.sqrt(2.0);
@@ -250,6 +252,52 @@ public class Player {
 		x += xVel;
 		y += yVel;
 		
+		if(xVel != 0 || yVel != 0)
+		{
+			spawnEnemies();
+		}
+	}
+	
+	public void spawnEnemies()
+	{
+		
+		double playerTheta = Math.atan(yVel/xVel);
+
+		if(xVel < 0)
+		{
+			playerTheta += Math.PI;
+		}
+		
+		for(double cT = 0; cT < Math.PI/4; cT += Math.PI/30)
+		{
+			for(int negAndPos = -1; negAndPos < 2; negAndPos += 2)
+			{
+				double spawnTheta = playerTheta + cT * negAndPos;
+				
+				//Goes this far because Field sets the rendered tiles.
+				int radiusOfTiles = Game.WIDTH/Tile.TILESIZE + 12;
+				
+				int xSpawn = (int) (x + (Math.cos(spawnTheta) * radiusOfTiles));
+				int ySpawn = (int) (y + (Math.sin(spawnTheta) * radiusOfTiles));
+				
+				//Spawning of enemies
+				
+				if (!map.getMap()[xSpawn][ySpawn].getRendered())
+				{
+					if(map.getMap()[xSpawn][ySpawn].getDif() == 1 && ( map.getEnemies(map.getMap()[(int)xSpawn][(int)ySpawn].getDif()) == null || map.getEnemies(map.getMap()[(int) x][(int) y].getDif()).size() <= 40))
+					{
+						//the player is in the shoreline and there are less than 40 enemies
+						if(Math.random() < 0.0005)
+						{
+							System.out.println("Pirate spawned");
+							//System.out.println(map.getEnemies(map.getMap()[(int)xSpawn][(int)ySpawn].getDif()).size());
+							map.addEnemy(new Pirate(xSpawn, ySpawn), 1);
+						}
+					}
+				}
+				
+			}
+		}
 	}
 
 	public void render(Graphics g) // Update picture for player
@@ -282,6 +330,7 @@ public class Player {
 			p.render(g, x, y);
 		}
 		
+		/*
 		//TODO only render close enemies
 		for (Enemy en : map.getEnemies()){
 			if (en.getStats().getActive())
@@ -295,6 +344,29 @@ public class Player {
 				for (Bomb b : en.getBombs())
 				{
 					b.render(g,  x,  y);
+				}
+			}
+		}
+		*/
+		
+		for (int cL = -1; cL <= 1; cL++)
+		{ //In surrounding lands only
+			int toRender = cL + map.getMap()[(int) x][(int) y].getDif();
+			if (toRender < 1)
+			{
+				cL++;
+			}
+			if (toRender > 5)
+			{
+				break;
+			}
+			for (Enemy en : map.getEnemies(toRender)) //For every enemies in surrounding lands
+			{
+				if (en.getStats().getActive())
+				{
+					//System.out.println("Rendering enemy from player.java");
+					en.render(g, x, y);
+					
 				}
 			}
 		}

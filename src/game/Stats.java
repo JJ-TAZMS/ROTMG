@@ -1,7 +1,12 @@
 package game;
 
 public class Stats {
-	private double speed, dexterity, attack , defense, vitality, attack2;
+	protected double speed;
+	private double dexterity;
+	private double attack;
+	private double defense;
+	private double vitality;
+	private double attack2;
 	private double wisdom, hp, mp, healthPotions, manaPotions, experience;
 	private int atkWait;
 	

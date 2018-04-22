@@ -20,8 +20,7 @@ public class Projectile {
 	public Projectile(int index, double x, double y, double theta, double vel) {
 		xPos = x;
 		yPos = y;
-		xVel = vel * Math.cos(theta);
-		yVel = vel * Math.sin(theta);
+		
 		dist = 0;
 
 		// TODO add constants for sizes / maxRange based on index
@@ -37,7 +36,11 @@ public class Projectile {
 			maxRange = new EnemyStats(index).getAtkDist()*2;
 			damage = new EnemyStats(index).getAttack();
 			isEnemy = true;
+			vel /= 4;
 		}
+		
+		xVel = vel * Math.cos(theta);
+		yVel = vel * Math.sin(theta);
 		
 		
 	}

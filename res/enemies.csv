@@ -1,37 +1,27 @@
 Enemy Name,Index,HP,DEF,EXP,SPEED,DEXTERITY,Move Dist.,ATTACK,Attack Dist.,ATTACK2,Attack2 Dist.,MoveBehavior,AttackBehavior,Spawn Location,Creator
-Pirate,1,5,0,1,6,3,10,4,3,,,Chases,Close shots,Shoreline,Sean
-Piratess,2,6,0,1,4,4,20,9,5,,,Chases,Close shots,Shoreline,Sean
-Red Gelatinous Cube,3,,,,,,,,,,,,,Shoreline,Sean
-Green Gelatinous Cube,4,,,,,,,,,,,,,Shoreline,Sean
-Purple Gelatinous Cube,5,,,,,,,,,,,,,Shoreline,Sean
-Forest Goblin,6,,,,,,,,,,,,,Lowlands,Zack
-Earth Golem,7,220,4,,,,,,,,,,,Lowlands,Jacob
-Paper Golem,8,220,1,,,,,,,,,,,Lowlands,Jacob
-Giant Crab,9,300,2,43,4,4,10,9,6,,,Chase/keep dist.,Close shots,Low Sand,James
-Urgle,10,1600,9,80,3,4,60,10,50,,,Wander then return to spawn,Far shots,High Plains,James
-Minotaur,11,850,7,144,5,5,40,11,30,,,Charge then retreat at diff. speeds,close + far shots,Midlands,James
-Goblin Mage,12,,,,,,,,,,,,Far shots + retreating,Lowlands,Muhib
-Sumo Master,13,,,,,,,,,,,,Rushes player,Lowlands,Muhib
-Forest Goblin Mage,14,,,,,,,,,,,,,Midlands,Zack
+Pirate,1,5,0,1,6,3,10,4,3,0,0,Chases,Close shots,1,Sean
+Piratess,2,6,0,1,4,4,20,9,5,0,0,Chases,Close shots,1,Sean
+Red Gelatinous Cube,3,,,,,,,,,,,,,1,Sean
+Green Gelatinous Cube,4,,,,,,,,,,,,,1,Sean
+Purple Gelatinous Cube,5,,,,,,,,,,,,,1,Sean
+Forest Goblin,6,,,,,,,,,,,,,2,Zack
+Earth Golem,7,220,4,,,,,,,,,,,2,Jacob
+Paper Golem,8,220,1,,,,,,,,,,,2,Jacob
+Giant Crab,9,300,2,43,4,4,10,9,6,0,0,Chase/keep dist.,Close shots,1,James
+Urgle,10,1600,9,80,3,4,60,10,50,0,0,Wander then return to spawn,Far shots,4,James
+Minotaur,11,850,7,144,5,5,40,11,30,0,0,Charge then retreat at diff. speeds,close + far shots,3,James
+Goblin Mage,12,,,,,,,,,,,,Far shots + retreating,2,Muhib
+Sumo Master,13,,,,,,,,,,,,Rushes player,2,Muhib
+Forest Goblin Mage,14,,,,,,,,,,,,,3,Zack
 Bandit,15,50,1,5,,,,,,,,Protect Bandit Leader,Far shots ,Bandit Leader,Tj
-Bandit Leader,16,280,2,45,,,3,9,5,,,Chase,Far shots + Grenades,Shoreline,Tj
-Flying Brain,17,,,,,,,,,,,,,Mountains,Zack
-Great Lizard,18,500,4,90,,,,,,,,"Rush to dist of 1, Wander",,Midlands,Tj
-Orc King,19,240,3,24,,,,,,,,Wander,Far shots,Midlands,Tj
-Orc Queen,20,,,,,,,,,,,Follows Orc King,Heals Orc King,Orc King,Tj
-Orc Warrior,21,90,3,9,,,,,,,,Chase,Far shots,Orc King,Tj
-White Dragon Whelp,22,240,0,24,,,,,,,,Chase,Far shots,Highlands,Alex
-Medusa,23,2000,18,195,4,6,12,100,7,150,8,Chase then wander,spread shots + bomb,Mountains,Sean
-GhostGod,24,1000,12,100,6,7,12,120,7,,,Wander,,Mountains,Tj
-,25,,,,,,,,,,,,,,
-,26,,,,,,,,,,,,,,
-,27,,,,,,,,,,,,,,
-,28,,,,,,,,,,,,,,
-,29,,,,,,,,,,,,,,
-,30,,,,,,,,,,,,,,
-,31,,,,,,,,,,,,,,
-,32,,,,,,,,,,,,,,
-,33,,,,,,,,,,,,,,
-,34,,,,,,,,,,,,,,
-,35,,,,,,,,,,,,,,
-,36,,,,,,,,,,,,,,
+Bandit Leader,16,280,2,45,,,3,9,5,0,0,Chase,Far shots + Grenades,3,Tj
+Flying Brain,17,,,,,,,,,,,,,5,Zack
+Great Lizard,18,500,4,90,,,,,,,,"Rush to dist of 1, Wander",,3,Tj
+Orc King,19,240,3,24,12,6,1,27,0,0,0,Wander,Far shots,3,Tj
+Orc Queen,20,130,0,13,12,1,7,0,,,,Follows Orc King,Heals Orc King,Orc King,Tj
+Orc Warrior,21,90,3,9,12,6,1,19,8,0,0,Chase,Far shots,Orc King,Tj
+White Dragon Whelp,22,240,0,24,,,,,,,,Chase,Far shots,4,Alex
+Medusa,23,2000,18,195,4,6,12,100,7,150,8,Chase then wander,spread shots + bomb,5,Sean
+GhostGod,24,1000,12,100,6,7,12,120,7,0,0,Wander,,5,Tj
+EntGod,25,1000,18,100,5,6,12,70,16,0,0,,,5,Sean
+SpriteGod,26,2000,12,195,1,6,1,100,14,0,14,Does not move,far shots,5,Tj

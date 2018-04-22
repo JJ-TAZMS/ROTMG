@@ -37,6 +37,14 @@ public class Enemy {
 		g.setColor(Color.GREEN);
 		g.fillOval((int) (Game.SCALE*(xP + Game.WIDTH/2)) - size/2, (int) (Game.SCALE*(yP + Game.HEIGHT/2)) - size/2, size, size);
 		
+		for (Projectile p : projectiles) 
+		{
+			p.render(g, xIn, yIn);
+		}
+		for (Bomb b : bombs)
+		{
+			b.render(g,  xIn,  yIn);
+		}
 		
 	}
 	
@@ -46,13 +54,16 @@ public class Enemy {
 		double distFromPlayer = Math.sqrt((eX - xIn)*(eX - xIn) + (eY - yIn)*(eY - yIn));
 		stats.setAtkWait(stats.getAtkWait()-1);
 		//System.out.println("distFromPlayer " + distFromPlayer + " == " + stats.getMoveDist());
-
+		System.out.println("Enemy.java - Distance to player is: " + distFromPlayer);
+		
+		
 		if (distFromPlayer < Game.WIDTH/Tile.TILESIZE * 3)
 		{
 			stats.setActive(true);
 			
 		}	else
 		{
+			System.out.println("Enemy.java - Distance to player is: " + distFromPlayer + " tiles. Setting Active to False");
 			stats.setActive(false);
 		}
 		
@@ -77,7 +88,7 @@ public class Enemy {
 						}
 						
 						
-						stats.setAtkWait( (int) (360/stats.getDexterity()));
+						stats.setAtkWait( (int) (360*4/stats.getDexterity()));
 					}
 					
 				}

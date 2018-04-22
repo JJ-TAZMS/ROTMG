@@ -11,7 +11,7 @@ public class EnemyStats extends Stats{
 	
 	
 	public EnemyStats(int index) {
-		active = false;
+		active = true;
 		
 		Scanner scanner = null;
 		try {
@@ -31,7 +31,7 @@ public class EnemyStats extends Stats{
 	        		
 	        		//if the index matches the index we are looking for then store the data 
 	        		if (sepData[1].equals("" + index)) {
-	        			setSpeed(Integer.valueOf(sepData[5]));
+	        			setSpeed(Integer.valueOf(sepData[5])/4);
 	        			setDexterity(Integer.valueOf(sepData[6]));
 	        			setDefense(Integer.valueOf(sepData[3]));
 	        			sethp(Integer.valueOf(sepData[2]));
@@ -64,6 +64,7 @@ public class EnemyStats extends Stats{
 	public double getAtkDist()	{	return attackDist;	}
 	public double getAtkDist2()	{	return attackDist2;	}
 	public boolean getActive()	{	return active;	}
+	public double getSpeed()	{		return speed/100.0;	}
 	
 	//Setters
 	public void setActive(boolean b)	{	active = b;	}

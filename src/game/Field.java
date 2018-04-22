@@ -12,7 +12,6 @@ import java.util.Scanner;
 import java.awt.*;
 import javax.swing.*;
 
-import game.Enemies.EntGod;
 import game.Enemies.Medusa;
 
 
@@ -22,8 +21,9 @@ public class Field {
 	private int chunks;
 	private int mapDist;
 	
+	
 	private ArrayList<LootBag> lootBags;
-	private ArrayList<Enemy> enemies;
+	private ArrayList<Enemy> shoreE, lowE, midE, highE, godE;
 	
 	
 	//Construct a new Field, where til is the amount of steps that must be taken each time the
@@ -32,7 +32,7 @@ public class Field {
 	{
 		field = new ArrayList<Tile> ();
 		lootBags = new ArrayList<LootBag> ();
-		enemies = new ArrayList<Enemy> ();
+		shoreE = lowE = midE = highE = godE = new ArrayList<Enemy>();
 		chunks = til;
 		mapDist = 70;
 		
@@ -116,7 +116,7 @@ public class Field {
 		//The current chunk you are is the distance you are from the [0][0] chunk (In chunks)
 		//Plus the position of that first chunk
 		
-		int radiusOfTiles = Game.WIDTH/10 + 10;
+		int radiusOfTiles = Game.WIDTH/Tile.TILESIZE + 10;
 		int currentX = (int) player.getX();
 		int currentY = (int) player.getY();
 		
@@ -187,11 +187,10 @@ public class Field {
 				//Enemy e2 = new GelatinousCube(player.getX() + 5, player.getY() + 10);
 				
 				
-				Enemy e3 = new EntGod(player.getX() + 10, player.getY() + 10);
+				
 				
 				//enemies.add(e1);
 				//enemies.add(e2);
-				enemies.add(e3);
 				
 				chosen = true;
 			}
@@ -817,6 +816,7 @@ public class Field {
 	
 	public void tick()
 	{
+		//Spawning of enemies
 		
 	}
 	
@@ -923,7 +923,53 @@ public class Field {
 		lootBags.add(new LootBag(enemyTier, x, y));
 	}
 	
-	public ArrayList<Enemy> getEnemies()	{	return enemies;	}
+	public void addEnemy(Enemy e, int diff)
+	{
+		if(diff == 1)
+		{
+			shoreE.add(e);
+		}
+		else if(diff == 2)
+		{
+			lowE.add(e);
+		}
+		else if (diff == 3)
+		{
+			midE.add(e);
+		}
+		else if(diff == 4)
+		{
+			highE.add(e);
+		}
+		else if(diff == 5)
+		{
+			godE.add(e);
+		}
+	}
+	
+	public ArrayList<Enemy> getEnemies(int diff)	{	
+		if(diff == 1)
+		{
+			return shoreE;
+		}
+		else if(diff == 2)
+		{
+			return lowE;
+		}
+		else if (diff == 3)
+		{
+			return midE;
+		}
+		else if(diff == 4)
+		{
+			return highE;
+		}
+		else if(diff == 5)
+		{
+			return godE;
+		}
+		return shoreE;
+	}
 	
 	//Used to be used to smooth the look of the map. Has possible future allocations
 		//Can be possibly used to better generate the map
@@ -988,7 +1034,6 @@ public class Field {
 			return base4Seed;
 		}
 	}
-
 	
 	public void loadSeed(String seed)
 	{
@@ -1053,4 +1098,5 @@ public class Field {
 		}
 	}
 	*/
+	
 }
