@@ -36,7 +36,7 @@ public class Bomb {
 	public void tick()
 	{	
 		
-			System.out.println("Bomb Dist: " + dist);
+			//System.out.println("Bomb Dist: " + dist);
 			if (dist == -1)//Move projectiles
 			{
 				for (int i = 0; i < bombSpread.size(); i++)
@@ -44,7 +44,7 @@ public class Bomb {
 					bombSpread.get(i).tick();
 					if (bombSpread.get(i).getDist() > bombSpread.get(i).getRange())
 					{
-						System.out.println("Removing a bomb projectile");
+						//System.out.println("Removing a bomb projectile");
 						bombSpread.remove(i);
 						i--;
 					}
@@ -52,7 +52,7 @@ public class Bomb {
 			}	else if (dist < maxRange) //If the bomb should be moving, move it
 			{
 				//Update position
-				System.out.println("Updating Bomb Pos");
+				//System.out.println("Updating Bomb Pos");
 				xPos += xVel;
 				yPos += yVel;
 				
@@ -60,7 +60,7 @@ public class Bomb {
 				dist += Math.sqrt(Math.pow(xVel, 2) + Math.pow(yVel,  2));
 			}	else //Create projectiles
 			{
-				System.out.println("Adding a bunch of porjectiles for the bomb");
+				//System.out.println("Adding a bunch of porjectiles for the bomb");
 				xVel = yVel = 0;
 				dist = -1;
 				for (double bombTheta = 0; bombTheta < 2*Math.PI; bombTheta+= Math.PI/4)

@@ -116,10 +116,15 @@ public class Enemy {
 		
 		theta = Math.atan(dY/dX);
 
+		
 		if(xIn < eX)
 		{
 			theta += Math.PI;
+			//Its TAN inverse, when left and right, it was going directly away from the player.
+			//Tan inverse can't tell the difference between two positives and two negatives
+			//and which one is negative for the fraction inside
 		}
+		//System.out.println("Enemy Theta: " + theta);
 	}
 	
 	public void moveBehavior(double xIn, double yIn) {
