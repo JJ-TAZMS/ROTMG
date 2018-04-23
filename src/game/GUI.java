@@ -11,7 +11,7 @@ public class GUI {
 	private Inventory inv;
 	private Hotbar hot;
 	private LootBag loot;
-	private int index;
+	//private int index;
 	public static int width = Game.WIDTH/5;
 	public static int xStart = (Game.WIDTH-width+2)*Game.SCALE;
 	public static int yStartInv = (Game.HEIGHT/2) * Game.SCALE;
@@ -31,7 +31,7 @@ public class GUI {
 		loot = l;	
 		
 	}
-	public void setIndex(int i){ index = i; }
+	//public void setIndex(int i){ index = i; }
 	public Inventory getInv()	{	return inv;	}
 	public Hotbar getHot()	{	return hot;	}
 	
@@ -52,12 +52,13 @@ public class GUI {
 			
 			for (int i = 0; i<loot.bagItems.size(); i++)
 			{
-				if (i == index)
+				/*if (i == index)
 				{
 					g.setColor(Color.YELLOW);
 				} else {
 					g.setColor(Color.BLACK);
-				}
+				}*/
+				g.setColor(Color.BLACK);
 				g.drawRect((xStart + 15)+(51*i), Game.HEIGHT*Game.SCALE - 150, 50, 50); //item icons
 				
 				g.drawImage( (Image) loot.bagItems.get(i).getImage(), (int)(xStart + 15)+(51*i), (int) (Game.HEIGHT*Game.SCALE - 150), null);

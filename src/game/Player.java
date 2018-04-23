@@ -594,7 +594,7 @@ public class Player {
 					itemInHand = true;
 					bagIndex = i-1;		
 					itemHeld = bag.bagItems.get(i-1);
-					gui.setIndex(i);
+					//gui.setIndex(i);
 					bag.bagItems.remove(i-1);
 				}
 			}
