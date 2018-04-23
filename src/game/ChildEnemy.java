@@ -1,12 +1,14 @@
 package game;
 
+import java.awt.image.BufferedImage;
+
 public class ChildEnemy extends Enemy{
 
 	protected double thetaToParent;
 	protected Enemy parentEnemy;
 	
-	public ChildEnemy(Enemy e, int ID, double X, double Y) {
-		super(ID, X, Y);
+	public ChildEnemy(Enemy e, int ID, double X, double Y, BufferedImage img) {
+		super(ID, X, Y, img);
 		thetaToParent = 0;
 		parentEnemy = e;
 	}

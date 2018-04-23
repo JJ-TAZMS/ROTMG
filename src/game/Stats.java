@@ -9,6 +9,7 @@ public class Stats {
 	private double attack2;
 	private double wisdom, hp, mp, healthPotions, manaPotions, experience;
 	private int atkWait;
+	private String tier;
 	
 	public Stats()
 	{
@@ -56,6 +57,7 @@ public class Stats {
 	public void setExperience(int x)	{		experience = x;	}
 	public void setAtkWait(int x)	{		atkWait = x;	}
 	public void setAttack2(int x)	{	attack2 = x;	}
+	public void setTier(String t)	{	tier = t;	}
 	
 	//Getters
 	public double getDispSpeed()	{		return speed;	}
@@ -72,5 +74,6 @@ public class Stats {
 	public double getExperience() 	{		return experience;	}
 	public int getAtkWait()	{		return atkWait;	}
 	public double getAttack2() {	return attack2;	}
+	public String getTier()	{	return tier;	}
 
 }

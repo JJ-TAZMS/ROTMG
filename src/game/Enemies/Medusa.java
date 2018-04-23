@@ -1,5 +1,7 @@
 package game.Enemies;
 
+import java.awt.image.BufferedImage;
+
 import game.Bomb;
 import game.Enemy;
 import game.Projectile;
@@ -9,8 +11,8 @@ public class Medusa extends Enemy{
 	private double wanderTheta;
 	private double attackStage;
 	
-	public Medusa(double X, double Y) {
-		super(23, X, Y);
+	public Medusa(double X, double Y, BufferedImage img) {
+		super(23, X, Y, img);
 		wanderTheta = 0;
 		attackStage = 0;
 	}

@@ -41,6 +41,8 @@ public class EnemyStats extends Stats{
 	        			attackDist = Integer.valueOf(sepData[9]);
 	        			setAttack2(Integer.valueOf(sepData[10]));
 	        			attackDist2 = Integer.valueOf(sepData[11]);
+	        			
+	        			setTier(sepData[14]);
 	        			break; //break out of loop because we are finished
 	        		}
 	        		

@@ -23,7 +23,7 @@ public class Bomb {
 		yPos = y;
 		index = ind;
 		
-		double vel = .2;
+		double vel = .2/4.0;
 		xVel = vel*Math.cos(theta);
 		yVel = vel*Math.sin(theta);
 		

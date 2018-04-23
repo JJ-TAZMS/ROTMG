@@ -2,44 +2,58 @@ package game;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 
 public class Inventory {
-	private Slots[][] inv; 
+	//private Slots[][] inv; 
+	private Item[][] inv;
 	private int xPos,yPos;
-		
-	
+	private int invX;
+	private int invY;		
+	private boolean itemSelected;
 	public Inventory(){
+		//inv = new Slots[4][2];
 		/*
-		inv = new Slots[8];
-		for (int i = 0;i<inv.length;i++){
-			inv[i] = null;
-		}
-		*/
-		inv = new Slots[4][2];
-		
-		for (int i = 0; i<4; i++){
-			for (int j = 0; j<2; j++){
-				inv[i][j] = new Slots();
+		for (int m = 0; m < inv.length; m++){
+			for (int n = 0; n < inv[m].length; n++){
+				inv[m][n] = new Slots();
 			}
-		}
+		} */
+		inv = new Item[4][2];
+		invX = 0;
+		invY = 0;
+		itemSelected = false;
+		
 	}
-	public void addItem(int x, int y, Item it){
-		inv[x][y].addItem(it);
+	public Item[][] getInv() { return inv; }
+	public void setX(int x) { invX = x; }
+	public void setY(int y) { invY = y; }
+	public void setItemBool(boolean b) { itemSelected = b; }
+	public int getX() { return invX; }
+	public int getY() { return invY; }
+	public void addItem(Item it){
+		inv[invX][invY] = it;
 	}
 	public void render(Graphics g){
 		
-		g.setColor(Color.black);
-		for (int i = 0; i<4; i++){
-			for (int j = 0; j<2; j++){
-				if (inv[i][j].getEmpty()){
-					g.drawRect((GUI.xStart + 15)+(50*i), GUI.yStartInv+(50*(j+1)), 50, 50);
+		//g.setColor(Color.black);
+		for (int i = 0; i<inv.length; i++){
+			for (int j = 0; j<inv[i].length; j++){
+				if (i == (invX%4) && j == (invY%2) && !itemSelected){
+					g.setColor(Color.YELLOW);
 				} else {
-					//when there's items, gotta add something that would render
-					//the item icon, need to use isEmpty in Slots
+					g.setColor(Color.BLACK);
+				}
+				
+				g.drawRect((GUI.xStart + 15)+(50*i), GUI.yStartInv+(50*(j+1)), 50, 50);
+				if (inv[i][j] != null)
+				{
+					g.drawImage(inv[i][j].getImage(), (GUI.xStart + 15)+(50*i), GUI.yStartInv+(50*(j+1)), null);
+
 				}
 			}
-			//g.drawRect((GUI.xStart + 15)+(50*i), GUI.yStartInv+50, 50, 50);
-			//g.drawRect((GUI.xStart + 15)+(50*i), GUI.yStartInv+100, 50, 50);
+			
 		}
 	}
 }
+

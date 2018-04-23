@@ -1,12 +1,14 @@
 package game.Enemies;
 
+import java.awt.image.BufferedImage;
+
 import game.Enemy;
 import game.Projectile;
 
 public class Urgle extends Enemy{
 
-	public Urgle(double X, double Y) {
-		super(10, X, Y);
+	public Urgle(double X, double Y, BufferedImage img) {
+		super(10, X, Y, img);
 	}
 	
 	private boolean isAdvancing = true;

@@ -1,5 +1,7 @@
 package game.Enemies;
 
+import java.awt.image.BufferedImage;
+
 import game.Enemy;
 import game.Projectile;
 
@@ -7,9 +9,9 @@ public class GelatinousCube extends Enemy{
 
 	private double wanderTheta;
 	
-	public GelatinousCube(double X, double Y) {
+	public GelatinousCube(double X, double Y, BufferedImage img) {
 		//Add randomization for type of gelatinous cube here
-		super(2, X, Y);
+		super(2, X, Y, img);
 		wanderTheta = 0;
 	}
 

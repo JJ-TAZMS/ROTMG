@@ -1,5 +1,7 @@
 package game.Enemies;
 
+import java.awt.image.BufferedImage;
+
 import game.Bomb;
 import game.Enemy;
 import game.Projectile;
@@ -7,8 +9,8 @@ import game.Projectile;
 public class EntGod extends Enemy{
 	private double wanderTheta;
 
-	public EntGod(double X, double Y) {
-		super(25, X, Y);
+	public EntGod(double X, double Y, BufferedImage img) {
+		super(25, X, Y, img);
 		wanderTheta = 0;
 	}
 

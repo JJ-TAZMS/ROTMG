@@ -2,6 +2,7 @@ package game;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -11,6 +12,7 @@ public class Enemy {
 	private int size;
 	protected double eX, eY, xVel, yVel;
 	protected double theta;
+	private BufferedImage img;
 	
 	public EnemyStats stats;
 	
@@ -18,7 +20,7 @@ public class Enemy {
 	protected ArrayList<Bomb> bombs = new ArrayList<Bomb> ();
 	
 	
-	public Enemy(int ID, double X, double Y){
+	public Enemy(int ID, double X, double Y, BufferedImage i){
 		
 		enemyID = ID;
 		eX = X;
@@ -26,6 +28,7 @@ public class Enemy {
 		xVel = yVel = 0;
 		size = Tile.TILESIZE*Game.SCALE;
 		stats = new EnemyStats(ID);
+		img = i;
 		
 	}
 	
@@ -35,7 +38,8 @@ public class Enemy {
 		double yP = ((-yIn) + (eY))*Tile.TILESIZE;
 		
 		g.setColor(Color.GREEN);
-		g.fillOval((int) (Game.SCALE*(xP + Game.WIDTH/2)) - size/2, (int) (Game.SCALE*(yP + Game.HEIGHT/2)) - size/2, size, size);
+		g.drawImage(img, (int) (Game.SCALE*(xP + Game.WIDTH/2 - Tile.TILESIZE/2 )), (int) (Game.SCALE*(yP + Game.HEIGHT/2 - Tile.TILESIZE/2)), Game.SCALE*Tile.TILESIZE, Game.SCALE*Tile.TILESIZE, null);
+		//g.fillOval((int) (Game.SCALE*(xP + Game.WIDTH/2)) - size/2, (int) (Game.SCALE*(yP + Game.HEIGHT/2)) - size/2, size, size);
 		
 		for (Projectile p : projectiles) 
 		{
@@ -54,7 +58,7 @@ public class Enemy {
 		double distFromPlayer = Math.sqrt((eX - xIn)*(eX - xIn) + (eY - yIn)*(eY - yIn));
 		stats.setAtkWait(stats.getAtkWait()-1);
 		//System.out.println("distFromPlayer " + distFromPlayer + " == " + stats.getMoveDist());
-		System.out.println("Enemy.java - Distance to player is: " + distFromPlayer);
+		//System.out.println("Enemy.java - Distance to player is: " + distFromPlayer);
 		
 		
 		if (distFromPlayer < Game.WIDTH/Tile.TILESIZE * 3)
@@ -155,4 +159,10 @@ public class Enemy {
 	public ArrayList<Bomb> getBombs()	{	return bombs;	}
 	public double getX()	{	return eX;	}
 	public double getY()	{	return eY;	}
+	
+	public boolean hurtEnemy(int damage)
+	{
+		stats.sethp((int)stats.gethp()-damage);
+		return (stats.gethp() <= 0);
+	}
 }

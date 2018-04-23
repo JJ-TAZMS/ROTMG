@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -16,9 +17,11 @@ import java.awt.image.DataBufferInt;
 import java.io.IOException;
 import java.util.Scanner;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 public class Game extends Canvas implements Runnable{
 
@@ -32,13 +35,9 @@ public class Game extends Canvas implements Runnable{
 	public final String NAME = "ROTMG";
 	
 	
-	private JFrame frame;
-	public static JLabel attack;
-	public static JLabel defense;
-	public static JLabel speed; 
-	public static JLabel dexterity; 
-	public static JLabel vitality;
-	public static JLabel wisdom;
+	private JFrame frame, mainScreen;
+	private JPanel contentPane;
+	JButton btnPlay;
 	
 	public boolean running = false;
 	public int tickCount = 0;
@@ -63,19 +62,6 @@ public class Game extends Canvas implements Runnable{
 		
 		frame = new JFrame(NAME);
 		
-		attack = new JLabel("ATT - ");
-		defense = new JLabel("DEF - ");
-		speed = new JLabel("SPD - ");
-		dexterity = new JLabel("DEX - ");
-		vitality = new JLabel("VIT - ");
-		wisdom = new JLabel("WIS - ");
-		frame.add(attack);
-		frame.add(defense);
-		frame.add(speed);
-		frame.add(dexterity);
-		frame.add(vitality);
-		frame.add(wisdom);
-		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout());
 		
@@ -84,7 +70,61 @@ public class Game extends Canvas implements Runnable{
 		
 		frame.setResizable(true);
 		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
+		frame.setVisible(false);
+		
+		
+		//Main menu
+		mainScreen = new JFrame(NAME);
+		mainScreen.setBackground(Color.BLACK);
+		mainScreen.setForeground(Color.BLACK);
+		
+		mainScreen.setEnabled(true);
+		mainScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainScreen.setBounds(100, 100, 1200, 920 );
+		contentPane = new JPanel();
+		contentPane.setBackground(Color.BLACK);
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		mainScreen.setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		btnPlay = new JButton("Play");
+		btnPlay.setForeground(Color.RED);
+		btnPlay.setBackground(Color.BLACK);
+		
+		btnPlay.setFont(new Font("Modern No. 20", Font.PLAIN, 60));
+		btnPlay.setBounds(421, 655, 253, 86);
+		
+		JLabel lblTitle = new JLabel("Realm of the Mad God");
+		lblTitle.setForeground(Color.RED);
+		lblTitle.setBackground(Color.RED);
+		lblTitle.setFont(new Font("Tahoma", Font.PLAIN, 60));
+		lblTitle.setBounds(318, 21, 643, 111);
+		contentPane.add(lblTitle);
+		
+		JLabel lblText1 = new JLabel("Welcome to the Realm! Do you have what it takes to fight the monsters?");
+		lblText1.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		lblText1.setForeground(Color.RED);
+		lblText1.setBounds(54, 123, 1099, 175);
+		contentPane.add(lblText1);
+		
+		JLabel lblText2 = new JLabel("Your WASD keys will move you around the realm... ");
+		lblText2.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		lblText2.setForeground(Color.RED);
+		lblText2.setBounds(64, 305, 993, 39);
+		contentPane.add(lblText2);
+		
+		JLabel lblText3 = new JLabel("...and left click will vanquish your enemies.");
+		lblText3.setForeground(Color.RED);
+		lblText3.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		lblText3.setBounds(54, 408, 588, 39);
+		contentPane.add(lblText3);
+		
+		JLabel lblText4 = new JLabel("Are you ready, wizard?");
+		lblText4.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		lblText4.setForeground(Color.RED);
+		lblText4.setBounds(397, 545, 467, 39);
+		contentPane.add(lblText4);
+		mainScreen.setVisible(true);
 	}
 	
 	public void init()
@@ -115,7 +155,7 @@ public class Game extends Canvas implements Runnable{
 		addMouseListener(listeners);
 		addMouseMotionListener(listeners);
 
-		
+		contentPane.add(btnPlay);
 		
 	}
 	
@@ -142,6 +182,10 @@ public class Game extends Canvas implements Runnable{
 	public void run() 
 	{
 		init();
+		
+		
+		
+		
 		long lastTime = System.nanoTime();
 		double nsPerTick = 1000000000D/60D;
 		
@@ -198,6 +242,11 @@ public class Game extends Canvas implements Runnable{
 	public void tick() //Update Game Logic
 	{
 		
+		if (btnPlay.getModel().isPressed()) {
+			mainScreen.setVisible(false);
+			frame.setVisible(true);
+		}
+		
 		player1.tick();
 		
 		//TODO when we have an arraylist of players, we need to send in the player positions to only their nearby enemies.
@@ -212,6 +261,11 @@ public class Game extends Canvas implements Runnable{
 					
 				}
 			}
+		}
+		
+		if (player1.getStats().gethp() <= 0)
+		{
+			System.exit(0);
 		}
 		
 		WIDTH = this.getWidth()/Game.SCALE;
@@ -261,7 +315,7 @@ public class Game extends Canvas implements Runnable{
 	//When a key is preesed down, this is called
 	public void keyPressed(KeyEvent e)
 	{
-		char key = e.getKeyChar();
+		int key = e.getKeyCode();
 		player1.controlPressed(key);
 		
 	}
@@ -269,7 +323,7 @@ public class Game extends Canvas implements Runnable{
 	//When the key it finished being pressed, this is called
 	public void keyReleased(KeyEvent e)
 	{
-		char key = e.getKeyChar();
+		int key = e.getKeyCode();
 		player1.controlReleased(key);
 	}
 	

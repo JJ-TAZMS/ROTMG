@@ -1,13 +1,15 @@
 package game.Enemies;
 
+import java.awt.image.BufferedImage;
+
 import game.Enemy;
 import game.Projectile;
 
 public class GiantCrab extends Enemy{
 
 	private double wanderTheta;
-	public GiantCrab(double X, double Y) {
-		super(9, X, Y);
+	public GiantCrab(double X, double Y, BufferedImage img) {
+		super(9, X, Y, img);
 		wanderTheta = 0;
 	}
 	

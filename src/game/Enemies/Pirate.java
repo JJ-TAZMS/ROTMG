@@ -1,13 +1,15 @@
 package game.Enemies;
 
+import java.awt.image.BufferedImage;
+
 import game.Enemy;
 import game.Projectile;
 
 public class Pirate extends Enemy{
 
-	public Pirate(double X, double Y) {
+	public Pirate(double X, double Y, BufferedImage img) {
 		//Add randomization for Pirate vs Piratess here
-		super(1, X, Y);
+		super(1, X, Y, img);
 	}
 	
 	//@Overrides Enemy Class

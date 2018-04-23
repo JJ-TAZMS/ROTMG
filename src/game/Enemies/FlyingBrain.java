@@ -1,11 +1,13 @@
 package game.Enemies;
 
+import java.awt.image.BufferedImage;
+
 import game.Enemy;
 import game.Projectile;
 
 public class FlyingBrain extends Enemy{
-	public FlyingBrain(double X, double Y) {
-		super(17, X, Y);
+	public FlyingBrain(double X, double Y, BufferedImage img) {
+		super(17, X, Y, img);
 	}
 	
 	//@Overrides Enemy Class

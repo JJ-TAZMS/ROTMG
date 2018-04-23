@@ -1,5 +1,7 @@
 package game.Enemies;
 
+import java.awt.image.BufferedImage;
+
 import game.Enemy;
 import game.Projectile;
 
@@ -8,9 +10,9 @@ public class BanditLeader extends Enemy	{
 	private boolean grenade;
 	private int delay = 1000;
 	
-	public BanditLeader(double x, double y)
+	public BanditLeader(double x, double y, BufferedImage img)
 	{
-		super(16,x,y);
+		super(16,x,y, img);
 		grenade = true;
 	}
 	

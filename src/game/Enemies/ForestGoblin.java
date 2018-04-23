@@ -1,11 +1,13 @@
 package game.Enemies;
 
+import java.awt.image.BufferedImage;
+
 import game.Enemy;
 import game.Projectile;
 
 public class ForestGoblin extends Enemy{
-	public ForestGoblin(double X, double Y) {
-		super(6, X, Y);
+	public ForestGoblin(double X, double Y, BufferedImage img) {
+		super(6, X, Y, img);
 	}
 
 	//@Overrides Enemy Class

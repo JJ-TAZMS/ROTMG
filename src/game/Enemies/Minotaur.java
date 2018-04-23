@@ -1,12 +1,14 @@
 package game.Enemies;
 
+import java.awt.image.BufferedImage;
+
 import game.Enemy;
 import game.Projectile;
 
 public class Minotaur extends Enemy{
 
-	public Minotaur(double X, double Y) {
-		super(11, X, Y);
+	public Minotaur(double X, double Y, BufferedImage img) {
+		super(11, X, Y, img);
 	}
 	
 	private boolean isAdvancing = true;

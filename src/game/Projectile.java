@@ -81,13 +81,9 @@ public class Projectile {
 	
 	// Getters
 	
-	public double getDist()
-	{
-		return dist;
-	}
-	
-	public double getRange()
-	{
-		return maxRange;
-	}
+	public double getDist()	{		return dist;	}
+	public double getRange()	{		return maxRange;	}
+	public double getX()	{	return xPos;	}
+	public double getY()	{	return yPos;	}
+	public double getDamage()	{	return damage;	}
 }

@@ -26,6 +26,7 @@ public class Field {
 	private ArrayList<Enemy> shoreE, lowE, midE, highE, godE;
 	
 	
+	
 	//Construct a new Field, where til is the amount of steps that must be taken each time the
 	//generation is tried.
 	public Field(int til)
@@ -184,13 +185,13 @@ public class Field {
 				//Enemy e1 = new Pirate(player.getX() + 5, player.getY() + 10);
 				
 				
-				//Enemy e2 = new GelatinousCube(player.getX() + 5, player.getY() + 10);
+				//Enemy e2 = new Medusa(player.getX() + 5, player.getY() + 10);
 				
 				
 				
 				
 				//enemies.add(e1);
-				//enemies.add(e2);
+				//player.getMap().getEnemies(1).add(e2);
 				
 				chosen = true;
 			}
@@ -970,6 +971,8 @@ public class Field {
 		}
 		return shoreE;
 	}
+	
+	public ArrayList<LootBag> getBags()	{	return lootBags;	}
 	
 	//Used to be used to smooth the look of the map. Has possible future allocations
 		//Can be possibly used to better generate the map

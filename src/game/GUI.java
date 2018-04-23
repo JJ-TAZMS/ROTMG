@@ -3,12 +3,15 @@ package game;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
 
 public class GUI {
 	private Minimap mini;
 	private Stats stat;
 	private Inventory inv;
 	private Hotbar hot;
+	private LootBag loot;
+	private int index;
 	public static int width = Game.WIDTH/5;
 	public static int xStart = (Game.WIDTH-width+2)*Game.SCALE;
 	public static int yStartInv = (Game.HEIGHT/2) * Game.SCALE;
@@ -23,6 +26,16 @@ public class GUI {
 		inv = new Inventory();
 		hot = new Hotbar();
 	}
+	public void setBag(LootBag l)
+	{
+		loot = l;	
+		
+	}
+	public void setIndex(int i){ index = i; }
+	public Inventory getInv()	{	return inv;	}
+	public Hotbar getHot()	{	return hot;	}
+	
+	
 	public void render(Graphics g, double xIn, double yIn){
 		
 		width = Game.WIDTH/5;
@@ -34,6 +47,22 @@ public class GUI {
 		g.setColor(Color.darkGray);
 		g.fillRect((Game.WIDTH-width+2)*Game.SCALE, 0, width*Game.SCALE, Game.HEIGHT*Game.SCALE);
 
+		
+		if (loot!=null) {
+			
+			for (int i = 0; i<loot.bagItems.size(); i++)
+			{
+				if (i == index)
+				{
+					g.setColor(Color.YELLOW);
+				} else {
+					g.setColor(Color.BLACK);
+				}
+				g.drawRect((xStart + 15)+(50*i), Game.HEIGHT*Game.SCALE - 150, 50, 50); //item icons
+				
+				g.drawImage( (Image) loot.bagItems.get(i).getImage(), (int)(xStart + 15)+(50*i), (int) (Game.HEIGHT*Game.SCALE - 150), null);
+			}
+		}
 		mini.render(g, xIn, yIn);
 		inv.render(g);
 		hot.render(g);
@@ -47,10 +76,13 @@ public class GUI {
 		g.drawString("DEX - "+ stat.getDexterity(), xStart+125, yStartStat+35);
 		g.drawString("VIT - "+stat.getVitality(), xStart+10, yStartStat+70);
 		g.drawString("WIS - "+stat.getWisdom(), xStart+125, yStartStat+70);
-		g.drawString("GUISIZE - " + width + ", " + Game.HEIGHT , xStart+10, yStartStat+105);
 		//health bar
 		//add inventory of lootbags when player is near one
-		
+		g.setColor(Color.GREEN);
+		g.drawRect(xStart+10, yStartStat+90, 200,  50);
+		g.fillRect(xStart+10, yStartStat+90, (int)stat.gethp()*2, 50);
+
+
 		
 	}
 }
