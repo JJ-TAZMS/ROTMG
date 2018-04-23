@@ -1,7 +1,12 @@
 package game;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
+
 import java.awt.Color;
 import java.awt.Graphics;
 
@@ -31,6 +36,14 @@ public class Projectile {
 			maxRange = 10;
 			damage = 10;
 			isEnemy = false;
+			/*
+			try {
+				img = ImageIO.read(new File("/.png"));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			*/
 		}	else
 		{
 			maxRange = new EnemyStats(index).getAtkDist()*2;

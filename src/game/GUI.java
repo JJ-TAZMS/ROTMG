@@ -58,9 +58,9 @@ public class GUI {
 				} else {
 					g.setColor(Color.BLACK);
 				}
-				g.drawRect((xStart + 15)+(50*i), Game.HEIGHT*Game.SCALE - 150, 50, 50); //item icons
+				g.drawRect((xStart + 15)+(51*i), Game.HEIGHT*Game.SCALE - 150, 50, 50); //item icons
 				
-				g.drawImage( (Image) loot.bagItems.get(i).getImage(), (int)(xStart + 15)+(50*i), (int) (Game.HEIGHT*Game.SCALE - 150), null);
+				g.drawImage( (Image) loot.bagItems.get(i).getImage(), (int)(xStart + 15)+(51*i), (int) (Game.HEIGHT*Game.SCALE - 150), null);
 			}
 		}
 		mini.render(g, xIn, yIn);
@@ -79,8 +79,8 @@ public class GUI {
 		//health bar
 		//add inventory of lootbags when player is near one
 		g.setColor(Color.GREEN);
-		g.drawRect(xStart+10, yStartStat+90, 200,  50);
-		g.fillRect(xStart+10, yStartStat+90, (int)stat.gethp()*2, 50);
+		g.drawRect(xStart+15, yStartStat+90, 200,  50);
+		g.fillRect(xStart+15, yStartStat+90, (int)stat.gethp()*2, 50);
 
 
 		

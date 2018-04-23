@@ -14,9 +14,11 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -276,6 +278,7 @@ public class Game extends Canvas implements Runnable{
 
 	public void render() //Update Game Display
 	{
+
 		BufferStrategy bs = getBufferStrategy(); 
 		if (bs == null)
 		{

@@ -26,8 +26,22 @@ public class Inventory {
 		
 	}
 	public Item[][] getInv() { return inv; }
-	public void setX(int x) { invX = x; }
-	public void setY(int y) { invY = y; }
+	public void setX(int x) 
+	{ 
+		if (x < 0)
+		{
+			x += 4;
+		}
+		invX = x; 
+	}
+	public void setY(int y) 
+	{ 
+		if (y < 0)
+		{
+			y += 4;
+		}
+		invY = y; 
+	}
 	public void setItemBool(boolean b) { itemSelected = b; }
 	public int getX() { return invX; }
 	public int getY() { return invY; }
@@ -35,6 +49,7 @@ public class Inventory {
 		inv[invX][invY] = it;
 	}
 	public void render(Graphics g){
+		
 		
 		//g.setColor(Color.black);
 		for (int i = 0; i<inv.length; i++){
@@ -45,10 +60,10 @@ public class Inventory {
 					g.setColor(Color.BLACK);
 				}
 				
-				g.drawRect((GUI.xStart + 15)+(50*i), GUI.yStartInv+(50*(j+1)), 50, 50);
+				g.drawRect((GUI.xStart + 15)+(51*i), GUI.yStartInv+(51*(j+1)), 50, 50);
 				if (inv[i][j] != null)
 				{
-					g.drawImage(inv[i][j].getImage(), (GUI.xStart + 15)+(50*i), GUI.yStartInv+(50*(j+1)), null);
+					g.drawImage(inv[i][j].getImage(), (GUI.xStart + 15)+(51*i), GUI.yStartInv+(51*(j+1)), null);
 
 				}
 			}

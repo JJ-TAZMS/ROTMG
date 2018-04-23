@@ -59,6 +59,7 @@ public class Player {
 		
 		bag = null;
 		nearBag = itemInHand = itemSelected = false;
+		//itemSelected = true;
 	}
 
 	public void tick() // Update game logic for player (stats, pos, etc.)
@@ -585,7 +586,7 @@ public class Player {
 		if (bag!=null) {
 			for (int i=1; i<=bag.bagItems.size();i++)
 			{
-				if (k == 48+i && nearBag)
+				if (k == 48+i && nearBag && !itemSelected)
 				{
 					itemInHand = true;
 					bagIndex = i-1;		
@@ -622,11 +623,13 @@ public class Player {
 		{
 			if (!itemSelected) { gui.getInv().setY((gui.getInv().getY() +1)%2); }
 		}
+		
 		if (k == KeyEvent.VK_ENTER)
 		{
 			if (itemInHand){
 				gui.getInv().addItem(itemHeld);
 				itemInHand = false; 
+				itemSelected = false;
 			} 
 			if(itemSelected){
 				gui.getHot().addItem(itemHeld);
@@ -635,6 +638,7 @@ public class Player {
 			}
 			if (!itemInHand && !itemSelected)
 			{
+				itemSelected = true;
 				itemHeld = gui.getInv().getInv()[gui.getInv().getX()][gui.getInv().getY()];
 			}
 			gui.getInv().setItemBool(itemSelected);
@@ -782,7 +786,7 @@ public class Player {
 			{
 				double bagX = map.getBags().get(i).getX();
 				double bagY = map.getBags().get(i).getY();
-				double playerDist = (Math.sqrt(bagX - x)*(bagX - x) + (bagY - y)*(bagY - y));
+				double playerDist = Math.sqrt((bagX - x)*(bagX - x) + (bagY - y)*(bagY - y));
 				nearBag = (Math.abs(playerDist)<1);
 				if (nearBag)
 				{
