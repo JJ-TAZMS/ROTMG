@@ -108,7 +108,7 @@ public class Player {
 					if (((Math.sqrt((en.getX() - projectiles.get(i).getX())*(en.getX()- projectiles.get(i).getX()) + (en.getY() - projectiles.get(i).getY())*(en.getY() - projectiles.get(i).getY()))))<=.50){
 						
 						//Make enemy lose health
-						if (en.hurtEnemy((int)projectiles.get(i).getDamage()))
+						if (en.hurtEnemy((int)(projectiles.get(i).getDamage()+stats.getAttack())))
 						{
 							//Add loot bag to field
 							if (Math.random() < .5)
@@ -121,7 +121,7 @@ public class Player {
 							map.getEnemies(toRender).remove(en);
 							
 						}
-						System.out.println("Player has done " + projectiles.get(i).getDamage() + " damage to enemy ( " + en.getStats().gethp() + ")");
+						System.out.println("Player has done " + (projectiles.get(i).getDamage()+stats.getAttack()) + " damage to enemy ( " + en.getStats().gethp() + ")");
 						
 						projectiles.remove(i);
 						i--;

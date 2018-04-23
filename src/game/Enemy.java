@@ -13,6 +13,7 @@ public class Enemy {
 	protected double eX, eY, xVel, yVel;
 	protected double theta;
 	private BufferedImage img;
+	protected double wanderTheta;
 	
 	public EnemyStats stats;
 	
@@ -96,6 +97,20 @@ public class Enemy {
 					}
 					
 				}
+			}	else
+			{
+				boolean wander = (stats.getAtkWait()%30 == 0);
+				
+				if (wander)
+				{
+					double speed = stats.getSpeed();
+					double changeTheta = Math.PI;
+					wanderTheta += (Math.random()*changeTheta - changeTheta/2);
+					xVel = (speed*Math.cos(wanderTheta))/2.0;
+					yVel = (speed*Math.sin(wanderTheta))/2.0;
+				}
+				eX += xVel;
+				eY += yVel;
 			}
 			
 			

@@ -8,12 +8,10 @@ import game.Projectile;
 
 public class Medusa extends Enemy{
 
-	private double wanderTheta;
 	private double attackStage;
 	
 	public Medusa(double X, double Y, BufferedImage img) {
 		super(23, X, Y, img);
-		wanderTheta = 0;
 		attackStage = 0;
 	}
 	
