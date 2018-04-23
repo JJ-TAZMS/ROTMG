@@ -74,7 +74,7 @@ public class Player {
 			}
 			
 			//Iterate through all enemies to see if a collision was detected 
-			ArrayList<Enemy> enemies = Field.getEnemies();
+			ArrayList<Enemy> enemies = map.getEnemies();
 			for (Enemy en: enemies) {
 				
 				if (((Math.sqrt((en.getX() - projectiles.get(i).getX())*(en.getX()- projectiles.get(i).getX()) + (en.getY() - projectiles.get(i).getY())*(en.getY() - projectiles.get(i).getY()))))<=.50){
