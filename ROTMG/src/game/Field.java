@@ -20,7 +20,7 @@ public class Field {
 	private int mapDist;
 	
 	private ArrayList<LootBag> lootBags;
-	private ArrayList<Enemy> enemies;
+	private static ArrayList<Enemy> enemies;
 	
 	
 	//Construct a new Field, where til is the amount of steps that must be taken each time the
@@ -180,17 +180,17 @@ public class Field {
 				
 				
 				//TODO get rid of this and add real spawning
-				//Enemy e1 = new Pirate(player.getX() + 5, player.getY() + 10);
+				Enemy e1 = new Pirate(player.getX() + 5, player.getY() + 10);
 				
 				
-				//Enemy e2 = new GelatinousCube(player.getX() + 5, player.getY() + 10);
+				Enemy e2 = new GelatinousCube(player.getX() + 5, player.getY() + 10);
 				
 				
-				//Enemy e3 = new GiantCrab(player.getX() + 10, player.getY() + 10);
+				Enemy e3 = new GiantCrab(player.getX() + 10, player.getY() + 10);
 				
-				//enemies.add(e1);
-				//enemies.add(e2);
-				//enemies.add(e3);
+				enemies.add(e1);
+				enemies.add(e2);
+				enemies.add(e3);
 				
 				lootBags.add(new LootBag("1", player.getX() + 5, player.getY() + 5));
 				lootBags.add(new LootBag("2", player.getX() + 2, player.getY() + 2));
@@ -927,7 +927,7 @@ public class Field {
 		lootBags.add(new LootBag(enemyTier, x, y));
 	}
 	
-	public ArrayList<Enemy> getEnemies()	{	return enemies;	}
+	public static ArrayList<Enemy> getEnemies()	{	return enemies;	}
 	
 	//Used to be used to smooth the look of the map. Has possible future allocations
 		//Can be possibly used to better generate the map

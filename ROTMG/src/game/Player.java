@@ -63,11 +63,29 @@ public class Player {
 		for(int i = 0; i < projectiles.size(); i++)
 		{
 			projectiles.get(i).tick();
+			//(Math.sqrt((xPos - playerX)*(xPos - playerX) + (yPos - playerY)*(yPos - playerY)))
+			
+			
 			if(projectiles.get(i).checkDelete())
 			{
 				projectiles.remove(i);
 				i--;
+				continue; //ends current iteration of for loop
 			}
+			
+			//Iterate through all enemies to see if a collision was detected 
+			ArrayList<Enemy> enemies = Field.getEnemies();
+			for (Enemy en: enemies) {
+				
+				if (((Math.sqrt((en.getX() - projectiles.get(i).getX())*(en.getX()- projectiles.get(i).getX()) + (en.getY() - projectiles.get(i).getY())*(en.getY() - projectiles.get(i).getY()))))<=.50){
+					System.out.println("Player has done " + projectiles.get(i).getDamage() + " damage to enemy!");
+					projectiles.remove(i);
+					i--;
+					break;
+				}
+				
+			}
+			
 		}
 	}
 	

@@ -83,7 +83,15 @@ public class Enemy {
 				{
 					projectiles.remove(i);
 					i--;
+					continue;
 				}
+				
+					
+				if (((Math.sqrt((xIn - projectiles.get(i).getX())*(xIn- projectiles.get(i).getX()) + (yIn - projectiles.get(i).getY())*(yIn - projectiles.get(i).getY()))))<=0.5){
+					System.out.println("Enemy has done " + projectiles.get(i).getDamage() + " damage to the player!");
+					projectiles.remove(i);
+					i--;
+				}	
 			}
 		}
 		
