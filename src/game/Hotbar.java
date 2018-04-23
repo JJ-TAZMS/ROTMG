@@ -28,6 +28,9 @@ public class Hotbar {
 				g.setColor(Color.BLACK);
 			}
 			g.drawRect((GUI.xStart + 15)+(51*i), GUI.yStartInv, 50, 50);
+			if (hotbar[i] != null){
+				g.drawImage(hotbar[i].getImage(),(GUI.xStart + 15)+(51*i), GUI.yStartInv, null);
+			}
 		}
 	}	
 	public int getX() { return hotX; }

@@ -532,13 +532,16 @@ public class Player {
 	
 	public void updateStats(Item it)
 	{
-		if (it.getType().equals("W")) 
-		{ 
-			stats.setAttack(12+it.getStat());
-		}else if (it.getType().equals("A")) {
+		if (it != null)
+		{
+			if (it.getType().equals("W")) 
+			{ 
+				stats.setAttack(12+it.getStat());
+			}else if (it.getType().equals("A")) {
 		 
-			stats.setDefense(it.getStat()); 
-		} 
+				stats.setDefense(it.getStat()); 
+			}
+		}
 	}
 	
 	public void controlPressed(int k)
@@ -630,17 +633,18 @@ public class Player {
 				gui.getInv().addItem(itemHeld);
 				itemInHand = false; 
 				itemSelected = false;
-			} 
-			if(itemSelected){
+			} else if(itemSelected){
 				gui.getHot().addItem(itemHeld);
 				itemSelected = false;
 				updateStats(itemHeld);
-			}
-			if (!itemInHand && !itemSelected)
+				//System.out.println(itemSelected);
+			} else
+			//if (!itemInHand && !itemSelected)
 			{
 				itemSelected = true;
 				itemHeld = gui.getInv().getInv()[gui.getInv().getX()][gui.getInv().getY()];
 			}
+			System.out.println(itemSelected);
 			gui.getInv().setItemBool(itemSelected);
 			gui.getHot().setItemBool(itemSelected);
 		}
