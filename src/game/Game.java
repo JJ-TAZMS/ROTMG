@@ -27,6 +27,7 @@ public class Game extends Canvas implements Runnable{
 	public static int WIDTH = 240;
 	public static int HEIGHT = (int) (WIDTH * .75);
 	public static final int SCALE = 5;
+	public static final int DELRADIUS = Game.WIDTH * Game.SCALE *20;
 	
 	
 	public final String NAME = "ROTMG";
@@ -201,23 +202,12 @@ public class Game extends Canvas implements Runnable{
 		player1.tick();
 		
 		//TODO when we have an arraylist of players, we need to send in the player positions to only their nearby enemies.
-		for (int toTick = 1; toTick <= 5; toTick++)
-		{ //In surrounding lands only
-			for (Enemy en : map.getEnemies(toTick)) //For every enemies in the game
-			{
-				if (en.getStats().getActive())
-				{
-					//System.out.println("Ticking enemy from Game.java");
-					en.tick(player1.getX(), player1.getY(), player1.getXvel(), player1.getYvel());
-					
-				}
-			}
+		for (Enemy en : map.getEnemies())
+		{
+			en.tick(player1.getX(), player1.getY());
 		}
-		
 		WIDTH = this.getWidth()/Game.SCALE;
 		HEIGHT = this.getHeight()/Game.SCALE;
-		
-		//System.out.println("Game Tiles Width: " + Game.WIDTH/Tile.TILESIZE);
 	}
 
 	public void render() //Update Game Display
@@ -258,10 +248,11 @@ public class Game extends Canvas implements Runnable{
 		bs.show();
 	}
 	
-	//When a key is preesed down, this is called
+	//When a key is pressed down, this is called
 	public void keyPressed(KeyEvent e)
 	{
-		char key = e.getKeyChar();
+		//char key = e.getKeyChar();
+		int key = e.getKeyCode();
 		player1.controlPressed(key);
 		
 	}
@@ -269,7 +260,8 @@ public class Game extends Canvas implements Runnable{
 	//When the key it finished being pressed, this is called
 	public void keyReleased(KeyEvent e)
 	{
-		char key = e.getKeyChar();
+		//char key = e.getKeyChar();
+		int key = e.getKeyCode();
 		player1.controlReleased(key);
 	}
 	

@@ -1,9 +1,16 @@
+
 package game;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
+
+import javax.imageio.ImageIO;
+
 import java.util.ArrayList;
 import java.util.Random;
 public class Item 
@@ -13,32 +20,7 @@ public class Item
 	private int itemTier;
 	private ArrayList<String[]> listOfDesiredItems;
 	private String itemName;
-	
-	/*
-	public static void main(String[] args) throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File("res/items_wiz.csv"));
-        //scanner.useDelimiter(",");
-        String itemType = "A";
-        String itemTier = "3";
-        ArrayList<String[]> listOfData = new ArrayList<String[]>();
-        while(scanner.hasNextLine()){
-        		String data = scanner.nextLine();
-        		//System.out.println(data);
-        		String[] sepData = data.split(",");
-        		//System.out.println(Arrays.toString(sepData));
-        		//System.out.println(sepData[0] + "  " + sepData[1]);
-        		if (sepData[0].equals(itemType) && sepData[1].equals(itemTier)) {
-        			listOfData.add(sepData);
-        		}
-        }
-        
-        //print out all items of the desired type and tier
-        for (String[] a: listOfData) {
-        		System.out.println(Arrays.toString(a));
-        }
-        scanner.close();
-    }
-    */
+	private BufferedImage itemImage;
 	
 	public Item(String type, String tier) throws FileNotFoundException {
 		createListOfItems(type, tier);
@@ -47,9 +29,15 @@ public class Item
 		itemTier = Integer.parseInt(itemData[1]);
 		itemName = itemData[2];
 		itemStat = Integer.parseInt(itemData[3]);
+		try {
+			itemImage = ImageIO.read(new File("res/wizItem/" + "T" + tier + " " + itemName + ".png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("ERROR: Item picture does not exist!");
+		}
 	}
 	
-	//SHOULD WRITE A CONSTRUCTOR THAT CAN GET A SPECIFIC ITEM, NOT JUST A RANDOM ONE
 	
 	public String getType() {
 		return itemType;
@@ -65,6 +53,10 @@ public class Item
 	
 	public int getStat() {
 		return itemStat;
+	}
+	
+	public Image getImage() {
+		return (Image)itemImage;
 	}
 	
 	//This will return a random item from the arraylist of desired items
@@ -94,6 +86,10 @@ public class Item
         
         scanner.close();
 		listOfDesiredItems = listOfData;
+		
+		//testing this to see if merge  can work
+		//please work for the love of god
+		
 	}
 	
 	public String toString() {
