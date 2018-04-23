@@ -1,12 +1,17 @@
-package game;
+package game.Enemies;
+
+import java.awt.image.BufferedImage;
+
+import game.Enemy;
+import game.Projectile;
 
 public class GhostGod extends Enemy	{
 
 	private double wanderTheta;
 	private int attackStage;
 	
-	public GhostGod(double X, double Y) {
-		super(24, X, Y);
+	public GhostGod(double X, double Y, BufferedImage img) {
+		super(24, X, Y, img);
 		wanderTheta = 0;
 		attackStage = 0;
 	}

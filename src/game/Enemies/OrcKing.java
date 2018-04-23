@@ -1,10 +1,15 @@
-package game;
+package game.Enemies;
+
+import java.awt.image.BufferedImage;
+
+import game.Enemy;
+import game.Projectile;
 
 public class OrcKing extends Enemy{
 
-	public OrcKing(double X, double Y) {
+	public OrcKing(double X, double Y, BufferedImage img) {
 		//Add randomization for Pirate vs Piratess here
-		super(19, X, Y);
+		super(19, X, Y, img);
 	}
 	
 	//@Overrides Enemy Class

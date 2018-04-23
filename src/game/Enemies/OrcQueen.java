@@ -1,9 +1,14 @@
-package game;
+package game.Enemies;
+
+import java.awt.image.BufferedImage;
+
+import game.ChildEnemy;
+import game.Enemy;
 
 public class OrcQueen extends ChildEnemy {
 
-	public OrcQueen(Enemy e, double x, double y) {
-		super(e, 20, x, y);
+	public OrcQueen(Enemy e, double x, double y, BufferedImage img) {
+		super(e, 20, x, y, img);
 	}
 	
 	//@Overrides Enemy Class
