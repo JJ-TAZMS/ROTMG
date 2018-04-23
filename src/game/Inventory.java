@@ -26,6 +26,7 @@ public class Inventory {
 	public void addItem(int x, int y, Item it){
 		inv[x][y].addItem(it);
 	}
+	
 	public void render(Graphics g){
 		
 		g.setColor(Color.black);

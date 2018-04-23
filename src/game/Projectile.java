@@ -17,10 +17,11 @@ public class Projectile {
 	private BufferedImage img;
 
 	//Index that represents the projectile, its position, and its angle and speed
-	public Projectile(int index, double x, double y, double theta, double vel) {
+	Projectile(int index, double x, double y, double theta, double vel) {
 		xPos = x;
 		yPos = y;
-		
+		xVel = vel * Math.cos(theta);
+		yVel = vel * Math.sin(theta);
 		dist = 0;
 
 		// TODO add constants for sizes / maxRange based on index
@@ -36,11 +37,7 @@ public class Projectile {
 			maxRange = new EnemyStats(index).getAtkDist()*2;
 			damage = new EnemyStats(index).getAttack();
 			isEnemy = true;
-			vel /= 4;
 		}
-		
-		xVel = vel * Math.cos(theta);
-		yVel = vel * Math.sin(theta);
 		
 		
 	}
@@ -78,6 +75,34 @@ public class Projectile {
 	{
 		return dist >= maxRange;
 	}
+	
+	public double getX() {
+		return xPos;
+	}
+	
+	public double getY() {
+		return yPos;
+	}
+	
+	public double getDamage() {
+		return damage;
+	}
+	/*
+	public boolean isCollision(double playerX, double playerY) {
+		
+		double distProjectileTarget;
+		if (isEnemy) {
+			distProjectileTarget = (Math.sqrt((xPos - playerX)*(xPos - playerX) + (yPos - playerY)*(yPos - playerY))) ;
+			
+		}
+		else {
+			//This one will be a huge pain in the ass 
+			//distProjectileTarget = (Math.sqrt((xPos - playerX)*(xPos - playerX) + (yPos - playerY)*(yPos - playerY))) ;
+		}
+		
+		return (distProjectileTarget<=1.0);
+		
+	}*/
 	
 	// Getters
 	

@@ -8,8 +8,6 @@ import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-import game.Enemies.Pirate;
-
 public class Player {
 	private double x, y, xVel, yVel, theta;
 	private boolean moveUp, moveDown, moveLeft, moveRight, rotateUp, rotateDown;
@@ -23,6 +21,10 @@ public class Player {
 	private Field map;
 	private int itemID;
 	private boolean itemInHand;
+	private LootBag bag;
+	private boolean nearBag;
+	private Item itemHeld;
+	private int bagIndex;
 
 	public Player(Field m, int index, SpriteSheet ss) // Sets class type with index
 	{
@@ -40,6 +42,9 @@ public class Player {
 		image[2] = ss.grabImage(10, 29, 1, 1); //Left
 		image[3] = ss.grabImage(11, 29, 1, 1); //Up
 		img = image[1];
+		
+		bag = null;
+		nearBag = false;
 	}
 
 	public void tick() // Update game logic for player (stats, pos, etc.)
@@ -48,6 +53,7 @@ public class Player {
 		rotateMap();
 		projectileTick();
 		attack();
+		checkBags();
 	}
 	
 	
@@ -57,11 +63,29 @@ public class Player {
 		for(int i = 0; i < projectiles.size(); i++)
 		{
 			projectiles.get(i).tick();
+			//(Math.sqrt((xPos - playerX)*(xPos - playerX) + (yPos - playerY)*(yPos - playerY)))
+			
+			
 			if(projectiles.get(i).checkDelete())
 			{
 				projectiles.remove(i);
 				i--;
+				continue; //ends current iteration of for loop
 			}
+			
+			//Iterate through all enemies to see if a collision was detected 
+			ArrayList<Enemy> enemies = Field.getEnemies();
+			for (Enemy en: enemies) {
+				
+				if (((Math.sqrt((en.getX() - projectiles.get(i).getX())*(en.getX()- projectiles.get(i).getX()) + (en.getY() - projectiles.get(i).getY())*(en.getY() - projectiles.get(i).getY()))))<=.50){
+					System.out.println("Player has done " + projectiles.get(i).getDamage() + " damage to enemy!");
+					projectiles.remove(i);
+					i--;
+					break;
+				}
+				
+			}
+			
 		}
 	}
 	
@@ -113,7 +137,7 @@ public class Player {
 			xVel += -speed*Math.cos(theta);
 		}
 		
-		if ((xVel != 0) && (yVel != 0))
+		if ((moveUp || moveDown) && (moveLeft || moveRight))
 		{
 			xVel = xVel / Math.sqrt(2.0);
 			yVel = yVel / Math.sqrt(2.0);
@@ -125,7 +149,7 @@ public class Player {
 			xVel = 0;
 		}
 		if (Math.abs(yVel) < .000001)
-		{
+		{ 
 			yVel = 0;
 		}
 		
@@ -199,105 +223,16 @@ public class Player {
 						}
 					}
 					
-					/*
-					if (cX < x && cY == y) //If checking left
-					{
-						if (xVel < 0)
-						{
-							xVel = 0;
-						}
-					}
-					if (cX > x && cY == y) //If checking right
-					{
-						if (xVel > 0)
-						{
-							xVel = 0;
-						}
-					}
-					if (cY < y && cX == x) //If checking up
-					{
-						if (yVel < 0)
-						{
-							yVel = 0;
-						}
-					}
-					if (cY > y && cX == x) //If checking down
-					{
-						if (yVel > 0)
-						{
-							yVel = 0;
-						}
-					}
-					*/
 					
-					/*
-					if ((cC.getTiles()[(int) ((x+.5)%Chunk.CHUNKSIZE)][(int) (y%Chunk.CHUNKSIZE)].getDif() < 0 && xVel > 0) || (cC.getTiles()[(int) ((x-.5)%Chunk.CHUNKSIZE)][(int) (y%Chunk.CHUNKSIZE)].getDif() < 0 && xVel < 0))
-					{
-						xVel = 0;
-					}
-					if ((cC.getTiles()[(int) (x%Chunk.CHUNKSIZE)][(int) ((y+.5)%Chunk.CHUNKSIZE)].getDif() < 0 && yVel > 0) || (cC.getTiles()[(int) (x%Chunk.CHUNKSIZE)][(int) ((y-.5)%Chunk.CHUNKSIZE)].getDif() < 0 && yVel < 0))
-					{
-						yVel = 0;
-					}
-					*/
 				}
 			}
 		}
 		
 			
-		//System.out.println("         After Xvel: " + xVel + ", yVel: " + yVel);
-		//System.out.println();
-		//System.out.println("Speed: " + Math.sqrt(xVel*xVel + yVel*yVel));
 		
 		x += xVel;
 		y += yVel;
 		
-		if(xVel != 0 || yVel != 0)
-		{
-			spawnEnemies();
-		}
-	}
-	
-	public void spawnEnemies()
-	{
-		
-		double playerTheta = Math.atan(yVel/xVel);
-
-		if(xVel < 0)
-		{
-			playerTheta += Math.PI;
-		}
-		
-		for(double cT = 0; cT < Math.PI/4; cT += Math.PI/30)
-		{
-			for(int negAndPos = -1; negAndPos < 2; negAndPos += 2)
-			{
-				double spawnTheta = playerTheta + cT * negAndPos;
-				
-				//Goes this far because Field sets the rendered tiles.
-				int radiusOfTiles = Game.WIDTH/Tile.TILESIZE + 12;
-				
-				int xSpawn = (int) (x + (Math.cos(spawnTheta) * radiusOfTiles));
-				int ySpawn = (int) (y + (Math.sin(spawnTheta) * radiusOfTiles));
-				
-				//Spawning of enemies
-				
-				if (!map.getMap()[xSpawn][ySpawn].getRendered())
-				{
-					if(map.getMap()[xSpawn][ySpawn].getDif() == 1 && ( map.getEnemies(map.getMap()[(int)xSpawn][(int)ySpawn].getDif()) == null || map.getEnemies(map.getMap()[(int) x][(int) y].getDif()).size() <= 40))
-					{
-						//the player is in the shoreline and there are less than 40 enemies
-						if(Math.random() < 0.0005)
-						{
-							System.out.println("Pirate spawned");
-							//System.out.println(map.getEnemies(map.getMap()[(int)xSpawn][(int)ySpawn].getDif()).size());
-							map.addEnemy(new Pirate(xSpawn, ySpawn), 1);
-						}
-					}
-				}
-				
-			}
-		}
 	}
 
 	public void render(Graphics g) // Update picture for player
@@ -330,44 +265,12 @@ public class Player {
 			p.render(g, x, y);
 		}
 		
-		/*
-		//TODO only render close enemies
 		for (Enemy en : map.getEnemies()){
-			if (en.getStats().getActive())
+			en.render(g, x, y);
+			
+			for (Projectile p : en.getProj()) 
 			{
-				en.render(g, x, y);
-				
-				for (Projectile p : en.getProj()) 
-				{
-					p.render(g, x, y);
-				}
-				for (Bomb b : en.getBombs())
-				{
-					b.render(g,  x,  y);
-				}
-			}
-		}
-		*/
-		
-		for (int cL = -1; cL <= 1; cL++)
-		{ //In surrounding lands only
-			int toRender = cL + map.getMap()[(int) x][(int) y].getDif();
-			if (toRender < 1)
-			{
-				cL++;
-			}
-			if (toRender > 5)
-			{
-				break;
-			}
-			for (Enemy en : map.getEnemies(toRender)) //For every enemies in surrounding lands
-			{
-				if (en.getStats().getActive())
-				{
-					//System.out.println("Rendering enemy from player.java");
-					en.render(g, x, y);
-					
-				}
+				p.render(g, x, y);
 			}
 		}
 
@@ -377,33 +280,40 @@ public class Player {
 		gui.render(g, x, y);
 	}
 	
-	public void controlPressed(char k) //Takes key input and decides what to do
+	//public void controlPressed(char k) //Takes key input and decides what to do
+	public void controlPressed(int k)
 	{
-		if(k == 'w')
+		//if(k == 'w')
+		if(k == 87)
 		{
 			moveUp = true;
 		}
-		if(k == 's')
+		//if(k == 's')
+		if(k == 83)
 		{
 			moveDown = true;
 		}
-		if(k == 'a')
+		//if(k == 'a')
+		if(k == 65)
 		{
 			moveLeft = true;
 		}
-		if(k == 'd')
+		//if(k == 'd')
+		if(k == 68)
 		{
 			moveRight = true;
 		}
-		if (k == 'q')
+		//if (k == 'q')
+		if (k == 81)
 		{
 			rotateUp = true;
 		}
-		if (k == 'e')
+		//if (k == 'e')
+		if (k == 69)
 		{
 			rotateDown = true;
 		}
-		if (k == '.')
+		/*if (k == '.')
 		{
 			try {
 				map.addLootBag("1", x, y);
@@ -411,34 +321,55 @@ public class Player {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}*/
+		
+		if (bag!=null) {
+			for (int i=1; i<=bag.bagItems.size();i++)
+			{
+				if (k == 48+i && nearBag)
+				{
+					itemInHand = true;
+					bagIndex = i-1;		
+					itemHeld = bag.bagItems.get(i-1);
+					gui.setIndex(i);
+				}
+			}
 		}
+		
 		
 		
 	}
 	
-	public void controlReleased(char k) //used for deceleration and such
+	//public void controlReleased(char k) //used for deceleration and such
+	public void controlReleased(int k)
 	{
-		if(k == 'w')
+		//if(k == 'w')
+		if (k == 87)
 		{
 			moveUp = false;
 		}
-		if(k == 's')
+		//if(k == 's')
+		if (k == 83)
 		{
 			moveDown = false;
 		}
-		if(k == 'a')
+		//if(k == 'a')
+		if (k == 65)
 		{
 			moveLeft = false;
 		}
-		if(k == 'd')
+		//if(k == 'd')
+		if (k == 68)
 		{
 			moveRight = false;
 		}
-		if (k == 'q')
+		//if (k == 'q')
+		if (k == 81)
 		{
 			rotateUp = false;
 		}
-		if (k == 'e')
+		//if (k == 'e')
+		if (k == 69)
 		{
 			rotateDown = false;
 		}
@@ -457,6 +388,7 @@ public class Player {
 		if(k == 1)
 		{
 			attacking = false;
+			
 		}
 	}
 	
@@ -535,4 +467,34 @@ public class Player {
 	public Field getMap()	{
 		return map;
 	}
+	public void checkBags(){
+		if (map.getBags().size()>0)
+		{
+			for (int i=0; i<map.getBags().size(); i++)
+			{
+				double bagX = map.getBags().get(i).getX();
+				double bagY = map.getBags().get(i).getY();
+				double playerDist = (Math.sqrt(bagX - x)*(bagX - x) + (bagY - y)*(bagY - y));
+				nearBag = (Math.abs(playerDist)<1);
+				if (nearBag)
+				{
+					bag = map.getBags().get(i);	
+					i = map.getBags().size()+1;
+				}else{
+					bag = null;		
+				}
+				gui.setBag(bag);
+				if (playerDist > Game.DELRADIUS)
+				{
+					map.getBags().remove(i);
+				}
+			}
+		}
+	}
+	
+	public LootBag getBag() { return bag; }
+	
+	public boolean getNear() { return nearBag;  }
+	
+	public int getBagIndex() { return bagIndex; }
 }
