@@ -6,12 +6,12 @@ import java.util.Scanner;
 
 public class EnemyStats extends Stats{
 
-	private double moveDist, attackDist, attackDist2; //In tiles
+	private double moveDist, attackDist; //In tiles
 	private boolean active;
 	
 	
 	public EnemyStats(int index) {
-		active = true;
+		active = false;
 		
 		Scanner scanner = null;
 		try {
@@ -31,16 +31,14 @@ public class EnemyStats extends Stats{
 	        		
 	        		//if the index matches the index we are looking for then store the data 
 	        		if (sepData[1].equals("" + index)) {
-	        			setSpeed(Integer.valueOf(sepData[5])/4);
+	        			setSpeed(Integer.valueOf(sepData[5]));
 	        			setDexterity(Integer.valueOf(sepData[6]));
+	        			setAttack(Integer.valueOf(sepData[7]));
 	        			setDefense(Integer.valueOf(sepData[3]));
 	        			sethp(Integer.valueOf(sepData[2]));
 	        			setExperience(Integer.valueOf(sepData[4]));
-	        			moveDist = Integer.valueOf(sepData[7]);
-	        			setAttack(Integer.valueOf(sepData[8]));
+	        			moveDist = Integer.valueOf(sepData[8]);
 	        			attackDist = Integer.valueOf(sepData[9]);
-	        			setAttack2(Integer.valueOf(sepData[10]));
-	        			attackDist2 = Integer.valueOf(sepData[11]);
 	        			break; //break out of loop because we are finished
 	        		}
 	        		
@@ -62,9 +60,7 @@ public class EnemyStats extends Stats{
 	//Getters
 	public double getMoveDist()	{	return moveDist;	}
 	public double getAtkDist()	{	return attackDist;	}
-	public double getAtkDist2()	{	return attackDist2;	}
 	public boolean getActive()	{	return active;	}
-	public double getSpeed()	{		return speed/100.0;	}
 	
 	//Setters
 	public void setActive(boolean b)	{	active = b;	}
