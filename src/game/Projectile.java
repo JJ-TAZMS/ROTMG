@@ -17,7 +17,7 @@ public class Projectile {
 	private BufferedImage img;
 
 	//Index that represents the projectile, its position, and its angle and speed
-	Projectile(int index, double x, double y, double theta, double vel) {
+	public Projectile(int index, double x, double y, double theta, double vel) {
 		xPos = x;
 		yPos = y;
 		xVel = vel * Math.cos(theta);

@@ -1,11 +1,18 @@
-package game;
+package game.Enemies;
 
-public class GiantCrab extends Enemy{
+import game.Bomb;
+import game.Enemy;
+import game.Projectile;
+
+public class Medusa extends Enemy{
 
 	private double wanderTheta;
-	public GiantCrab(double X, double Y) {
-		super(9, X, Y);
+	private double attackStage;
+	
+	public Medusa(double X, double Y) {
+		super(23, X, Y);
 		wanderTheta = 0;
+		attackStage = 0;
 	}
 	
 	//@Overrides Enemy Class
@@ -36,9 +43,23 @@ public class GiantCrab extends Enemy{
 		}
 		
 		public void attackBehavior(double xIn, double yIn) {
+			attackStage ++;
+			//Typically shoot out 5 spread of projectiles
+			//System.out.println("Attacking the player...");
+			if (attackStage >= 3) //Every three times the spread is fired, throw a bomb
+			{
+				System.out.println("BOMB");
+				attackStage = 0;
+				bombs.add(new Bomb(23, eX, eY, theta));
+				//Bomb
+			}
 			
-			System.out.println("Attacking the player...");
-			projectiles.add(new Projectile(9, eX, eY, theta, .1));
+			projectiles.add(new Projectile(23, eX, eY, theta, .1));
+			for (double cT = Math.PI/12; cT <= Math.PI/6; cT += Math.PI/12)
+			{
+				projectiles.add(new Projectile(23, eX, eY, theta+cT, .1));
+				projectiles.add(new Projectile(23, eX, eY, theta-cT, .1));
+			}
 		}
 
 	

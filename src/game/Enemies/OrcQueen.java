@@ -1,9 +1,9 @@
 package game;
 
-public class Bandit extends ChildEnemy {
+public class OrcQueen extends ChildEnemy {
 
-	public Bandit(Enemy e, double x, double y) {
-		super(e, 15, x, y);
+	public OrcQueen(Enemy e, double x, double y) {
+		super(e, 20, x, y);
 	}
 	
 	//@Overrides Enemy Class
@@ -40,7 +40,7 @@ public class Bandit extends ChildEnemy {
 		}
 		
 		public void attackBehavior(double xIn, double yIn) {
-			projectiles.add(new Projectile(1, eX, eY, theta, .1));
+			parentEnemy.getStats().sethp((int)parentEnemy.getStats().gethp() + 75);
 		}
 
 }

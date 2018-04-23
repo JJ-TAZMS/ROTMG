@@ -1,4 +1,7 @@
-package game;
+package game.Enemies;
+
+import game.Enemy;
+import game.Projectile;
 
 public class FlyingBrain extends Enemy{
 	public FlyingBrain(double X, double Y) {

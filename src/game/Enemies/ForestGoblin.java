@@ -1,4 +1,7 @@
-package game;
+package game.Enemies;
+
+import game.Enemy;
+import game.Projectile;
 
 public class ForestGoblin extends Enemy{
 	public ForestGoblin(double X, double Y) {

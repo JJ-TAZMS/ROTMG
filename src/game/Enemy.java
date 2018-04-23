@@ -14,7 +14,7 @@ public class Enemy {
 	
 	public EnemyStats stats;
 	
-	ArrayList<Projectile> projectiles = new ArrayList<Projectile>(); 
+	protected ArrayList<Projectile> projectiles = new ArrayList<Projectile>(); 
 	
 	
 	public Enemy(int ID, double X, double Y){
