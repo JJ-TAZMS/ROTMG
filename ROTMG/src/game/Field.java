@@ -20,7 +20,7 @@ public class Field {
 	private int mapDist;
 	
 	private ArrayList<LootBag> lootBags;
-	private static ArrayList<Enemy> enemies;
+	private ArrayList<Enemy> enemies;
 	
 	
 	//Construct a new Field, where til is the amount of steps that must be taken each time the
@@ -927,7 +927,7 @@ public class Field {
 		lootBags.add(new LootBag(enemyTier, x, y));
 	}
 	
-	public static ArrayList<Enemy> getEnemies()	{	return enemies;	}
+	public ArrayList<Enemy> getEnemies()	{	return enemies;	}
 	
 	//Used to be used to smooth the look of the map. Has possible future allocations
 		//Can be possibly used to better generate the map
