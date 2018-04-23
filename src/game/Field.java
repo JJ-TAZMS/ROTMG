@@ -179,18 +179,7 @@ public class Field {
 				player.setY(map[rndX][rndY].getY()/Tile.TILESIZE);
 				
 				
-				//TODO get rid of this and add real spawning
-				Enemy e1 = new Pirate(player.getX() + 5, player.getY() + 10);
-				
-				
-				Enemy e2 = new GelatinousCube(player.getX() + 5, player.getY() + 10);
-				
-				
-				Enemy e3 = new GiantCrab(player.getX() + 10, player.getY() + 10);
-				
-				enemies.add(e1);
-				enemies.add(e2);
-				enemies.add(e3);
+			
 				
 				lootBags.add(new LootBag("1", player.getX() + 5, player.getY() + 5));
 				lootBags.add(new LootBag("2", player.getX() + 2, player.getY() + 2));
