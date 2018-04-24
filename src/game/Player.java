@@ -105,30 +105,31 @@ public class Player {
 				{
 				
 					//Your projectile hitting them
-					if (((Math.sqrt((en.getX() - projectiles.get(i).getX())*(en.getX()- projectiles.get(i).getX()) + (en.getY() - projectiles.get(i).getY())*(en.getY() - projectiles.get(i).getY()))))<=.50){
+					if (((Math.sqrt((en.getX() - projectiles.get(i).getX())*(en.getX()- projectiles.get(i).getX()) + (en.getY() - projectiles.get(i).getY())*(en.getY() - projectiles.get(i).getY()))))<=.50)
+					{
 						
+						double damageTaking = (projectiles.get(i).getDamage() - en.getStats().getDefense());
 						//Make enemy lose health
-						if (projectiles.get(i).getDamage() - en.getStats().getDefense() > 0)
+						if (damageTaking < projectiles.get(i).getDamage()*.15) //Max stopping of 85% of an attack
 						{
-							if (en.hurtEnemy((int)(projectiles.get(i).getDamage() - en.getStats().getDefense())))
-							{
-								//Add loot bag to field
-								if (Math.random() < .2) //20% Chance to drop a loot bag
-								{
-									System.out.println("Adding LootBag! Player.java");
-									map.getBags().add(new LootBag(en.getStats().getTier(), en.getX(), en.getY()));
-								}
-								
-								//Get rid of the enemy
-								map.getEnemies(toRender).remove(en);
-								
-							}
-							System.out.println("Player has done " + (projectiles.get(i).getDamage() - en.getStats().getDefense()) + " damage to enemy ( " + en.getStats().gethp() + ")");
-							
-						}	else
-						{
-							System.out.println("Player has hit but done NO damage!");
+							damageTaking = projectiles.get(i).getDamage()*.15;
 						}
+							
+						if (en.hurtEnemy((int)(damageTaking)))
+						{
+							//Add loot bag to field
+							if (Math.random() < .2) //20% Chance to drop a loot bag
+							{
+								System.out.println("Adding LootBag! Player.java");
+								map.getBags().add(new LootBag(en.getStats().getTier(), en.getX(), en.getY()));
+							}
+							
+							//Get rid of the enemy
+							map.getEnemies(toRender).remove(en);
+							
+						}
+						System.out.println("player.java - Player has done " + (damageTaking) + " damage to enemy ( " + en.getStats().gethp() + ")");
+						
 						projectiles.remove(i);
 						i--;
 						break;
@@ -165,10 +166,16 @@ public class Player {
 					if (((Math.sqrt((x - en.getProj().get(j).getX())*(x- en.getProj().get(j).getX()) + (y - en.getProj().get(j).getY())*(y - en.getProj().get(j).getY()))))<=0.5){
 						
 						
-						System.out.println("Enemy has done " + en.getProj().get(j).getDamage() + " damage to the player (" + stats.gethp() + ")");
+						double damageTaking = (en.getProj().get(j).getDamage() - getDefense());
+						//Make enemy lose health
+						if (damageTaking < en.getProj().get(j).getDamage()*.15) //Max stopping of 85% of an attack
+						{
+							damageTaking = en.getProj().get(j).getDamage()*.15;
+						}
+						System.out.println("Enemy has done " + damageTaking + " damage to the player (" + stats.gethp() + ")");
+							
+						stats.sethp((int)(stats.gethp()-damageTaking));
 						
-						
-						stats.sethp((int)(stats.gethp()-en.getProj().get(j).getDamage()));
 						
 						
 						en.getProj().remove(j);
@@ -756,7 +763,7 @@ public class Player {
 			
 			//TODO give in weapon firing speed
 			projectiles.add(new Projectile(index, x, y, pTheta, .2, getDamage()));
-			System.out.println("Added new projectile");
+			//System.out.println("player.java - Added new player projectile");
 			
 			stats.setAtkWait( (int) (360/stats.getDexterity()));
 		}

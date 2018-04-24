@@ -34,7 +34,14 @@ public class Hotbar {
 		}
 	}	
 	public int getX() { return hotX; }
-	public void setX(int x) { hotX = x; }
+	public void setX(int x) 
+	{ 
+		if (x < 0)
+		{
+			x += 4;
+		}
+		hotX = x; 
+	}
 	public Item[] getHot() {  return hotbar; }
 	public void addItem(Item it)
 	{
