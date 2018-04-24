@@ -60,10 +60,10 @@ public class Inventory {
 					g.setColor(Color.BLACK);
 				}
 				
-				g.drawRect((GUI.xStart + 15)+(51*i), GUI.yStartInv+(51*(j+1)), 50, 50);
+				g.drawRect((GUI.xStart + 15)+(51*i), (int)(GUI.yStartInv+(51*(j+1.2))), 50, 50);
 				if (inv[i][j] != null)
 				{
-					g.drawImage(inv[i][j].getImage(), (GUI.xStart + 15)+(51*i), GUI.yStartInv+(51*(j+1)), null);
+					g.drawImage(inv[i][j].getImage(), (int)(GUI.yStartInv+(51*(j+1.2))), GUI.yStartInv+(51*(j+1)), null);
 
 				}
 			}

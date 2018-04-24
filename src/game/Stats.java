@@ -7,7 +7,7 @@ public class Stats {
 	private double defense;
 	private double vitality;
 	private double attack2;
-	private double wisdom, hp, mp, healthPotions, manaPotions, experience;
+	private double wisdom, hp, maxHealth, mp, healthPotions, manaPotions, experience;
 	private int atkWait;
 	private String tier;
 	
@@ -26,7 +26,7 @@ public class Stats {
 	public Stats(int index)
 	{
 		atkWait = 0;
-		if(index == 0) //Two digit numbers are player stats only
+		if(index == 0) //zero or negative numbers are player stats only
 		{
 			speed = 10; 
 			dexterity = 15;
@@ -40,6 +40,7 @@ public class Stats {
 			healthPotions = 3;
 			manaPotions = 3;
 			experience = 0;
+			maxHealth = hp;
 		}
 	}
 	
@@ -51,6 +52,7 @@ public class Stats {
 	public void setVitality(int x)	{		vitality = x;	}
 	public void setWisdom(int x)	{		wisdom = x;	}
 	public void sethp(int x)	{		hp = x;	}
+	public void setMaxHP(int x)	{	maxHealth = x;	}
 	public void setmp(int x)	{		mp = x;	}
 	public void setHealthPotions(int x)	{		healthPotions = x;	}
 	public void setManaPotions(int x)	{		manaPotions = x;	}
@@ -68,6 +70,7 @@ public class Stats {
 	public double getVitality()	{		return vitality;	}
 	public double getWisdom()	{		return wisdom;	}
 	public double gethp()	{		return hp;	}
+	public double getMaxHP()	{	return maxHealth;	}
 	public double getmp()	{		return mp;	}
 	public double getHealthPotions()	{		return healthPotions;	}
 	public double getManaPotions()	{		return manaPotions;	}

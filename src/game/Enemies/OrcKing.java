@@ -42,7 +42,7 @@ public class OrcKing extends Enemy{
 	}
 	
 	public void attackBehavior(double xIn, double yIn) {
-		projectiles.add(new Projectile(19, eX, eY, theta, .1));
+		projectiles.add(new Projectile(19, eX, eY, theta, .1, stats.getAttack()));
 	}
 
 }

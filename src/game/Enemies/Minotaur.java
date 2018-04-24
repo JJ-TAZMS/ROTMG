@@ -42,7 +42,7 @@ public class Minotaur extends Enemy{
 			
 			//TODO give in weapon firing speed
 			//System.out.println("Attacking the player...");
-			projectiles.add(new Projectile(11, eX, eY, theta, .1));
+			projectiles.add(new Projectile(11, eX, eY, theta, .1, stats.getAttack2()));
 		}
 
 	

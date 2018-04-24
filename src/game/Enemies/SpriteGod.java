@@ -2,6 +2,7 @@ package game.Enemies;
 
 import java.awt.image.BufferedImage;
 
+import game.Bomb;
 import game.Enemy;
 import game.Projectile;
 
@@ -40,11 +41,14 @@ public class SpriteGod extends Enemy {
 		{
 			attackStage = 0;
 			// Bomb
+			double projSpeed = .1;
+			projectiles.add(new Projectile(25, eX, eY, thetaPredict(xIn, yIn, xVel, yVel, projSpeed), projSpeed, stats.getAttack2()));
 		}
 
+
 		for (double cT = Math.PI / 24; cT <= 3 * Math.PI / 24; cT += Math.PI / 12) {
-			projectiles.add(new Projectile(26, eX, eY, theta + cT, .1));
-			projectiles.add(new Projectile(26, eX, eY, theta - cT, .1));
+			projectiles.add(new Projectile(26, eX, eY, theta + cT, .1, stats.getAttack()));
+			projectiles.add(new Projectile(26, eX, eY, theta - cT, .1, stats.getAttack()));
 		}
 	}
 

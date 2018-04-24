@@ -157,6 +157,54 @@ public class Enemy {
 		//System.out.println("Enemy Theta: " + theta);
 	}
 	
+	public double thetaPredict(double xIn, double yIn, double xVel, double yVel, double projectileSpeed)
+	{
+		double angleToShoot = theta;
+		
+		
+		double playerSpeed = Math.sqrt(Math.pow(xVel, 2) + Math.pow(yVel, 2));
+		
+		
+		//Make eTheta and pTheta within [-PI, PI]
+		double eTheta = theta;
+		double pTheta = Math.atan(yVel/xVel);
+		
+		if (xVel < 0)
+		{
+			pTheta += Math.PI;
+		}
+		
+		if (eTheta > Math.PI)
+		{
+			eTheta -= Math.PI*2;
+		}
+		if (pTheta > Math.PI)
+		{
+			pTheta -= Math.PI*2;
+		}
+		
+		//Calculate Player's Angle within triangle (always positive)
+		double angleP = Math.abs((Math.PI + (eTheta - pTheta))%Math.PI);
+		
+		
+		//Calculate what angle off of eTheta we must shoot.
+		double angleE = 0;
+		if (playerSpeed != 0)
+		{
+			angleE = Math.asin(playerSpeed/projectileSpeed * Math.sin(angleP));
+		}
+		
+		//Figure out which way to add it
+		int eDirection = -1;
+		if ((eY > yIn && xVel > 0) || (eY < yIn && xVel < 0))
+		{
+			eDirection = 1;
+		}
+		
+		angleToShoot += eDirection*angleE;
+		return angleToShoot;
+	}
+	
 	public void moveBehavior(double xIn, double yIn) {
 		
 	}

@@ -2,6 +2,7 @@ package game.Enemies;
 
 import java.awt.image.BufferedImage;
 
+import game.Bomb;
 import game.Enemy;
 import game.Projectile;
 
@@ -30,11 +31,11 @@ public class BanditLeader extends Enemy	{
 		{
 			delay = 1000;
 			grenade = false;
-			projectiles.add(new Projectile(1, eX, eY, theta, .3));
+			bombs.add(new Bomb(16, eX, eY, theta, true));
 		}
 		else
 		{
-			projectiles.add(new Projectile(1, eX, eY, theta, .1));
+			projectiles.add(new Projectile(1, eX, eY, theta, .1, stats.getAttack()));
 			grenade = delayAttack();
 		}
 	}

@@ -48,7 +48,7 @@ public class GhostGod extends Enemy	{
 		if(attackStage < 10) //NORMALLY 60
 		{
 			attackStage++;
-			projectiles.add(new Projectile(24, eX, eY, theta, .1));
+			projectiles.add(new Projectile(24, eX, eY, theta, .1, stats.getAttack()));
 		}
 		else if(attackStage < 18)
 		{
@@ -57,7 +57,7 @@ public class GhostGod extends Enemy	{
 				for(int i = 1; i <= 7; i++)
 				{
 					//System.out.println(2*Math.PI/i);
-					projectiles.add(new Projectile(24, eX, eY, (step * i), .1));
+					projectiles.add(new Projectile(24, eX, eY, (step * i), .1, stats.getAttack()));
 				}
 				System.out.println("--------------------");
 				attackStage++;

@@ -22,7 +22,7 @@ public class Projectile {
 	private BufferedImage img;
 
 	//Index that represents the projectile, its position, and its angle and speed
-	public Projectile(int index, double x, double y, double theta, double vel) {
+	public Projectile(int index, double x, double y, double theta, double vel, double dam) {
 		xPos = x;
 		yPos = y;
 		
@@ -34,7 +34,7 @@ public class Projectile {
 		if (index == 0)
 		{
 			maxRange = 10;
-			damage = 10;
+			damage = dam;
 			isEnemy = false;
 			/*
 			try {
@@ -47,7 +47,7 @@ public class Projectile {
 		}	else
 		{
 			maxRange = new EnemyStats(index).getAtkDist()*2;
-			damage = new EnemyStats(index).getAttack();
+			damage = dam;
 			isEnemy = true;
 			vel /= 4;
 		}

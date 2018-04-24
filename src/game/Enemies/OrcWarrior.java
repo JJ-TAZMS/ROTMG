@@ -45,7 +45,7 @@ public class OrcWarrior extends ChildEnemy {
 		}
 		
 		public void attackBehavior(double xIn, double yIn) {
-			projectiles.add(new Projectile(21, eX, eY, theta, .1));
+			projectiles.add(new Projectile(21, eX, eY, theta, .1, stats.getAttack()));
 		}
 
 }

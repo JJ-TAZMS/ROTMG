@@ -48,17 +48,17 @@ public class Medusa extends Enemy{
 			//System.out.println("Attacking the player...");
 			if (attackStage >= 3) //Every three times the spread is fired, throw a bomb
 			{
-				System.out.println("BOMB");
+				//System.out.println("BOMB");
 				attackStage = 0;
-				bombs.add(new Bomb(23, eX, eY, theta));
+				bombs.add(new Bomb(23, eX, eY, theta, true));
 				//Bomb
 			}
 			
-			projectiles.add(new Projectile(23, eX, eY, theta, .1));
+			projectiles.add(new Projectile(23, eX, eY, theta, .1, stats.getAttack()));
 			for (double cT = Math.PI/12; cT <= Math.PI/6; cT += Math.PI/12)
 			{
-				projectiles.add(new Projectile(23, eX, eY, theta+cT, .1));
-				projectiles.add(new Projectile(23, eX, eY, theta-cT, .1));
+				projectiles.add(new Projectile(23, eX, eY, theta+cT, .1, stats.getAttack()));
+				projectiles.add(new Projectile(23, eX, eY, theta-cT, .1, stats.getAttack()));
 			}
 		}
 

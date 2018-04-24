@@ -40,7 +40,7 @@ public class GelatinousCube extends Enemy{
 			
 			//TODO give in weapon firing speed
 			System.out.println("Attacking the player...");
-			projectiles.add(new Projectile(2, eX, eY, theta, .1));
+			projectiles.add(new Projectile(2, eX, eY, theta, .1, stats.getAttack2()));
 		}
 
 	

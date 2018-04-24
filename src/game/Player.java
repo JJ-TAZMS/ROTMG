@@ -108,21 +108,27 @@ public class Player {
 					if (((Math.sqrt((en.getX() - projectiles.get(i).getX())*(en.getX()- projectiles.get(i).getX()) + (en.getY() - projectiles.get(i).getY())*(en.getY() - projectiles.get(i).getY()))))<=.50){
 						
 						//Make enemy lose health
-						if (en.hurtEnemy((int)(projectiles.get(i).getDamage()+stats.getAttack())))
+						if (projectiles.get(i).getDamage() - en.getStats().getDefense() > 0)
 						{
-							//Add loot bag to field
-							if (Math.random() < .5)
+							if (en.hurtEnemy((int)(projectiles.get(i).getDamage() - en.getStats().getDefense())))
 							{
-								System.out.println("Adding LootBag! Player.java");
-								map.getBags().add(new LootBag(en.getStats().getTier(), en.getX(), en.getY()));
+								//Add loot bag to field
+								if (Math.random() < .2) //20% Chance to drop a loot bag
+								{
+									System.out.println("Adding LootBag! Player.java");
+									map.getBags().add(new LootBag(en.getStats().getTier(), en.getX(), en.getY()));
+								}
+								
+								//Get rid of the enemy
+								map.getEnemies(toRender).remove(en);
+								
 							}
+							System.out.println("Player has done " + (projectiles.get(i).getDamage() - en.getStats().getDefense()) + " damage to enemy ( " + en.getStats().gethp() + ")");
 							
-							//Get rid of the enemy
-							map.getEnemies(toRender).remove(en);
-							
+						}	else
+						{
+							System.out.println("Player has hit but done NO damage!");
 						}
-						System.out.println("Player has done " + (projectiles.get(i).getDamage()+stats.getAttack()) + " damage to enemy ( " + en.getStats().gethp() + ")");
-						
 						projectiles.remove(i);
 						i--;
 						break;
@@ -157,7 +163,11 @@ public class Player {
 				for (int j = 0; j < en.getProj().size(); j++)
 				{
 					if (((Math.sqrt((x - en.getProj().get(j).getX())*(x- en.getProj().get(j).getX()) + (y - en.getProj().get(j).getY())*(y - en.getProj().get(j).getY()))))<=0.5){
+						
+						
 						System.out.println("Enemy has done " + en.getProj().get(j).getDamage() + " damage to the player (" + stats.gethp() + ")");
+						
+						
 						stats.sethp((int)(stats.gethp()-en.getProj().get(j).getDamage()));
 						
 						
@@ -390,11 +400,15 @@ public class Player {
 					if(map.getMap()[xSpawn][ySpawn].getDif() == 1 && ( map.getEnemies(map.getMap()[(int)xSpawn][(int)ySpawn].getDif()) == null || map.getEnemies(map.getMap()[(int) xSpawn][(int) ySpawn].getDif()).size() <= 40))
 					{
 						//the player is in the shoreline and there are less than 40 enemies
-						if(Math.random() < 0.005)
+						if(Math.random() < 0.005) //1 in every 200 tiles is a pirate 'cluster'
 						{
 							System.out.println("Pirate spawned");
 							//System.out.println(map.getEnemies(map.getMap()[(int)xSpawn][(int)ySpawn].getDif()).size());
-							map.addEnemy(new Pirate(xSpawn, ySpawn, spriteSheet.grabImage(11, 1, 1, 1)), 1);
+							for (int i = 0; i < 4 + (Math.random()*2 - 1); i++)
+							{
+								map.addEnemy(new Pirate(xSpawn + (Math.random()*4 - 2), ySpawn + (Math.random()*4 - 2), spriteSheet.grabImage(11, 1, 1, 1)), 1);
+							}
+							
 						}
 					}
 					if(map.getMap()[xSpawn][ySpawn].getDif() == 2 && ( map.getEnemies(map.getMap()[(int)xSpawn][(int)ySpawn].getDif()) == null || map.getEnemies(map.getMap()[(int) xSpawn][(int) ySpawn].getDif()).size() <= 40))
@@ -648,6 +662,25 @@ public class Player {
 			gui.getInv().setItemBool(itemSelected);
 			gui.getHot().setItemBool(itemSelected);
 		}
+		
+		if(k == KeyEvent.VK_SPACE)
+		{
+			//Lets just say it costs 30 to use your thing.
+			if (stats.getmp() - 30 > 0)
+			{
+				
+				stats.setmp((int)(stats.getmp() - 30));
+				//the mouse x and y need to be converted to the map based x y location
+				double mX = Game.mouseX/(Game.SCALE*Tile.TILESIZE) - Game.WIDTH/Tile.TILESIZE/2 + x;
+				double mY = Game.mouseY/(Game.SCALE*Tile.TILESIZE) - Game.HEIGHT/Tile.TILESIZE/2 + y;
+				
+				System.out.println("Player.java - creating a magic spell at " + mX + ", " + mY);
+				for (double bombTheta = 0; bombTheta < 2*Math.PI; bombTheta+= Math.PI/4)
+				{
+					projectiles.add(new Projectile(index, mX, mY, bombTheta, .2, stats.getAttack2()));
+				}
+			}
+		}
 
 
 		
@@ -722,7 +755,7 @@ public class Player {
 			
 			
 			//TODO give in weapon firing speed
-			projectiles.add(new Projectile(index, x, y, pTheta, .2));
+			projectiles.add(new Projectile(index, x, y, pTheta, .2, getDamage()));
 			System.out.println("Added new projectile");
 			
 			stats.setAtkWait( (int) (360/stats.getDexterity()));
@@ -779,6 +812,64 @@ public class Player {
 	public Stats getStats() {
 		return stats;
 	}
+	
+	//The Player's Stats + What they are wearing
+	public int getDamage() //Basic attack
+	{
+		int num = (int) stats.getAttack();
+		
+		for (Item i : gui.getHot().getHot()) 
+		{
+			if (i != null)
+			{
+				if (i.getType().equals("W"))
+				{
+					num += i.getStat();
+					break;
+				}
+			}
+		}
+		return num;
+	}
+	
+	public int getMagicDamage() //Basic attack
+	{
+		int num = (int) stats.getAttack2();
+		
+		for (Item i : gui.getHot().getHot()) 
+		{
+			if (i != null)
+			{
+				if (i.getType().equals("M"))
+				{
+					num += i.getStat();
+					break;
+				}
+			}
+		}
+		return num;
+	}
+	
+	public int getDefense()
+	{
+		int num = (int) stats.getDefense();
+		
+		for (Item i : gui.getHot().getHot()) 
+		{
+			if (i != null)
+			{
+				if (i.getType().equals("A"))
+				{
+					num += i.getStat();
+					break;
+				}
+			}
+		}
+		return num;
+	}
+	
+	
+	
 	
 	public Field getMap()	{
 		return map;

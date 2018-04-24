@@ -17,18 +17,32 @@ public class Bomb {
 	private BufferedImage img;
 	private ArrayList<Projectile> bombSpread;
 	
-	public Bomb(int ind, double x, double y, double theta)
+	public Bomb(int ind, double x, double y, double theta, boolean moving)
 	{
 		xPos = x;
 		yPos = y;
 		index = ind;
 		
-		double vel = .2/4.0;
+		double vel = 0;
+		if (moving)
+		{
+			vel = .2/4.0;
+		}
+		
 		xVel = vel*Math.cos(theta);
 		yVel = vel*Math.sin(theta);
 		
-		maxRange = new EnemyStats(index).getAtkDist2();
-		damage = new EnemyStats(index).getAttack2();
+		if (index != 0)
+		{
+			maxRange = new EnemyStats(index).getAtkDist2();
+			damage = new EnemyStats(index).getAttack2();
+		}	else
+		{
+			//Will automatically create the bomb spread.
+			maxRange = 0;
+			dist = 1;
+			damage = new Stats(index).getAttack2();
+		}
 		bombSpread = new ArrayList<Projectile> ();
 		
 	}
@@ -65,7 +79,7 @@ public class Bomb {
 				dist = -1;
 				for (double bombTheta = 0; bombTheta < 2*Math.PI; bombTheta+= Math.PI/4)
 				{
-					bombSpread.add(new Projectile(index, xPos, yPos, bombTheta, .2));
+					bombSpread.add(new Projectile(index, xPos, yPos, bombTheta, .2, damage));
 				}
 			}
 			

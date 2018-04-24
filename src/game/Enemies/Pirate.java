@@ -42,7 +42,7 @@ public class Pirate extends Enemy{
 	}
 	
 	public void attackBehavior(double xIn, double yIn) {
-		projectiles.add(new Projectile(1, eX, eY, theta, .1));
+		projectiles.add(new Projectile(1, eX, eY, theta, .1, stats.getAttack2()));
 	}
 
 }

@@ -43,7 +43,7 @@ public class GiantCrab extends Enemy{
 		public void attackBehavior(double xIn, double yIn) {
 			
 			System.out.println("Attacking the player...");
-			projectiles.add(new Projectile(9, eX, eY, theta, .1));
+			projectiles.add(new Projectile(9, eX, eY, theta, .1, stats.getAttack2()));
 		}
 
 	
