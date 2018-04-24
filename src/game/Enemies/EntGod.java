@@ -64,6 +64,6 @@ public class EntGod extends Enemy{
 			//System.out.println("Enemy to Player Theta: " + eTheta);
 			//System.out.println("Angle P: " + angleP);
 			double projectileSpeed = .1;
-			projectiles.add(new Projectile(25, eX, eY, thetaPredict(xIn, yIn, xVel, yVel, projectileSpeed), projectileSpeed, stats.getAttack2()));
+			projectiles.add(new Projectile(25, eX, eY, thetaPredict(xIn, yIn, xVel, yVel, projectileSpeed), projectileSpeed, stats.getAttack()));
 		}
 }

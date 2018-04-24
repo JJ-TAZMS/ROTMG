@@ -40,6 +40,7 @@ public class Game extends Canvas implements Runnable{
 	private JFrame frame, mainScreen;
 	private JPanel contentPane;
 	JButton btnPlay;
+	JLabel lblLoading, lblTitle, lblDesc;
 	
 	public boolean running = false;
 	public int tickCount = 0;
@@ -94,38 +95,58 @@ public class Game extends Canvas implements Runnable{
 		btnPlay.setBackground(Color.BLACK);
 		
 		btnPlay.setFont(new Font("Modern No. 20", Font.PLAIN, 60));
-		btnPlay.setBounds(421, 655, 253, 86);
+		btnPlay.setBounds(470, 580, 253, 86);
+		contentPane.add(btnPlay);
+		btnPlay.setVisible(false);
 		
-		JLabel lblTitle = new JLabel("Realm of the Mad God");
+		lblTitle = new JLabel("Realm of the Mad God");
 		lblTitle.setForeground(Color.RED);
 		lblTitle.setBackground(Color.RED);
 		lblTitle.setFont(new Font("Tahoma", Font.PLAIN, 60));
 		lblTitle.setBounds(318, 21, 643, 111);
 		contentPane.add(lblTitle);
 		
-		JLabel lblText1 = new JLabel("Welcome to the Realm! Do you have what it takes to fight the monsters?");
-		lblText1.setFont(new Font("Tahoma", Font.PLAIN, 30));
-		lblText1.setForeground(Color.RED);
-		lblText1.setBounds(54, 123, 1099, 175);
-		contentPane.add(lblText1);
+		lblDesc = new JLabel("Welcome to the Realm! Do you have what it takes to fight the monsters?");
+		lblDesc.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		lblDesc.setForeground(Color.RED);
+		lblDesc.setBounds(54, 123, 1099, 175);
+		contentPane.add(lblDesc);
 		
-		JLabel lblText2 = new JLabel("Your WASD keys will move you around the realm... ");
-		lblText2.setFont(new Font("Tahoma", Font.PLAIN, 30));
-		lblText2.setForeground(Color.RED);
-		lblText2.setBounds(64, 305, 993, 39);
-		contentPane.add(lblText2);
+		JLabel lblControlsHeader, lblControls1, lblControls2, lblControls3, lblControls4;
 		
-		JLabel lblText3 = new JLabel("...and left click will vanquish your enemies.");
-		lblText3.setForeground(Color.RED);
-		lblText3.setFont(new Font("Tahoma", Font.PLAIN, 30));
-		lblText3.setBounds(54, 408, 588, 39);
-		contentPane.add(lblText3);
+		lblControlsHeader = new JLabel("Movement                              Attack                              Magic");
+		lblControlsHeader.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		lblControlsHeader.setForeground(Color.RED);
+		lblControlsHeader.setBounds(150, 305, 993, 39);
+		contentPane.add(lblControlsHeader);
 		
-		JLabel lblText4 = new JLabel("Are you ready, wizard?");
-		lblText4.setFont(new Font("Tahoma", Font.PLAIN, 30));
-		lblText4.setForeground(Color.RED);
-		lblText4.setBounds(397, 545, 467, 39);
-		contentPane.add(lblText4);
+
+		lblControls1 = new JLabel("  W                          Aim with your mouse        Aim with your mouse");
+		lblControls1.setForeground(Color.RED);
+		lblControls1.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		lblControls1.setBounds(179, 408, 1000, 39);
+		contentPane.add(lblControls1);
+		lblControls2 = new JLabel("A S D                           Left Mouse Click                    SpaceBar");
+		lblControls2.setForeground(Color.RED);
+		lblControls2.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		lblControls2.setBounds(175, 440, 1000, 39);
+		contentPane.add(lblControls2);
+		lblControls3 = new JLabel("Get Items From Lootbags: Numpad > Arrows > Enter");
+		lblControls3.setForeground(Color.RED);
+		lblControls3.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		lblControls3.setBounds(200, 750, 1000, 39);
+		contentPane.add(lblControls3);
+		lblControls4 = new JLabel("Equip Items From Inventory: Enter > Arrows > Enter");
+		lblControls4.setForeground(Color.RED);
+		lblControls4.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		lblControls4.setBounds(200, 790, 1000, 39);
+		contentPane.add(lblControls4);
+		
+		lblLoading = new JLabel("Generating Realm...");
+		lblLoading.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		lblLoading.setForeground(Color.RED);
+		lblLoading.setBounds(460, 580, 467, 39);
+		contentPane.add(lblLoading);
 		mainScreen.setVisible(true);
 	}
 	
@@ -157,7 +178,8 @@ public class Game extends Canvas implements Runnable{
 		addMouseListener(listeners);
 		addMouseMotionListener(listeners);
 
-		contentPane.add(btnPlay);
+		btnPlay.setVisible(true);
+		lblLoading.setVisible(false);
 		
 	}
 	

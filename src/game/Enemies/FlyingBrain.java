@@ -27,7 +27,7 @@ public class FlyingBrain extends Enemy{
 		System.out.println("Attacking the player...");
 		for (int i = 0;i<5;i++)
 		{
-			projectiles.add(new Projectile(17, eX, eY, theta + (double)i * Math.PI/2.5, .1, stats.getAttack2()));
+			projectiles.add(new Projectile(17, eX, eY, theta + (double)i * Math.PI/2.5, .1, stats.getAttack()));
 		}
 	}
 }
