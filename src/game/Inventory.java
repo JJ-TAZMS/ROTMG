@@ -1,6 +1,7 @@
 package game;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 
@@ -26,6 +27,7 @@ public class Inventory {
 		
 	}
 	public Item[][] getInv() { return inv; }
+	public void removeItem() { inv[invX][invY]= null; }
 	public void setX(int x) 
 	{ 
 		if (x < 0)
@@ -63,7 +65,10 @@ public class Inventory {
 				g.drawRect((GUI.xStart + 15)+(51*i), (int)(GUI.yStartInv+(51*(j+1.2))), 50, 50);
 				if (inv[i][j] != null)
 				{
-					g.drawImage(inv[i][j].getImage(), (int)(GUI.yStartInv+(51*(j+1.2))), GUI.yStartInv+(51*(j+1)), null);
+					g.drawImage(inv[i][j].getImage(), (GUI.xStart + 15)+(51*i), (int)(GUI.yStartInv+(51*(j+1.2))), null);
+					g.setColor(Color.RED);
+					g.setFont(new Font("TimesRoman", Font.PLAIN, 10));
+					g.drawString(Integer.toString(inv[i][j].getTier()), (GUI.xStart + 15)+(51*i)+40, (int)(GUI.yStartInv+(51*(j+1.2)))+47);
 
 				}
 			}

@@ -41,7 +41,7 @@ public class Urgle extends Enemy{
 			
 			//TODO give in weapon firing speed
 			//System.out.println("Attacking the player...");
-			projectiles.add(new Projectile(10, eX, eY, theta, .1, stats.getAttack()));
+			projectiles.add(new Projectile(10, eX, eY, theta, .1, stats.getAttack2()));
 		}
 
 	

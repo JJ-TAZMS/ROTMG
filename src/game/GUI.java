@@ -11,6 +11,8 @@ public class GUI {
 	private Inventory inv;
 	private Hotbar hot;
 	private LootBag loot;
+	private int attack;
+	private int defense;
 	//private int index;
 	public static int width = Game.WIDTH/5;
 	public static int xStart = (Game.WIDTH-width+2)*Game.SCALE;
@@ -25,6 +27,8 @@ public class GUI {
 		stat = stats;
 		inv = new Inventory();
 		hot = new Hotbar();
+		attack = 12;
+		defense = 0;
 	}
 	public void setBag(LootBag l)
 	{
@@ -34,6 +38,8 @@ public class GUI {
 	//public void setIndex(int i){ index = i; }
 	public Inventory getInv()	{	return inv;	}
 	public Hotbar getHot()	{	return hot;	}
+	public void setDamage(int i) { attack = i; }
+	public void setDefense(int i) { defense = i; }
 	
 	
 	public void render(Graphics g, double xIn, double yIn){
@@ -62,6 +68,9 @@ public class GUI {
 				g.drawRect((xStart + 15)+(51*i), Game.HEIGHT*Game.SCALE - 150, 50, 50); //item icons
 				
 				g.drawImage( (Image) loot.bagItems.get(i).getImage(), (int)(xStart + 15)+(51*i), (int) (Game.HEIGHT*Game.SCALE - 150), null);
+				g.setColor(Color.RED);
+				g.setFont(new Font("TimesRoman", Font.PLAIN, 10));
+				g.drawString(Integer.toString(loot.bagItems.get(i).getTier()), (int)(xStart + 15)+(51*i)+40, (int) (Game.HEIGHT*Game.SCALE - 150)+47);
 			}
 		}
 		mini.render(g, xIn, yIn);

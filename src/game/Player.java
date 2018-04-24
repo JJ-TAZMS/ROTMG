@@ -14,6 +14,7 @@ import game.Enemies.EntGod;
 import game.Enemies.GiantCrab;
 import game.Enemies.Medusa;
 import game.Enemies.Pirate;
+import game.Enemies.SpriteGod;
 import game.Enemies.Urgle;
 
 public class Player {
@@ -70,6 +71,16 @@ public class Player {
 		checkPlayerHit();
 		attack();
 		checkBags();
+		if(stats.gethp()+.008<=stats.getMaxHP())
+		{
+			stats.sethp(stats.gethp()+.008);
+			System.out.println("Your health is now "+stats.gethp());
+		}
+		if(stats.getmp()+.008<=stats.getMaxMP())
+		{
+			stats.setmp(stats.getmp()+.008);
+			System.out.println("Your mp is now "+stats.getmp());
+		}
 	}
 	
 	
@@ -105,30 +116,31 @@ public class Player {
 				{
 				
 					//Your projectile hitting them
-					if (((Math.sqrt((en.getX() - projectiles.get(i).getX())*(en.getX()- projectiles.get(i).getX()) + (en.getY() - projectiles.get(i).getY())*(en.getY() - projectiles.get(i).getY()))))<=.50){
+					if (((Math.sqrt((en.getX() - projectiles.get(i).getX())*(en.getX()- projectiles.get(i).getX()) + (en.getY() - projectiles.get(i).getY())*(en.getY() - projectiles.get(i).getY()))))<=.50)
+					{
 						
+						double damageTaking = (projectiles.get(i).getDamage() - en.getStats().getDefense());
 						//Make enemy lose health
-						if (projectiles.get(i).getDamage() - en.getStats().getDefense() > 0)
+						if (damageTaking < projectiles.get(i).getDamage()*.15) //Max stopping of 85% of an attack
 						{
-							if (en.hurtEnemy((int)(projectiles.get(i).getDamage() - en.getStats().getDefense())))
-							{
-								//Add loot bag to field
-								if (Math.random() < .2) //20% Chance to drop a loot bag
-								{
-									System.out.println("Adding LootBag! Player.java");
-									map.getBags().add(new LootBag(en.getStats().getTier(), en.getX(), en.getY()));
-								}
-								
-								//Get rid of the enemy
-								map.getEnemies(toRender).remove(en);
-								
-							}
-							System.out.println("Player has done " + (projectiles.get(i).getDamage() - en.getStats().getDefense()) + " damage to enemy ( " + en.getStats().gethp() + ")");
-							
-						}	else
-						{
-							System.out.println("Player has hit but done NO damage!");
+							damageTaking = projectiles.get(i).getDamage()*.15;
 						}
+							
+						if (en.hurtEnemy((int)(damageTaking)))
+						{
+							//Add loot bag to field
+							if (Math.random() < .2) //20% Chance to drop a loot bag
+							{
+								System.out.println("Adding LootBag! Player.java");
+								map.getBags().add(new LootBag(en.getStats().getTier(), en.getX(), en.getY()));
+							}
+							
+							//Get rid of the enemy
+							map.getEnemies(toRender).remove(en);
+							
+						}
+						System.out.println("player.java - Player has done " + (damageTaking) + " damage to enemy ( " + en.getStats().gethp() + ")");
+						
 						projectiles.remove(i);
 						i--;
 						break;
@@ -165,10 +177,16 @@ public class Player {
 					if (((Math.sqrt((x - en.getProj().get(j).getX())*(x- en.getProj().get(j).getX()) + (y - en.getProj().get(j).getY())*(y - en.getProj().get(j).getY()))))<=0.5){
 						
 						
-						System.out.println("Enemy has done " + en.getProj().get(j).getDamage() + " damage to the player (" + stats.gethp() + ")");
+						double damageTaking = (en.getProj().get(j).getDamage() - getDefense());
+						//Make enemy lose health
+						if (damageTaking < en.getProj().get(j).getDamage()*.15) //Max stopping of 85% of an attack
+						{
+							damageTaking = en.getProj().get(j).getDamage()*.15;
+						}
+						System.out.println("Enemy has done " + damageTaking + " damage to the player (" + stats.gethp() + ")");
+							
+						stats.sethp((int)(stats.gethp()-damageTaking));
 						
-						
-						stats.sethp((int)(stats.gethp()-en.getProj().get(j).getDamage()));
 						
 						
 						en.getProj().remove(j);
@@ -400,15 +418,11 @@ public class Player {
 					if(map.getMap()[xSpawn][ySpawn].getDif() == 1 && ( map.getEnemies(map.getMap()[(int)xSpawn][(int)ySpawn].getDif()) == null || map.getEnemies(map.getMap()[(int) xSpawn][(int) ySpawn].getDif()).size() <= 40))
 					{
 						//the player is in the shoreline and there are less than 40 enemies
-						if(Math.random() < 0.005) //1 in every 200 tiles is a pirate 'cluster'
+						if(Math.random() < 0.005)
 						{
 							System.out.println("Pirate spawned");
 							//System.out.println(map.getEnemies(map.getMap()[(int)xSpawn][(int)ySpawn].getDif()).size());
-							for (int i = 0; i < 4 + (Math.random()*2 - 1); i++)
-							{
-								map.addEnemy(new Pirate(xSpawn + (Math.random()*4 - 2), ySpawn + (Math.random()*4 - 2), spriteSheet.grabImage(11, 1, 1, 1)), 1);
-							}
-							
+							map.addEnemy(new Pirate(xSpawn, ySpawn, spriteSheet.grabImage(11, 1, 1, 1)), 1);
 						}
 					}
 					if(map.getMap()[xSpawn][ySpawn].getDif() == 2 && ( map.getEnemies(map.getMap()[(int)xSpawn][(int)ySpawn].getDif()) == null || map.getEnemies(map.getMap()[(int) xSpawn][(int) ySpawn].getDif()).size() <= 40))
@@ -426,9 +440,9 @@ public class Player {
 						//the player is in the shoreline and there are less than 40 enemies
 						if(Math.random() < 0.005)
 						{
-							System.out.println("Pirate spawned");
+							System.out.println("SpriteGod spawned");
 							//System.out.println(map.getEnemies(map.getMap()[(int)xSpawn][(int)ySpawn].getDif()).size());
-							map.addEnemy(new Pirate(xSpawn, ySpawn, spriteSheet.grabImage(11, 1, 1, 1)), 3);
+							map.addEnemy(new SpriteGod(xSpawn, ySpawn, spriteSheet.grabImage(14, 20, 2, 2)), 3);
 						}
 					}
 					if(map.getMap()[xSpawn][ySpawn].getDif() == 4 && ( map.getEnemies(map.getMap()[(int)xSpawn][(int)ySpawn].getDif()) == null || map.getEnemies(map.getMap()[(int) xSpawn][(int) ySpawn].getDif()).size() <= 40))
@@ -456,7 +470,7 @@ public class Player {
 							{
 								System.out.println("EntGod spawned");
 								//System.out.println(map.getEnemies(map.getMap()[(int)xSpawn][(int)ySpawn].getDif()).size());
-								map.addEnemy(new EntGod(xSpawn, ySpawn, spriteSheet.grabImage(12, 20, 2, 2)), 5);
+								map.addEnemy(new EntGod(xSpawn, ySpawn, spriteSheet.grabImage(14, 18, 2, 2)), 5);
 
 							}
 						}
@@ -544,7 +558,7 @@ public class Player {
 		gui.render(g, x, y);
 	}
 	
-	public void updateStats(Item it)
+	public void updateStats(Item it)  
 	{
 		if (it != null)
 		{
@@ -554,6 +568,14 @@ public class Player {
 			}else if (it.getType().equals("A")) {
 		 
 				stats.setDefense(it.getStat()); 
+			}else if(it.getType().equals("M")) {
+				if ((int)stats.getmp()+(it.getStat()*10)<=stats.getMaxMP())
+				{
+					stats.setmp((int)stats.getmp()+(it.getStat()*10));
+				} else {
+					stats.setmp((int)stats.getMaxMP());
+				}
+				
 			}
 		}
 	}
@@ -651,6 +673,8 @@ public class Player {
 				gui.getHot().addItem(itemHeld);
 				itemSelected = false;
 				updateStats(itemHeld);
+				gui.getInv().removeItem();
+				
 				//System.out.println(itemSelected);
 			} else
 			//if (!itemInHand && !itemSelected)
@@ -662,7 +686,6 @@ public class Player {
 			gui.getInv().setItemBool(itemSelected);
 			gui.getHot().setItemBool(itemSelected);
 		}
-		
 		if(k == KeyEvent.VK_SPACE)
 		{
 			//Lets just say it costs 30 to use your thing.
@@ -680,11 +703,8 @@ public class Player {
 					projectiles.add(new Projectile(index, mX, mY, bombTheta, .2, stats.getAttack2()));
 				}
 			}
+			gui.getHot().removeSpells();
 		}
-
-
-		
-		
 		
 	}
 	
@@ -813,64 +833,6 @@ public class Player {
 		return stats;
 	}
 	
-	//The Player's Stats + What they are wearing
-	public int getDamage() //Basic attack
-	{
-		int num = (int) stats.getAttack();
-		
-		for (Item i : gui.getHot().getHot()) 
-		{
-			if (i != null)
-			{
-				if (i.getType().equals("W"))
-				{
-					num += i.getStat();
-					break;
-				}
-			}
-		}
-		return num;
-	}
-	
-	public int getMagicDamage() //Basic attack
-	{
-		int num = (int) stats.getAttack2();
-		
-		for (Item i : gui.getHot().getHot()) 
-		{
-			if (i != null)
-			{
-				if (i.getType().equals("M"))
-				{
-					num += i.getStat();
-					break;
-				}
-			}
-		}
-		return num;
-	}
-	
-	public int getDefense()
-	{
-		int num = (int) stats.getDefense();
-		
-		for (Item i : gui.getHot().getHot()) 
-		{
-			if (i != null)
-			{
-				if (i.getType().equals("A"))
-				{
-					num += i.getStat();
-					break;
-				}
-			}
-		}
-		return num;
-	}
-	
-	
-	
-	
 	public Field getMap()	{
 		return map;
 	}
@@ -879,26 +841,89 @@ public class Player {
 		{
 			for (int i=0; i<map.getBags().size(); i++)
 			{
-				double bagX = map.getBags().get(i).getX();
-				double bagY = map.getBags().get(i).getY();
-				double playerDist = Math.sqrt((bagX - x)*(bagX - x) + (bagY - y)*(bagY - y));
-				nearBag = (Math.abs(playerDist)<1);
-				if (nearBag)
-				{
-					bag = map.getBags().get(i);	
-					i = map.getBags().size()+1;
-				}else{
-					bag = null;		
-				}
-				gui.setBag(bag);
-				if (playerDist > Game.WIDTH/Tile.TILESIZE*3)
-				{
+				if (map.getBags().get(i).bagItems.size()==0){
 					map.getBags().remove(i);
+					i--;
+				} else {
+					double bagX = map.getBags().get(i).getX();
+					double bagY = map.getBags().get(i).getY();
+					double playerDist = Math.sqrt((bagX - x)*(bagX - x) + (bagY - y)*(bagY - y));
+					nearBag = (Math.abs(playerDist)<1);
+					if (nearBag)
+					{
+						bag = map.getBags().get(i);	
+						i = map.getBags().size()+1;
+					}else{
+						bag = null;		
+					}
+					gui.setBag(bag);
+					if (playerDist > Game.WIDTH/Tile.TILESIZE*3)
+					{	
+						map.getBags().remove(i);
+						System.out.println("removing bag");
+						i--;
+					}
 				}
+
 			}
 		}
 	}
-	
+	//The Player's Stats + What they are wearing
+		public int getDamage() //Basic attack
+		{
+			int num = (int) stats.getAttack();
+			
+			for (Item i : gui.getHot().getHot()) 
+			{
+				if (i != null)
+				{
+					if (i.getType().equals("W"))
+					{
+						num += i.getStat();
+						break;
+					}
+				}
+			}
+			gui.setDamage(num);
+			return num;
+		}
+		
+		public int getMagicDamage() //Basic attack
+		{
+			int num = (int) stats.getAttack2();
+			
+			for (Item i : gui.getHot().getHot()) 
+			{
+				if (i != null)
+				{
+					if (i.getType().equals("M"))
+					{
+						num += i.getStat();
+						break;
+					}
+				}
+			}
+			return num;
+		}
+		
+		public int getDefense()
+		{
+			int num = (int) stats.getDefense();
+			
+			for (Item i : gui.getHot().getHot()) 
+			{
+				if (i != null)
+				{
+					if (i.getType().equals("A"))
+					{
+						num += i.getStat();
+						break;
+					}
+				}
+			}
+			gui.setDefense(num);
+			return num;
+		}
 	public LootBag getBag() { return bag; }
 	
 	public boolean getNear() { return nearBag;  }
