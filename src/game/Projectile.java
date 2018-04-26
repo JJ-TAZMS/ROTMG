@@ -78,7 +78,7 @@ public class Projectile {
 		g.setColor(Color.BLACK);
 		if (!isEnemy)
 		{
-			g.setColor(Color.GREEN);
+			g.setColor(Color.BLUE);
 		}
 		
 		//g.fillRect((int) (Game.SCALE*(xP + Game.WIDTH/2)), (int) (Game.SCALE*(yP + Game.HEIGHT/2)), Tile.TILESIZE*Game.SCALE, Tile.TILESIZE*Game.SCALE);

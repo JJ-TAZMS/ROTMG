@@ -276,13 +276,17 @@ public class Game extends Canvas implements Runnable{
 		//TODO when we have an arraylist of players, we need to send in the player positions to only their nearby enemies.
 		for (int toTick = 1; toTick <= 5; toTick++)
 		{ //In surrounding lands only
-			for (Enemy en : map.getEnemies(toTick)) //For every enemies in the game
+			for (int i = 0; i < map.getEnemies(toTick).size(); i++) //For every enemies in the game
 			{
-				if (en.getStats().getActive())
+				if (map.getEnemies(toTick).get(i).getStats().getDelete())
+				{
+					System.out.println("Deleting enemy.");
+					map.getEnemies(toTick).remove(i);
+					i--;
+				}	else
 				{
 					//System.out.println("Ticking enemy from Game.java");
-					en.tick(player1.getX(), player1.getY(), player1.getXvel(), player1.getYvel());
-					
+					map.getEnemies(toTick).get(i).tick(player1.getX(), player1.getY(), player1.getXvel(), player1.getYvel());
 				}
 			}
 		}

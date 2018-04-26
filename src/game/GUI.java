@@ -71,6 +71,7 @@ public class GUI {
 				g.setColor(Color.RED);
 				g.setFont(new Font("TimesRoman", Font.PLAIN, 10));
 				g.drawString(Integer.toString(loot.bagItems.get(i).getTier()), (int)(xStart + 15)+(51*i)+40, (int) (Game.HEIGHT*Game.SCALE - 150)+47);
+				g.drawString(loot.bagItems.get(i).getName(), (int)(xStart + 15)+(51*i)+40, (int) (Game.HEIGHT*Game.SCALE - 150)+47);
 			}
 		}
 		mini.render(g, xIn, yIn);
@@ -89,8 +90,8 @@ public class GUI {
 		//health bar
 		//add inventory of lootbags when player is near one
 		g.setColor(Color.GREEN);
-		g.drawRect(xStart+15, yStartStat+90, 200,  50);
-		g.fillRect(xStart+15, yStartStat+90, (int)stat.gethp()*2, 50);
+		g.drawRect(xStart+15, yStartStat+90, 200,  30);
+		g.fillRect(xStart+15, yStartStat+90, (int)stat.gethp()*2, 30);
 
 
 		

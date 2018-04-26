@@ -13,6 +13,9 @@ import com.sun.glass.events.KeyEvent;
 import game.Enemies.EntGod;
 import game.Enemies.GiantCrab;
 import game.Enemies.Medusa;
+import game.Enemies.OrcKing;
+import game.Enemies.OrcQueen;
+import game.Enemies.OrcWarrior;
 import game.Enemies.Pirate;
 import game.Enemies.SpriteGod;
 import game.Enemies.Urgle;
@@ -74,12 +77,12 @@ public class Player {
 		if(stats.gethp()+.008<=stats.getMaxHP())
 		{
 			stats.sethp(stats.gethp()+.008);
-			System.out.println("Your health is now "+stats.gethp());
+			//System.out.println("Your health is now "+stats.gethp());
 		}
 		if(stats.getmp()+.008<=stats.getMaxMP())
 		{
 			stats.setmp(stats.getmp()+.008);
-			System.out.println("Your mp is now "+stats.getmp());
+			//System.out.println("Your mp is now "+stats.getmp());
 		}
 	}
 	
@@ -415,17 +418,21 @@ public class Player {
 				
 				if (!map.getMap()[xSpawn][ySpawn].getRendered())
 				{
-					if(map.getMap()[xSpawn][ySpawn].getDif() == 1 && ( map.getEnemies(map.getMap()[(int)xSpawn][(int)ySpawn].getDif()) == null || map.getEnemies(map.getMap()[(int) xSpawn][(int) ySpawn].getDif()).size() <= 40))
+					if(map.getMap()[xSpawn][ySpawn].getDif() == 1)
 					{
 						//the player is in the shoreline and there are less than 40 enemies
 						if(Math.random() < 0.005)
 						{
 							System.out.println("Pirate spawned");
 							//System.out.println(map.getEnemies(map.getMap()[(int)xSpawn][(int)ySpawn].getDif()).size());
-							map.addEnemy(new Pirate(xSpawn, ySpawn, spriteSheet.grabImage(11, 1, 1, 1)), 1);
+							for (int i = 0; i < 4 + (Math.random()*2 - 1); i++)
+							{
+								map.addEnemy(new Pirate(xSpawn + (Math.random()*4 - 2), ySpawn + (Math.random()*4 - 2), spriteSheet.grabImage(11, 1, 1, 1)), 1);
+
+							}
 						}
 					}
-					if(map.getMap()[xSpawn][ySpawn].getDif() == 2 && ( map.getEnemies(map.getMap()[(int)xSpawn][(int)ySpawn].getDif()) == null || map.getEnemies(map.getMap()[(int) xSpawn][(int) ySpawn].getDif()).size() <= 40))
+					if(map.getMap()[xSpawn][ySpawn].getDif() == 2)
 					{
 						//the player is in the shoreline and there are less than 40 enemies
 						if(Math.random() < 0.005)
@@ -435,7 +442,7 @@ public class Player {
 							map.addEnemy(new GiantCrab(xSpawn, ySpawn, spriteSheet.grabImage(9, 12, 1, 1)), 2);
 						}
 					}
-					if(map.getMap()[xSpawn][ySpawn].getDif() == 3 && ( map.getEnemies(map.getMap()[(int)xSpawn][(int)ySpawn].getDif()) == null || map.getEnemies(map.getMap()[(int) xSpawn][(int) ySpawn].getDif()).size() <= 40))
+					if(map.getMap()[xSpawn][ySpawn].getDif() == 3)
 					{
 						//the player is in the shoreline and there are less than 40 enemies
 						if(Math.random() < 0.005)
@@ -445,17 +452,22 @@ public class Player {
 							map.addEnemy(new SpriteGod(xSpawn, ySpawn, spriteSheet.grabImage(14, 20, 2, 2)), 3);
 						}
 					}
-					if(map.getMap()[xSpawn][ySpawn].getDif() == 4 && ( map.getEnemies(map.getMap()[(int)xSpawn][(int)ySpawn].getDif()) == null || map.getEnemies(map.getMap()[(int) xSpawn][(int) ySpawn].getDif()).size() <= 40))
+					if(map.getMap()[xSpawn][ySpawn].getDif() == 4)
 					{
 						//the player is in the shoreline and there are less than 40 enemies
 						if(Math.random() < 0.005)
 						{
+							Enemy e1 = new OrcKing(xSpawn, ySpawn, spriteSheet.grabImage(6,  16,  2,  2));
+							map.addEnemy(e1, 4);
+							map.addEnemy(new OrcQueen(e1, xSpawn, ySpawn, spriteSheet.grabImage(6,  16,  2,  2)), 4);
+							map.addEnemy(new OrcWarrior(e1, xSpawn, ySpawn, spriteSheet.grabImage(6,  16,  2,  2)), 4);
+
 							System.out.println("Urcle spawned");
 							//System.out.println(map.getEnemies(map.getMap()[(int)xSpawn][(int)ySpawn].getDif()).size());
-							map.addEnemy(new Urgle(xSpawn, ySpawn, spriteSheet.grabImage(6,  16,  2,  2)), 4);
+							//map.addEnemy(new Urgle(xSpawn, ySpawn, spriteSheet.grabImage(6,  16,  2,  2)), 4);
 						}
 					}
-					if(map.getMap()[xSpawn][ySpawn].getDif() == 5 && ( map.getEnemies(map.getMap()[(int)xSpawn][(int)ySpawn].getDif()) == null || map.getEnemies(map.getMap()[(int) xSpawn][(int) ySpawn].getDif()).size() <= 40))
+					if(map.getMap()[xSpawn][ySpawn].getDif() == 5)
 					{
 						//the player is in the shoreline and there are less than 40 enemies
 						if(Math.random() < 0.005)
@@ -543,7 +555,7 @@ public class Player {
 			}
 			for (Enemy en : map.getEnemies(toRender)) //For every enemies in surrounding lands
 			{
-				if (en.getStats().getActive())
+				if (!en.getStats().getDelete())
 				{
 					//System.out.println("Rendering enemy from player.java");
 					en.render(g, x, y);

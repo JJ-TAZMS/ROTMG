@@ -28,15 +28,15 @@ public class Stats {
 		atkWait = 0;
 		if(index == 0) //zero or negative numbers are player stats only
 		{
-			speed = 10; 
+			speed = 20; 
 			dexterity = 15;
 			attack = 12;
 			attack2 = 10;
 			defense = 0;
 			vitality = 12;
 			wisdom = 12;
-			hp = 100;
-			mp = 100;
+			hp = 99999;
+			mp = 99999;
 			healthPotions = 3;
 			manaPotions = 3;
 			experience = 0;

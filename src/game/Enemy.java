@@ -62,14 +62,19 @@ public class Enemy {
 		//System.out.println("Enemy.java - Distance to player is: " + distFromPlayer);
 		
 		
-		if (distFromPlayer < Game.WIDTH/Tile.TILESIZE * 3)
+		if (distFromPlayer < stats.getMoveDist()*1.5)
 		{
 			stats.setActive(true);
 			
 		}	else
 		{
-			System.out.println("Enemy.java - Distance to player is: " + distFromPlayer + " tiles. Setting Active to False");
+		
 			stats.setActive(false);
+			if ((distFromPlayer > Game.WIDTH/Tile.TILESIZE * 3))
+			{
+				stats.settooFar(true);
+				System.out.println("Way too far. setting delete to true");
+			}
 		}
 		
 		
@@ -97,20 +102,6 @@ public class Enemy {
 					}
 					
 				}
-			}	else
-			{
-				boolean wander = (stats.getAtkWait()%30 == 0);
-				
-				if (wander)
-				{
-					double speed = stats.getSpeed();
-					double changeTheta = Math.PI;
-					wanderTheta += (Math.random()*changeTheta - changeTheta/2);
-					xVel = (speed*Math.cos(wanderTheta))/2.0;
-					yVel = (speed*Math.sin(wanderTheta))/2.0;
-				}
-				eX += xVel;
-				eY += yVel;
 			}
 			
 			
@@ -134,6 +125,21 @@ public class Enemy {
 				}
 			}
 			
+		}	else
+		{
+			//System.out.println("Enemy wander: " + !stats.getActive() + " wanderin");
+			boolean wander = (stats.getAtkWait()%30 == 0);
+			
+			if (wander)
+			{
+				double speed = stats.getSpeed();
+				double changeTheta = Math.PI;
+				wanderTheta += (Math.random()*changeTheta - changeTheta/2);
+				xVel = (speed*Math.cos(wanderTheta))/2.0;
+				yVel = (speed*Math.sin(wanderTheta))/2.0;
+			}
+			eX += xVel;
+			eY += yVel;
 		}
 		
 		

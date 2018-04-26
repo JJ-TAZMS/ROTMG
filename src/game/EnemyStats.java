@@ -7,11 +7,12 @@ import java.util.Scanner;
 public class EnemyStats extends Stats{
 
 	private double moveDist, attackDist, attackDist2; //In tiles
-	private boolean active;
+	private boolean active, tooFar;
 	
 	
 	public EnemyStats(int index) {
 		active = true;
+		tooFar = false;
 		
 		Scanner scanner = null;
 		try {
@@ -67,8 +68,10 @@ public class EnemyStats extends Stats{
 	public double getAtkDist2()	{	return attackDist2;	}
 	public boolean getActive()	{	return active;	}
 	public double getSpeed()	{		return speed/100.0;	}
+	public boolean getDelete()	{	return tooFar;	}
 	
 	//Setters
 	public void setActive(boolean b)	{	active = b;	}
+	public void settooFar(boolean b)	{	tooFar = b;	}
 
 }
