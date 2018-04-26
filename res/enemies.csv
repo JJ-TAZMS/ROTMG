@@ -18,7 +18,7 @@ Bandit Leader,16,280,2,45,4,5,3,9,5,0,0,Chase,Far shots + Grenades,3,Tj
 Flying Brain,17,,,,,,,,,,,,,5,Zack
 Great Lizard,18,500,4,90,,,,,,,,"Rush to dist of 1, Wander",,3,Tj
 Orc King,19,240,3,24,12,6,1,27,0,0,0,Wander,Far shots,3,Tj
-Orc Queen,20,130,0,13,12,1,7,0,,,,Follows Orc King,Heals Orc King,Orc King,Tj
+Orc Queen,20,130,0,13,12,1,7,0,0,0,0,Follows Orc King,Heals Orc King,Orc King,Tj
 Orc Warrior,21,90,3,9,12,6,1,19,8,0,0,Chase,Far shots,Orc King,Tj
 White Dragon Whelp,22,240,0,24,,,,,,,,Chase,Far shots,4,Alex
 Medusa,23,2000,18,195,4,6,12,100,7,150,8,Chase then wander,spread shots + bomb,5,Sean
